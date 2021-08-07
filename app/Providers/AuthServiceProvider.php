@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Gate;
+use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Support\HtmlString;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -25,6 +27,22 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        //
+        VerifyEmail::toMailUsing(function ($notifiable, $url) {
+
+            $data = explode('/', $url)[6];
+            $splitData = explode('?', $data);
+
+            $hash = $splitData[0];
+            $query = $splitData[1];
+
+            $newUrl = env('SPA_URL', 'http://localhost:3000') . '/login/?hash=' . $hash . '&' . $query . '&type=verify_email&user=' . $notifiable->id;
+
+            return (new MailMessage)
+                ->subject('Verify Your Email Address!')
+                ->greeting('Hello ' . $notifiable->name . '!')
+                ->line('Click the button below to verify your email address . ')
+                ->action('Verify Email Address', $newUrl)
+                ->salutation(new HtmlString('Kind regards,<br> Sander Cokart'));
+        });
     }
 }
