@@ -50,6 +50,7 @@ class AuthController extends Controller
         ]);
 
         $remember_me = $validatedData['remember_me'] ?? false;
+        unset($validatedData['remember_me']);
 
         //attempt login otherwise return abort 401
         if (!auth()->attempt($validatedData, $remember_me)) {
@@ -58,6 +59,7 @@ class AuthController extends Controller
 
         //return user
         return response()->json(['user' => auth()->user()]);
+    }
 
     }
 }
