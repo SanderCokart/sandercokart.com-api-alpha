@@ -1,10 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="serve" type="PhpLocalRunConfigurationType" factoryName="PHP Console" path="$PROJECT_DIR$/artisan" scriptParameters="serve --host=api.sandercokart --port=8000">
-    <CommandLine>
-      <PhpTestInterpreterSettings>
-        <option name="interpreterName" value="PHP 7.4.8" />
-      </PhpTestInterpreterSettings>
-    </CommandLine>
+  <configuration default="false" name="serve" type="PhpLocalRunConfigurationType" factoryName="PHP Console" path="$PROJECT_DIR$/artisan" scriptParameters="serve">
     <method v="2" />
   </configuration>
 </component>
