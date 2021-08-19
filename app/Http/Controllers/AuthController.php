@@ -61,5 +61,8 @@ class AuthController extends Controller
         return response()->json(['user' => auth()->user()]);
     }
 
+    public function check(): JsonResponse
+    {
+        return response()->json(auth()->user());
     }
 }
