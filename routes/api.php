@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,21 +14,23 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-//guest routes
-Route::group([], function () {
-    Route::post('/register', [App\Http\Controllers\AuthController::class, 'register']);
-    Route::post('/login', [App\Http\Controllers\AuthController::class, 'login']);
-    Route::get('/check', [App\Http\Controllers\AuthController::class, 'check']);
+//account
+Route::group(['prefix' => 'account'], function () {
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::get('/check', [AuthController::class, 'check']);
     Route::group(['prefix' => 'password'], function () {
-        Route::post('/forgot', [App\Http\Controllers\AuthController::class, 'forget_password']);
-        Route::patch('/reset', [\App\Http\Controllers\AuthController::class, 'reset_password'])->name('password.reset');
+        Route::post('/forgot', [AuthController::class, 'password_forgot']);
+        Route::patch('/reset', [AuthController::class, 'password_reset'])->name('password.reset');
     });
 });
 
-//logged in routes
-Route::group(['middleware' => 'auth:sanctum'], function () {
-    Route::get('/email/verify/{id}/{hash}', [\App\Http\Controllers\AuthController::class, 'verify'])->name('verification.verify')->middleware('signed');
-    Route::post('/logout', [\App\Http\Controllers\AuthController::class, 'logout']);
+//account with auth
+Route::group(['middleware' => 'auth:sanctum', 'prefix' => 'account'], function () {
+    Route::group(['prefix' => 'email'], function () {
+        Route::get('/verify/{id}/{hash}', [AuthController::class, 'verify'])->name('verification.verify')->middleware('signed');
+    });
+    Route::post('/logout', [AuthController::class, 'logout']);
 });
 
 //verified routes
