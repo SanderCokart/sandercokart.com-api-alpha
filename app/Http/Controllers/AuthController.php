@@ -42,11 +42,10 @@ class AuthController extends Controller
 
     public function login(Request $request): JsonResponse
     {
-        //validate login
         $validatedData = $request->validate([
-            'email' => 'required|email|string',
+            'email' => 'required|email',
             'password' => 'required|string',
-            'remember_me' => 'boolean|nullable',
+            'remember_me' => 'required|boolean',
         ]);
 
         $remember_me = $validatedData['remember_me'] ?? false;
@@ -54,7 +53,7 @@ class AuthController extends Controller
 
         //attempt login otherwise return abort 401
         if (!auth()->attempt($validatedData, $remember_me)) {
-            abort(401);
+            abort(401, 'Incorrect email or password!');
         }
 
         //return user
