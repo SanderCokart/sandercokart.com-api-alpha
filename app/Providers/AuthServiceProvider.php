@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -43,6 +44,11 @@ class AuthServiceProvider extends ServiceProvider
                 ->line('Click the button below to verify your email address . ')
                 ->action('Verify Email Address', $newUrl)
                 ->salutation(new HtmlString('Kind regards,<br> Sander Cokart'));
+        });
+
+
+        ResetPassword::createUrlUsing(function ($user, string $token) {
+            return env('SPA_URL') . '/account/password/reset?token=' . $token . '&email=' . $user->email;
         });
     }
 }

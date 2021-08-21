@@ -3,29 +3,27 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Password;
 
 class AuthController extends Controller
 {
-    public function register(Request $request)
+    public function register(Request $request): JsonResponse
     {
-        /* validate the form */
         $validatedData = $request->validate([
             'name' => 'required|max:255',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6|confirmed',
         ]);
 
-        /* encrypt password */
         $validatedData['password'] = bcrypt($validatedData['password']);
 
-        /* create user */
         $user = User::create($validatedData);
 
-        /* send user a verify email link */
         event(new Registered($user));
 
         return response()->json($user);
@@ -51,17 +49,51 @@ class AuthController extends Controller
         $remember_me = $validatedData['remember_me'] ?? false;
         unset($validatedData['remember_me']);
 
-        //attempt login otherwise return abort 401
         if (!auth()->attempt($validatedData, $remember_me)) {
             abort(401, 'Incorrect email or password!');
         }
 
-        //return user
         return response()->json(['user' => auth()->user()]);
     }
 
     public function check(): JsonResponse
     {
-        return response()->json(auth()->user());
+        return response()->json(['user' => auth()->user()]);
+    }
+
+    public function logout(): void
+    {
+        auth()->guard('web')->logout();
+    }
+
+    public function password_forgot(Request $request): JsonResponse
+    {
+        $validatedData = $request->validate(['email' => 'required|email']);
+
+        return response()->json(['status' => Password::sendResetLink($validatedData)]);
+    }
+
+    public function password_reset(Request $request)
+    {
+        $validatedData = $request->validate([
+            'password' => 'confirmed|min:6|required',
+            'email' => 'email|required',
+            'token' => 'required',
+        ]);
+
+        Password::reset(
+            $validatedData,
+            function ($user, $password) {
+                $user->forceFill([
+                    'password' => bcrypt($password),
+                ]);
+                /*->setRememberToken(Str::random(60))*/
+
+                $user->save();
+
+                event(new PasswordReset($user));
+            }
+        );
+
     }
 }
