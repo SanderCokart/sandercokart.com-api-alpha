@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Password;
 
 class AuthController extends Controller
 {
-    public function register(Request $request): JsonResponse
+    public function register(Request $request): void
     {
         $validatedData = $request->validate([
             'name' => 'required|max:255',
@@ -25,8 +25,6 @@ class AuthController extends Controller
         $user = User::create($validatedData);
 
         event(new Registered($user));
-
-        return response()->json($user);
     }
 
     public function verify(EmailVerificationRequest $request): JsonResponse
