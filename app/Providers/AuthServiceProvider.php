@@ -30,7 +30,8 @@ class AuthServiceProvider extends ServiceProvider
 
         VerifyEmail::toMailUsing(function ($notifiable, $url) {
 
-            $data = explode('/', $url)[6];
+            /* TODO what can go wrong? find consistent solution */
+            $data = explode('/', $url)[7];
             $splitData = explode('?', $data);
 
             $hash = $splitData[0];
