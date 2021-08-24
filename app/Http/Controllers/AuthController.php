@@ -64,7 +64,7 @@ class AuthController extends Controller
         auth()->guard('web')->logout();
     }
 
-    public function password_forgot(Request $request): JsonResponse
+    public function request_password(Request $request): string
     {
         $validatedData = $request->validate(['email' => 'required|email']);
 
