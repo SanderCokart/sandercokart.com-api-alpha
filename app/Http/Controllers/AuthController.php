@@ -71,7 +71,7 @@ class AuthController extends Controller
         return response()->json(['status' => Password::sendResetLink($validatedData)]);
     }
 
-    public function password_reset(Request $request)
+    public function password_reset(Request $request): string
     {
         $validatedData = $request->validate([
             'password' => 'confirmed|min:6|required',
@@ -79,7 +79,7 @@ class AuthController extends Controller
             'token' => 'required',
         ]);
 
-        Password::reset(
+        return Password::reset(
             $validatedData,
             function ($user, $password) {
                 $user->forceFill([
