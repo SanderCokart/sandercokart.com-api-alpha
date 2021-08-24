@@ -20,7 +20,7 @@ Route::group(['prefix' => 'account'], function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::get('/check', [AuthController::class, 'check']);
     Route::group(['prefix' => 'password'], function () {
-        Route::post('/forgot', [AuthController::class, 'password_forgot']);
+        Route::post('/request', [AuthController::class, 'request_password']);
         Route::patch('/reset', [AuthController::class, 'password_reset'])->name('password.reset');
     });
 });
@@ -28,6 +28,8 @@ Route::group(['prefix' => 'account'], function () {
 //account with auth
 Route::group(['middleware' => 'auth:sanctum', 'prefix' => 'account'], function () {
     Route::group(['prefix' => 'email'], function () {
+        Route::post('/request', [AuthController::class, 'request_email']);
+        Route::post('/change', [AuthController::class, 'email_change'])->name('email.change');
         Route::get('/verify/{id}/{hash}', [AuthController::class, 'verify'])->name('verification.verify')->middleware('signed');
     });
     Route::post('/logout', [AuthController::class, 'logout']);
