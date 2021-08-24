@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Notifications\EmailChangeNotification;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -68,7 +69,16 @@ class AuthController extends Controller
     {
         $validatedData = $request->validate(['email' => 'required|email']);
 
-        return response()->json(['status' => Password::sendResetLink($validatedData)]);
+        return Password::sendResetLink($validatedData);
+    }
+
+    public function request_email(Request $request): string
+    {
+        /*TODO DB::table('email_changes')->insert([
+            'email' => auth()->user()->email,
+        ]);*/
+
+        auth()->user()->notify(new EmailChangeNotification());
     }
 
     public function password_reset(Request $request): string
@@ -92,6 +102,5 @@ class AuthController extends Controller
                 event(new PasswordReset($user));
             }
         );
-
     }
 }
