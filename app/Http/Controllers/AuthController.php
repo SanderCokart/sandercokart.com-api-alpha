@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\EmailChangeRequest;
 use App\Models\User;
 use App\Notifications\EmailChangeNotification;
 use Illuminate\Auth\Events\PasswordReset;
@@ -9,7 +10,10 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -74,11 +78,16 @@ class AuthController extends Controller
 
     public function request_email(Request $request): string
     {
-        /*TODO DB::table('email_changes')->insert([
-            'email' => auth()->user()->email,
-        ]);*/
+        $token = hash_hmac('sha256', Str::random(40), env('APP_KEY'));;
 
-        auth()->user()->notify(new EmailChangeNotification());
+        DB::table('email_change_requests')->insert([
+            'email' => $request->user()->email,
+            'user_id' => $request->user()->getKey(),
+            'token' => Hash::make($token),
+            'created_at' => now(),
+        ]);
+
+        $request->user()->sendEmailChangeNotification($token);
     }
 
     public function password_reset(Request $request): string
@@ -102,5 +111,10 @@ class AuthController extends Controller
                 event(new PasswordReset($user));
             }
         );
+    }
+
+    public function email_change(EmailChangeRequest $request)
+    {
+        $request->fulfill();
     }
 }

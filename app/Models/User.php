@@ -2,14 +2,18 @@
 
 namespace App\Models;
 
+use App\Interfaces\CanChangeEmail as CanChangeEmailContract;
+use App\Traits\CanChangeEmail;
+use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable implements MustVerifyEmail
+class User extends Authenticatable implements MustVerifyEmail, CanChangeEmailContract, CanResetPassword
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, CanChangeEmail;
 
     /**
      * The attributes that are mass assignable.
@@ -40,4 +44,10 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function email_change_requests(): HasOne
+    {
+        return $this->hasOne(EmailChangeRequest::class);
+    }
+
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateEmailChangesTable extends Migration
+class CreateEmailChangeRequestsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,9 @@ class CreateEmailChangesTable extends Migration
      */
     public function up()
     {
-        Schema::create('email_changes', function (Blueprint $table) {
+        Schema::create('email_change_requests', function (Blueprint $table) {
             $table->string('email')->index();
+            $table->foreignId('user_id');
             $table->string('token');
             $table->timestamp('created_at')->nullable();
         });
@@ -27,6 +28,6 @@ class CreateEmailChangesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('email_changes');
+        Schema::dropIfExists('email_change_requests');
     }
 }

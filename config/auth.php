@@ -114,4 +114,9 @@ return [
 
     'password_timeout' => 10800,
 
+
+    /* Email Verification */
+    'verification' => [
+        'expire' => 60,
+    ],
 ];
