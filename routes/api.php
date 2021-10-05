@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\URL;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,4 +40,14 @@ Route::group(['middleware' => 'auth:sanctum', 'prefix' => 'account'], function (
 //verified routes
 Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
 
+});
+
+Route::get('/user', function () {
+    User::truncate();
+    return true;
+});
+
+
+Route::get('/test', function () {
+    dd(URL::temporarySignedRoute('verification.verify', now()->addHour(), ['id' => 1, 'hash' => sha1('cokart32@gmail.com')]));
 });
