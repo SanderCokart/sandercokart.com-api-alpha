@@ -46,8 +46,3 @@ Route::get('/user', function () {
     User::truncate();
     return true;
 });
-
-
-Route::get('/test', function () {
-    dd(URL::temporarySignedRoute('verification.verify', now()->addHour(), ['id' => 1, 'hash' => sha1('cokart32@gmail.com')]));
-});

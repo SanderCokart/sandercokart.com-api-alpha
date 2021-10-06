@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\URL;
 
@@ -25,6 +26,14 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
+
+        VerifyEmail::createUrlUsing(function ($notifiable) {
+            return config('app.url') .
+                URL::temporarySignedRoute('verification.verify',
+                    now()->addMinutes(config('auth.verification.expire', 60)),
+                    ['id' => $notifiable->id, 'hash' => sha1($notifiable->getEmailForVerification())],
+                    false);
+        });
 
 //        VerifyEmail::toMailUsing(function ($notifiable, $url) {
 //
