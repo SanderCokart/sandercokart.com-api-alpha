@@ -3,7 +3,6 @@
 use App\Http\Controllers\AuthController;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\URL;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,7 +31,7 @@ Route::group(['middleware' => 'auth:sanctum', 'prefix' => 'account'], function (
     Route::group(['prefix' => 'email'], function () {
         Route::post('/request', [AuthController::class, 'request_email'])->middleware('throttle:3:60');
         Route::post('/change', [AuthController::class, 'email_change'])->name('email.change');
-        Route::get('/verify/{id}/{hash}', [AuthController::class, 'verify'])->name('verification.verify')->middleware('signed');
+        Route::get('/verify/{id}/{hash}', [AuthController::class, 'verify'])->name('verification.verify')->middleware('signed:relative');
     });
     Route::post('/logout', [AuthController::class, 'logout']);
 });
@@ -40,9 +39,4 @@ Route::group(['middleware' => 'auth:sanctum', 'prefix' => 'account'], function (
 //verified routes
 Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
 
-});
-
-Route::get('/user', function () {
-    User::truncate();
-    return true;
 });

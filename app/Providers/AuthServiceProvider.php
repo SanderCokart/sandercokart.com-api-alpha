@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\URL;
 
 class AuthServiceProvider extends ServiceProvider
@@ -31,7 +32,7 @@ class AuthServiceProvider extends ServiceProvider
             return config('app.url') .
                 URL::temporarySignedRoute('verification.verify',
                     now()->addMinutes(config('auth.verification.expire', 60)),
-                    ['id' => $notifiable->id, 'hash' => sha1($notifiable->getEmailForVerification())],
+                    ['id' => $notifiable->id, 'hash' => sha1($notifiable->getEmailForVerification()), 'type' => 'verify'],
                     false);
         });
 
@@ -58,7 +59,7 @@ class AuthServiceProvider extends ServiceProvider
 //        });
 
         ResetPassword::createUrlUsing(function ($user, string $token) {
-            return env('SPA_URL') . '/account/password/reset?token=' . $token . '&email=' . $user->email;
+            return config('app.url') . '/account/password/reset?token=' . $token . '&email=' . $user->email;
         });
     }
 }
