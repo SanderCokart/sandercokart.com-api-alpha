@@ -49,6 +49,7 @@ class PasswordController extends Controller
         $validatedData = $request->validate([
             'current_password' => 'required',
             'password' => [PasswordRule::min(8)->symbols()->mixedCase()->numbers(), 'required', 'max:50', 'confirmed'],
+            'sign_out_everywhere' => 'required|boolean'
         ]);
 
 
@@ -62,16 +63,19 @@ class PasswordController extends Controller
         $user->password = bcrypt($validatedData['password']);
         $user->save();
 
-        $token = hash_hmac('sha256', Str::random(40), config('app.key'));;
+        if ($validatedData['sign_out_everywhere'])
+            DB::table('sessions')->where('user_id', $user['id'])->where('id', '!=', session()->getId())->delete();
 
+
+        $token = hash_hmac('sha256', Str::random(40), config('app.key'));;
         DB::table('password_changes')->insert([
             'user_id' => $user->getKey(),
             'token' => $token,
             'created_at' => now(),
             'expire_at' => now()->addYear()
         ]);
-
         $user->sendPasswordChangeNotification($token);
+
     }
 
     public function passwordCompromised(PasswordCompromisedRequest $request, User $user)
@@ -81,5 +85,7 @@ class PasswordController extends Controller
         $user->password = bcrypt($validatedData['password']);
 
         $user->save();
+
+        DB::table('sessions')->where('user_id', $user['id'])->delete();
     }
 }
