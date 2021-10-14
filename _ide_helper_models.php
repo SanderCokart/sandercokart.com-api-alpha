@@ -12,24 +12,6 @@
 
 namespace App\Models{
 /**
- * App\Models\EmailChangeRequest
- *
- * @property string $email
- * @property string $token
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property-read \App\Models\User|null $user
- * @method static \Illuminate\Database\Eloquent\Builder|EmailChangeRequest newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|EmailChangeRequest newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|EmailChangeRequest query()
- * @method static \Illuminate\Database\Eloquent\Builder|EmailChangeRequest whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|EmailChangeRequest whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder|EmailChangeRequest whereToken($value)
- */
-	class EmailChangeRequest extends \Eloquent {}
-}
-
-namespace App\Models{
-/**
  * App\Models\User
  *
  * @property int $id
@@ -40,7 +22,6 @@ namespace App\Models{
  * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\EmailChangeRequest|null $email_change_requests
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
  * @method static \Database\Factories\UserFactory factory(...$parameters)
@@ -56,6 +37,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  */
-	class User extends \Eloquent implements \Illuminate\Contracts\Auth\MustVerifyEmail, \App\Interfaces\CanChangeEmail {}
+	class User extends \Eloquent implements \Illuminate\Contracts\Auth\MustVerifyEmail {}
 }
 

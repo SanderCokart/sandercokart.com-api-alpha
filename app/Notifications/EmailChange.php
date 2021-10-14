@@ -3,25 +3,27 @@
 namespace App\Notifications;
 
 use Closure;
+use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Support\HtmlString;
 
 class EmailChange extends Notification
 {
 
+    use Queueable;
+
     /**
      * The callback that should be used to create the verify email URL.
      *
-     * @var \Closure|null
+     * @var Closure|null
      */
     public static $createUrlCallback;
 
     /**
      * The callback that should be used to build the mail message.
      *
-     * @var \Closure|null
+     * @var Closure|null
      */
     public static $toMailCallback;
 
@@ -69,7 +71,7 @@ class EmailChange extends Notification
      *
      * @param $url
      * @param mixed $notifiable
-     * @return \Illuminate\Notifications\Messages\MailMessage
+     * @return MailMessage
      */
     protected function buildMailMessage($url, $notifiable): MailMessage
     {

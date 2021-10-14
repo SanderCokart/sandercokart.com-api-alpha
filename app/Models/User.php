@@ -2,18 +2,19 @@
 
 namespace App\Models;
 
-use App\Interfaces\CanChangeEmail as CanChangeEmailContract;
-use App\Traits\CanChangeEmail;
-use Illuminate\Contracts\Auth\CanResetPassword;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Traits\CanChangePassword;
+use Illuminate\Auth\MustVerifyEmail;
+use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable implements MustVerifyEmail, CanChangeEmailContract, CanResetPassword
+class User extends Authenticatable implements MustVerifyEmailContract, CanResetPasswordContract
 {
-    use HasFactory, Notifiable, CanChangeEmail;
+    use HasFactory, Notifiable, MustVerifyEmail, CanChangePassword, CanResetPassword, HasApiTokens;
 
     /**
      * The attributes that are mass assignable.
@@ -44,10 +45,4 @@ class User extends Authenticatable implements MustVerifyEmail, CanChangeEmailCon
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-
-    public function email_change_requests(): HasOne
-    {
-        return $this->hasOne(EmailChangeRequest::class);
-    }
-
 }
