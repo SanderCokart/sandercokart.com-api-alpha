@@ -16,35 +16,43 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-//account without auth
-Route::group(['prefix' => 'account'], function () {
-    Route::post('/register', [AuthController::class, 'register']);//register user
-    Route::post('/login', [AuthController::class, 'login']);//login user
-    Route::get('/check', [AuthController::class, 'check']);//check if user is logged in
+
+/*NO AUTH REQUIRED*/
+Route::group([], function () {
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::get('/check', [AuthController::class, 'check']);
 
     Route::group(['prefix' => 'password'], function () {
-        Route::post('/request', [PasswordController::class, 'requestPassword'])->middleware('throttle:3:60');//forgot password request
-        Route::patch('/reset', [PasswordController::class, 'passwordReset'])->name('password.reset');//submit forgot password reset
-        Route::patch('/compromised/{user}/{token}', [PasswordController::class, 'passwordCompromised'])->name('password.compromised');//submit forgot password reset
+        Route::post('/request', [PasswordController::class, 'requestPassword'])->middleware('throttle:3:60');
+        Route::patch('/reset', [PasswordController::class, 'passwordReset'])->name('password.reset');
+        Route::patch('/compromised/{user}/{token}', [PasswordController::class, 'passwordCompromised'])->name('password.compromised');
+    });
+
+    Route::group(['prefix' => 'email'], function () {
+        Route::patch('/compromised/{user}/{token}', [EmailController::class, 'emailCompromised'])->name('email.compromised');
     });
 });
+/*NO AUTH REQUIRED*/
 
-//account with auth
+/*AUTH REQUIRED*/
 Route::group(['middleware' => 'auth:sanctum', 'prefix' => 'account'], function () {
     Route::group(['prefix' => 'email'], function () {
-//        Route::patch('/change', [EmailController::class, 'email_change']);//change email
-//        Route::get('/change/{id}/{hash}', [EmailController::class, 'change_email'])->name('email.change.undo');//change the password
+        Route::patch('/change/{user}', [EmailController::class, 'changeEmail']);
+//        Route::get('/change/{id}/{hash}', [EmailController::class, 'change_email'])->name('email.change.undo');
         Route::get('/verify/{id}/{hash}', [EmailController::class, 'verify'])->name('verification.verify')->middleware('signed:relative');
     });
 
     Route::group(['prefix' => 'password'], function () {
-        Route::patch('/change', [PasswordController::class, 'changePassword']);//change the password
+        Route::patch('/change', [PasswordController::class, 'changePassword']);
     });
 
     Route::post('/logout', [AuthController::class, 'logout']);
 });
+/*AUTH REQUIRED*/
 
-//verified routes
+/*VERIFIED ONLY*/
 Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
 
 });
+/*VERIFIED ONLY*/

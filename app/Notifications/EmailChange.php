@@ -2,40 +2,27 @@
 
 namespace App\Notifications;
 
-use Closure;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\HtmlString;
 
 class EmailChange extends Notification
 {
-
     use Queueable;
 
-    /**
-     * The callback that should be used to create the verify email URL.
-     *
-     * @var Closure|null
-     */
-    public static $createUrlCallback;
-
-    /**
-     * The callback that should be used to build the mail message.
-     *
-     * @var Closure|null
-     */
-    public static $toMailCallback;
-
-    /**
-     * @var string
-     */
     private $token;
+    private $userId;
 
-    public function __construct(string $token)
+    /**
+     * Create a new notification instance.
+     *
+     * @param string $token
+     * @param int $user
+     */
+    public function __construct(string $token, int $user)
     {
-
         $this->token = $token;
+        $this->userId = $user;
     }
 
     /**
@@ -50,77 +37,34 @@ class EmailChange extends Notification
     }
 
     /**
-     * Build the mail representation of the notification.
+     * Get the mail representation of the notification.
      *
-     * @param mixed $notifiable
      * @return MailMessage
      */
-    public function toMail($notifiable): MailMessage
+    public function toMail(): MailMessage
     {
-        $emailChangeUrl = $this->changeEmailUrl($notifiable);
+        $url = config('app.url') . route('email.compromised', [
+                'user' => $this->userId,
+                'token' => $this->token,
+            ], false);
 
-        if (static::$toMailCallback) {
-            return call_user_func(static::$toMailCallback, $notifiable, $emailChangeUrl);
-        }
-
-        return $this->buildMailMessage($emailChangeUrl, $notifiable);
-    }
-
-    /**
-     * Get the change email notification mail message for the given URL.
-     *
-     * @param $url
-     * @param mixed $notifiable
-     * @return MailMessage
-     */
-    protected function buildMailMessage($url, $notifiable): MailMessage
-    {
         return (new MailMessage)
-            ->subject('Email Change Request')
-            ->greeting('Hello ' . $notifiable->name . '!')
-            ->line('You or someone else requested for your email to be altered. If it was you, please click the button below, if not please ignore this email.')
-            ->action('Change Email Address', $url)
-            ->salutation(new HtmlString('Kind regards,<br> Sander Cokart'));
+            ->subject('Email Change Notification')
+            ->line('You are receiving this email because your email has been changed.')
+            ->line('If it wasn\'t you who changed the email, please press the button below.')
+            ->action('This was NOT me!', $url)
+            ->line('if it was indeed you, no further action is required.');
     }
 
     /**
-     * Get the change email URL for the given notifiable
+     * Get the array representation of the notification.
      *
-     * @param mixed $notifiable
-     * @return string
+     * @return array
      */
-    protected function changeEmailUrl($notifiable): string
+    public function toArray(): array
     {
-        if (static::$createUrlCallback) {
-            return call_user_func(static::$createUrlCallback, $notifiable);
-        }
-
-        return url(route('email.change', [
-            'id' => $notifiable->getKey(),
-            'token' => $this->token,
-            'hash' => sha1($notifiable->getEmailForEmailChange()),
-        ], false));
-    }
-
-    /**
-     * Set a callback that should be used when creating the change email URL.
-     *
-     * @param Closure $callback
-     * @return void
-     */
-    public static function createUrlUsing(Closure $callback): void
-    {
-        static::$createUrlCallback = $callback;
-    }
-
-    /**
-     * Set a callback that should be used when building the notification mail message.
-     *
-     * @param Closure $callback
-     * @return void
-     */
-    public static function toMailUsing(Closure $callback): void
-    {
-        static::$toMailCallback = $callback;
+        return [
+            //
+        ];
     }
 }

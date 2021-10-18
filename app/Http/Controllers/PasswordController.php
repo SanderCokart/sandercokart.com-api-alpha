@@ -74,8 +74,8 @@ class PasswordController extends Controller
             'created_at' => now(),
             'expire_at' => now()->addYear()
         ]);
-        $user->sendPasswordChangeNotification($token);
 
+        $user->sendPasswordChangeNotification($token);
     }
 
     public function passwordCompromised(PasswordCompromisedRequest $request, User $user)

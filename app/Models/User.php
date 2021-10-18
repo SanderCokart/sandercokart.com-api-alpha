@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\CanChangeEmail;
 use App\Traits\CanChangePassword;
 use Database\Factories\UserFactory;
 use Eloquent;
@@ -51,7 +52,7 @@ use Laravel\Sanctum\PersonalAccessToken;
  */
 class User extends Authenticatable implements MustVerifyEmailContract, CanResetPasswordContract
 {
-    use HasFactory, Notifiable, MustVerifyEmail, CanChangePassword, CanResetPassword, HasApiTokens;
+    use HasFactory, Notifiable, MustVerifyEmail, CanChangePassword, CanResetPassword, HasApiTokens, CanChangeEmail;
 
     /**
      * The attributes that are mass assignable.

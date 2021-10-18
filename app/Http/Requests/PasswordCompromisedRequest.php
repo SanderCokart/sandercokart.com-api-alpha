@@ -13,10 +13,10 @@ class PasswordCompromisedRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return !!DB::table('password_changes')
-            ->where('user_id', $this->route('user')->getKey())
+            ->where('user_id', (int)$this->route('user')->getKey())
             ->where('token', (string)$this->route('token'))
             ->delete();
     }
@@ -26,7 +26,7 @@ class PasswordCompromisedRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             'password' => [PasswordRule::min(8)->symbols()->mixedCase()->numbers(), 'required', 'max:50', 'confirmed']
