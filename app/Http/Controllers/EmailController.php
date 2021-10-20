@@ -29,13 +29,12 @@ class EmailController extends Controller
             'email' => 'required|email|unique:users,email'
         ]);
 
-        $oldUser = $user->replicate();
+        $oldEmail = $user->email;
 
-        $user->forceFill([
-            'email' => $validatedData['email']
-        ])->save();
+        $user->fill(['email' => $validatedData['email'], 'email_verified_at' => null])->save();
+        $user->sendEmailVerificationNotification();
 
-        $token = hash_hmac('sha256', Str::random(40), config('app.key'));;
+        $token = hash_hmac('sha256', Str::random(40), config('app.key'));
         DB::table('email_changes')->insert([
             'user_id' => $user->getKey(),
             'token' => $token,
@@ -43,14 +42,7 @@ class EmailController extends Controller
             'expire_at' => now()->addYear()
         ]);
 
-        DB::table('email_change_history')->insert([
-            'user_id' => $user->getKey(),
-            'old_email' => $oldUser->email,
-            'new_email' => $user->email,
-            'changed_at' => now()
-        ]);
-
-        Notification::route('mail', $oldUser->email)->notify(new EmailChange($token, $user->getKey()));
+        Notification::route('mail', $oldEmail)->notify(new EmailChange($token, $user->getKey()));
     }
 
     /**
@@ -66,20 +58,11 @@ class EmailController extends Controller
 
         abort_if(!DB::table('email_changes')
             ->where('user_id', (int)$request->route('user')->getKey())
-            ->where('token', (string)$request->route('token'))->delete(), '401');
+            ->where('token', (string)$request->route('token'))->delete(), '401', 'This user and token combination was not found in our systems.');
 
         $oldUser = $user->replicate();
 
-        $user->password = bcrypt($validatedData['password']);
-        $user->email = $validatedData['email'];
-        $user->save();
-
-        DB::table('email_change_history')->insert([
-            'user_id' => $user->getKey(),
-            'old_email' => $oldUser->email,
-            'new_email' => $user->email,
-            'changed_at' => now()
-        ]);
+        $user->fill(['email' => $validatedData['email'],'password' => $validatedData['password']])->save();
 
         DB::table('sessions')->where('user_id', $user['id'])->delete();
     }

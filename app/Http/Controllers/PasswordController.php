@@ -32,13 +32,7 @@ class PasswordController extends Controller
         return Password::reset(
             $validatedData,
             function ($user, $password) {
-                $user->forceFill([
-                    'password' => bcrypt($password),
-                ]);
-                /*->setRememberToken(Str::random(60))*/
-
-                $user->save();
-
+                $user->fill(['password' => bcrypt($password),])->save();
                 event(new PasswordReset($user));
             }
         );
@@ -60,8 +54,7 @@ class PasswordController extends Controller
             abort(400, 'The current password didn\'t match the password in our system, please check if you entered the current password correctly');
         }
 
-        $user->password = bcrypt($validatedData['password']);
-        $user->save();
+        $user->fill(['password' => bcrypt($validatedData['password'])])->save();
 
         if ($validatedData['sign_out_everywhere'])
             DB::table('sessions')->where('user_id', $user['id'])->where('id', '!=', session()->getId())->delete();
@@ -82,9 +75,7 @@ class PasswordController extends Controller
     {
         $validatedData = $request->validated();
 
-        $user->password = bcrypt($validatedData['password']);
-
-        $user->save();
+        $user->fill(['password' => bcrypt($validatedData['password'])])->save();
 
         DB::table('sessions')->where('user_id', $user['id'])->delete();
     }

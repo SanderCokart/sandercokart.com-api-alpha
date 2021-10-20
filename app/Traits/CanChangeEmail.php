@@ -3,8 +3,6 @@
 
 namespace App\Traits;
 
-use App\Notifications\EmailChange;
-
 trait CanChangeEmail
 {
     /**
@@ -14,8 +12,7 @@ trait CanChangeEmail
      */
     public function markEmailAsUnverified(): bool
     {
-        return $this->forceFill([
-            'email_verified_at' => null,
-        ])->save();
+        $this->email_verified_at = null;
+        return $this->save();
     }
 }

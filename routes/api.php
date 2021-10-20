@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\PasswordController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 
 /*NO AUTH REQUIRED*/
 Route::group([], function () {
-    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/register', [UserController::class, 'create']);
     Route::post('/login', [AuthController::class, 'login']);
     Route::get('/check', [AuthController::class, 'check']);
 
@@ -53,6 +54,5 @@ Route::group(['middleware' => 'auth:sanctum', 'prefix' => 'account'], function (
 
 /*VERIFIED ONLY*/
 Route::group(['middleware' => ['auth:sanctum', 'verified']], function () {
-
 });
 /*VERIFIED ONLY*/

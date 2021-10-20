@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Contracts\CanChangeEmail as CanChangeEmailContract;
 use App\Traits\CanChangeEmail;
 use App\Traits\CanChangePassword;
 use Database\Factories\UserFactory;
@@ -20,6 +21,8 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Carbon;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Sanctum\PersonalAccessToken;
+use OwenIt\Auditing\Auditable;
+use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
 
 /**
  * App\Models\User
@@ -49,10 +52,12 @@ use Laravel\Sanctum\PersonalAccessToken;
  * @method static Builder|User whereRememberToken($value)
  * @method static Builder|User whereUpdatedAt($value)
  * @mixin Eloquent
+ * @property-read Collection|\OwenIt\Auditing\Models\Audit[] $audits
+ * @property-read int|null $audits_count
  */
-class User extends Authenticatable implements MustVerifyEmailContract, CanResetPasswordContract
+class User extends Authenticatable implements MustVerifyEmailContract, CanResetPasswordContract, CanChangeEmailContract, AuditableContract
 {
-    use HasFactory, Notifiable, MustVerifyEmail, CanChangePassword, CanResetPassword, HasApiTokens, CanChangeEmail;
+    use HasFactory, Notifiable, MustVerifyEmail, CanChangePassword, CanResetPassword, HasApiTokens, CanChangeEmail, Auditable;
 
     /**
      * The attributes that are mass assignable.
