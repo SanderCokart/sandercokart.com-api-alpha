@@ -14,6 +14,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail as MustVerifyEmailContract;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Notifications\DatabaseNotificationCollection;
@@ -54,6 +55,8 @@ use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
  * @mixin Eloquent
  * @property-read Collection|\OwenIt\Auditing\Models\Audit[] $audits
  * @property-read int|null $audits_count
+ * @property-read Collection|\App\Models\Post[] $posts
+ * @property-read int|null $posts_count
  */
 class User extends Authenticatable implements MustVerifyEmailContract, CanResetPasswordContract, CanChangeEmailContract, AuditableContract
 {
@@ -88,4 +91,9 @@ class User extends Authenticatable implements MustVerifyEmailContract, CanResetP
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function posts(): HasMany
+    {
+        return $this->hasMany(Post::class);
+    }
 }

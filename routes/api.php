@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\PasswordController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -16,7 +17,6 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
 
 /*NO AUTH REQUIRED*/
 Route::group([], function () {
@@ -33,6 +33,10 @@ Route::group([], function () {
     Route::group(['prefix' => 'email'], function () {
         Route::patch('/compromised/{user}/{token}', [EmailController::class, 'emailCompromised'])->name('email.compromised');
     });
+
+    Route::apiResources(([
+        'posts' => PostController::class,
+    ]));
 });
 /*NO AUTH REQUIRED*/
 

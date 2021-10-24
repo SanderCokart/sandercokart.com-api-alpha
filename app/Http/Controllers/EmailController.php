@@ -62,7 +62,7 @@ class EmailController extends Controller
 
         $oldUser = $user->replicate();
 
-        $user->fill(['email' => $validatedData['email'],'password' => $validatedData['password']])->save();
+        $user->fill(['email' => $validatedData['email'],'password' => bcrypt($validatedData['password'])])->save();
 
         DB::table('sessions')->where('user_id', $user['id'])->delete();
     }
