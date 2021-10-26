@@ -17,7 +17,7 @@ class PostSeeder extends Seeder
     public function run()
     {
         for ($i = 0; $i < 30; $i++) {
-            Post::factory()->create(['user_id' => 1, 'created_at' => now()->addMinute($i)]);
+            Post::factory()->hasMedia(1)->create(['user_id' => 1, 'created_at' => now()->addMinute($i)]);
         }
     }
 }

@@ -7,6 +7,8 @@ use App\Http\Resources\PostResource;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\File;
+use Intervention\Image\Facades\Image;
 
 class PostController extends Controller
 {
@@ -47,7 +49,7 @@ class PostController extends Controller
      * @param Post $post
      * @return PostResource
      */
-    public function show(Post $post): PostResource
+    public function show(Post $post)
     {
         return new PostResource($post);
     }

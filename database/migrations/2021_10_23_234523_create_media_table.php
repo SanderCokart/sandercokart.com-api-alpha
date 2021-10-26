@@ -15,7 +15,13 @@ class CreateMediaTable extends Migration
     {
         Schema::create('media', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->nullableMorphs('mediable');
+            $table->string('name');
+            $table->string('original_name');
+            $table->string('mime_type');
+            $table->string('relative_path');
+            $table->string('absolute_path')->nullable();
+            $table->timestampsTz();
         });
     }
 
@@ -25,7 +31,7 @@ class CreateMediaTable extends Migration
      * @return void
      */
     public function down()
-        
+
     {
         Schema::dropIfExists('media');
     }

@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rules\Password as PasswordRule;
 
 class AuthController extends Controller
 {
@@ -25,7 +22,7 @@ class AuthController extends Controller
             abort(401, 'Incorrect email or password!');
         }
 
-        return response()->json(['user' => auth()->user(), 'id' => session()->getId()]);
+        return response()->json(['user' => auth()->user()]);
     }
 
     public function check(): JsonResponse
