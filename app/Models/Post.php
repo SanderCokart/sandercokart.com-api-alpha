@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasToggleableFilePrivacy;
 use Database\Factories\PostFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
@@ -10,6 +11,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Carbon;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
@@ -37,11 +40,11 @@ use Spatie\Sluggable\SlugOptions;
  * @method static Builder|Post whereUserId($value)
  * @mixin Eloquent
  */
-class Post extends Model
+class Post extends Model implements HasMedia
 {
-    use HasFactory, HasSlug;
+    use HasFactory, HasSlug, InteractsWithMedia;
 
-    protected $with = ['user:id,name', 'media:mediable_id,absolute_path'];
+    protected $with = ['user:id,name'];
 
     public function getSlugOptions(): SlugOptions
     {
@@ -53,10 +56,5 @@ class Post extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
-    }
-
-    public function media(): MorphMany
-    {
-        return $this->morphMany(Media::class, 'mediable');
     }
 }

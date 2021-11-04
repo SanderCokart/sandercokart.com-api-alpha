@@ -7,8 +7,6 @@ use App\Http\Resources\PostResource;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\File;
-use Intervention\Image\Facades\Image;
 
 class PostController extends Controller
 {
@@ -27,7 +25,7 @@ class PostController extends Controller
             $query->where('id', '<=', $cursor);
         })->simplePaginate($perPage)->appends(['cursor' => $cursor]));
 
-        if (!isset($cursor)) $cursor = $postCollection->collection->first()->id;
+        if (!isset($cursor)) $cursor = $postCollection->collection->first()->id ?? null;
 
         return ($postCollection)->additional(['meta' => ['cursor' => $cursor]]);
     }
