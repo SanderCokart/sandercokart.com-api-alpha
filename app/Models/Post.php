@@ -2,17 +2,14 @@
 
 namespace App\Models;
 
-use App\Traits\HasToggleableFilePrivacy;
 use Database\Factories\PostFactory;
 use Eloquent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Carbon;
-use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
@@ -39,12 +36,14 @@ use Spatie\Sluggable\SlugOptions;
  * @method static Builder|Post whereUpdatedAt($value)
  * @method static Builder|Post whereUserId($value)
  * @mixin Eloquent
+ * @property-read File|null $media
+ * @property-read \App\Models\File|null $files
  */
-class Post extends Model implements HasMedia
+class Post extends Model
 {
-    use HasFactory, HasSlug, InteractsWithMedia;
+    use HasFactory, HasSlug;
 
-    protected $with = ['user:id,name'];
+    protected $with = ['user:id,name', 'files'];
 
     public function getSlugOptions(): SlugOptions
     {
@@ -56,5 +55,10 @@ class Post extends Model implements HasMedia
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function files(): MorphOne
+    {
+        return $this->morphOne(File::class, 'fileable');
     }
 }

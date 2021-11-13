@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmailController;
+use App\Http\Controllers\FileController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\UserController;
@@ -38,21 +39,32 @@ Route::group([], function () {
         'posts' => PostController::class,
     ]));
 });
+
 /*NO AUTH REQUIRED*/
 
 /*AUTH REQUIRED*/
-Route::group(['middleware' => 'auth:sanctum', 'prefix' => 'account'], function () {
-    Route::group(['prefix' => 'email'], function () {
-        Route::patch('/change/{user}', [EmailController::class, 'changeEmail']);
-//        Route::get('/change/{id}/{hash}', [EmailController::class, 'change_email'])->name('email.change.undo');
-        Route::get('/verify/{id}/{hash}', [EmailController::class, 'verify'])->name('verification.verify')->middleware('signed:relative');
-    });
+Route::group(['middleware' => 'auth:sanctum'], function () {
 
-    Route::group(['prefix' => 'password'], function () {
-        Route::patch('/change', [PasswordController::class, 'changePassword']);
-    });
+    /*ACCOUNT RELATED*/
+    Route::group(['prefix' => 'account'], function () {
+        Route::group(['prefix' => 'email'], function () {
+            Route::patch('/change/{user}', [EmailController::class, 'changeEmail']);
+            Route::get('/verify/{id}/{hash}', [EmailController::class, 'verify'])->name('verification.verify')->middleware('signed:relative');
+        });
 
-    Route::post('/logout', [AuthController::class, 'logout']);
+        Route::group(['prefix' => 'password'], function () {
+            Route::patch('/change', [PasswordController::class, 'changePassword']);
+        });
+
+        Route::post('/logout', [AuthController::class, 'logout']);
+    });
+    /*ACCOUNT RELATED*/
+
+    /*RESOURCES WITH AUTH*/
+    Route::apiResources(([
+        'files' => FileController::class,
+    ]));
+    /*RESOURCES WITH AUTH*/
 });
 /*AUTH REQUIRED*/
 

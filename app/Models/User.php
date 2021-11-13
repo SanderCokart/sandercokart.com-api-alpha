@@ -24,6 +24,7 @@ use Laravel\Sanctum\HasApiTokens;
 use Laravel\Sanctum\PersonalAccessToken;
 use OwenIt\Auditing\Auditable;
 use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
+use OwenIt\Auditing\Models\Audit;
 
 /**
  * App\Models\User
@@ -53,9 +54,9 @@ use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
  * @method static Builder|User whereRememberToken($value)
  * @method static Builder|User whereUpdatedAt($value)
  * @mixin Eloquent
- * @property-read Collection|\OwenIt\Auditing\Models\Audit[] $audits
+ * @property-read Collection|Audit[] $audits
  * @property-read int|null $audits_count
- * @property-read Collection|\App\Models\Post[] $posts
+ * @property-read Collection|Post[] $posts
  * @property-read int|null $posts_count
  */
 class User extends Authenticatable implements MustVerifyEmailContract, CanResetPasswordContract, CanChangeEmailContract, AuditableContract
