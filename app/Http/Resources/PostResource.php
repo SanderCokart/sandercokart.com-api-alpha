@@ -23,7 +23,7 @@ class PostResource extends JsonResource
             'updatedAt' => $this->updated_at,
             'slug' => $this->slug,
             'user' => $this->whenLoaded('user'),
-            'media' => $this->whenLoaded('media')
+            'banner_image' => new FileResource($this->whenLoaded('banner_image'))
         ];
     }
 }

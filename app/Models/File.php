@@ -52,14 +52,20 @@ class File extends Model
 
     public function makePrivate(): void
     {
-        $this->is_private = true;
-        $this->save();
+        if (!$this->is_private) {
+            $this->is_private = true;
+            Storage::move('public/' . $this->relative_url, 'private/' . $this->relative_url);
+            $this->save();
+        }
     }
 
     public function makePublic(): void
     {
-        $this->is_private = false;
-        $this->save();
+        if ($this->is_private) {
+            $this->is_private = false;
+            Storage::move('private/' . $this->relative_url, 'public/' . $this->relative_url);
+            $this->save();
+        }
     }
 
     protected static function booted()

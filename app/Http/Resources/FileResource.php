@@ -22,7 +22,7 @@ class FileResource extends JsonResource
             'id' => $this['id'],
             'original_name' => $this['original_name'],
             'created_at' => $this['created_at'],
-            'relative_url' => $this->when(!$this['is_private'], $this['relative_url'])
+            'relative_url' => $this->when((boolean)$this['is_private'] === false, $this['relative_url'])
         ];
     }
 }
