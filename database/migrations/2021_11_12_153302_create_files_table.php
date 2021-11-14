@@ -19,9 +19,7 @@ class CreateFilesTable extends Migration
             $table->string('original_name');
             $table->string('mime_type');
             $table->boolean('is_private')->default(true);
-            $table->string('relative_path');
-            $table->string('public_url')->nullable();
-            $table->string('private_url')->nullable();
+            $table->string('relative_url');
             $table->timestampsTz();
         });
     }

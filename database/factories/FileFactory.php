@@ -25,8 +25,7 @@ class FileFactory extends Factory
         return [
             'original_name' => $file->getFilename(),
             'mime_type' => $file->getMimeType(),
-            'relative_path' => $path,
-            'url' => null,
+            'relative_url' => $path,
         ];
     }
 }

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\FileResource;
 use App\Models\File;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Response;
 use Storage;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -15,20 +15,20 @@ class FileController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return Collection|File[]
+     * @return AnonymousResourceCollection
      */
-    public function index()
+    public function index(): AnonymousResourceCollection
     {
-        return File::all();
+        return FileResource::collection(File::all());
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param Request $request
-     * @return File|Model
+     * @return FileResource
      */
-    public function store(Request $request)
+    public function store(Request $request): FileResource
     {
         $validatedData = $request->validate(['file' => 'image|required|max:10000']);
 
@@ -37,11 +37,11 @@ class FileController extends Controller
 
         $relativePath = Storage::disk('private')->putFileAs('uploads', $validatedData['file'], $newName);
 
-        return File::create([
-            'original_name' => $validatedData['file']->getFilename(),
+        return new FileResource(File::create([
+            'original_name' => $validatedData['file']->getClientOriginalName(),
             'mime_type' => $validatedData['file']->getMimeType(),
-            'relative_path' => $relativePath,
-        ]);
+            'relative_url' => $relativePath,
+        ]));
     }
 
     /**
@@ -53,7 +53,7 @@ class FileController extends Controller
      */
     public function show(Request $request, File $file): StreamedResponse
     {
-        return Storage::disk('private')->response($file->relative_path);
+        return Storage::disk('private')->response($file->relative_url);
     }
 
     /**
@@ -71,11 +71,12 @@ class FileController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
-     * @return Response
+     * @param Request $request
+     * @param File $file
+     * @return bool
      */
-    public function destroy($id)
+    public function destroy(Request $request, File $file): bool
     {
-        //
+        return $file->delete();
     }
 }

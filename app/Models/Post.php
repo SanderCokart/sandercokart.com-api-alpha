@@ -43,7 +43,7 @@ class Post extends Model
 {
     use HasFactory, HasSlug;
 
-    protected $with = ['user:id,name', 'files'];
+    protected $with = ['user:id,name', 'banner_image'];
 
     public function getSlugOptions(): SlugOptions
     {
@@ -57,7 +57,7 @@ class Post extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function files(): MorphOne
+    public function banner_image(): MorphOne
     {
         return $this->morphOne(File::class, 'fileable');
     }
