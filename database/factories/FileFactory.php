@@ -15,7 +15,7 @@ class FileFactory extends Factory
      */
     public function definition(): array
     {
-        $file = new File(Storage::disk('private')->path('/placeholders/600x200.png'));
+        $file = new File(Storage::disk('public')->path('/static/600x200.png'));
 
         $vars = ['$name' => uniqid(), '$ext' => $file->getExtension()];
         $newName = strtr('$name.$ext', $vars);
