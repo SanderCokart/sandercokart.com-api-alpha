@@ -45,6 +45,7 @@ Curabitur sodales at lacus sed fermentum. Sed fermentum felis semper pharetra co
         return [
             'title' => $this->faker->name(),
             'markdown' => $markdown,
+            'excerpt' => substr($markdown, 0, 100),
             'user_id' => 1,
         ];
     }
