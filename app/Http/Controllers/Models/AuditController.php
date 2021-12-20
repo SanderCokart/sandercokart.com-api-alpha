@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Models;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use OwenIt\Auditing\Models\Audit;
+use function response;
 
 class AuditController extends Controller
 {
