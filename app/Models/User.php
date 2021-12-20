@@ -63,7 +63,7 @@ use OwenIt\Auditing\Models\Audit;
  */
 class User extends Authenticatable implements MustVerifyEmailContract, CanResetPasswordContract, CanChangeEmailContract, AuditableContract
 {
-    use HasFactory, Notifiable, MustVerifyEmail, CanChangePassword, CanResetPassword, HasApiTokens, CanChangeEmail, Auditable;
+    use HasFactory, Notifiable, MustVerifyEmail, CanChangePassword, CanResetPassword, HasApiTokens, CanChangeEmail, Auditable, HasApiTokens;
 
     protected $with = ['roles'];
 

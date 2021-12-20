@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ChangeEmailController;
 use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetEmailController;
 use App\Http\Controllers\Auth\ResetPasswordController;
@@ -27,8 +28,8 @@ use Illuminate\Support\Facades\Route;
 
 /*NO AUTH REQUIRED*/
 Route::group([], function () {
-    Route::post('/register', RegisterController::class);
-    Route::post('/login', LoginController::class);
+    Route::post('/register', RegisterController::class)->name('register');
+    Route::post('/login', LoginController::class)->name('login');
 
     Route::group(['prefix' => 'password'], function () {
         Route::post('/request', [ResetPasswordController::class, 'requestPassword'])->middleware('throttle:3:60');
@@ -53,6 +54,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
     /*ACCOUNT RELATED*/
     Route::get('/user', [AuthController::class, 'user']);
+    Route::post('/logout', LogoutController::class);
 
     Route::group(['prefix' => 'account'], function () {
         Route::group(['prefix' => 'email'], function () {
@@ -64,7 +66,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
             Route::patch('/change', [ChangePasswordController::class, 'changePassword']);
         });
 
-        Route::post('/logout', [AuthController::class, 'logout']);
     });
 
     /*ACCOUNT RELATED*/
