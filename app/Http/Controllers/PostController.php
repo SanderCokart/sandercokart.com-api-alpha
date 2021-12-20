@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\PostCollection;
 use App\Http\Resources\PostResource;
+use App\Models\File;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -34,11 +35,24 @@ class PostController extends Controller
      * Store a newly created resource in storage.
      *
      * @param Request $request
-     * @return Response
+     * @return PostResource
      */
-    public function store(Request $request)
+    public function store(Request $request): PostResource
     {
-        //
+        $validatedData = $request->validate([
+            'title' => ['string', 'max:255', 'required'],
+            'excerpt' => ['string', 'required'],
+            'banner_image' => ['array', 'required'],
+            'markdown' => ['string', 'required'],
+        ]);
+
+        $validatedData['banner_image'] = $validatedData['banner_image'][0];
+
+        $post = $request->user()->posts()->create($validatedData);
+        $post->banner()->save(File::find($validatedData['banner_image']['id']));
+        $post->load('banner');
+
+        return new PostResource($post);
     }
 
     /**

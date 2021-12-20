@@ -41,6 +41,7 @@ class FileController extends Controller
             'original_name' => $validatedData['file']->getClientOriginalName(),
             'mime_type' => $validatedData['file']->getMimeType(),
             'relative_url' => $relativePath,
+            'is_private' => true,
         ]));
     }
 

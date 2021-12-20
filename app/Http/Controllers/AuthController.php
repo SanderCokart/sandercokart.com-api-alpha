@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class AuthController extends Controller
 {
@@ -22,12 +24,16 @@ class AuthController extends Controller
             abort(401, 'Incorrect email or password!');
         }
 
-        return response()->json(['user' => auth()->user()]);
+        return response()->json(['user' => new UserResource(auth()->user())]);
     }
 
-    public function check(): JsonResponse
+    public function check(Request $request): JsonResponse|Response
     {
-        return response()->json(['user' => auth()->user()]);
+        if ($user = $request->user())
+            return response()->json(['user' => new UserResource($user)]);
+        else
+            return response()->noContent();
+
     }
 
     public function logout(): void

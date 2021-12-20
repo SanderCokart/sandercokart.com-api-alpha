@@ -20,7 +20,7 @@ class FileFactory extends Factory
         $vars = ['$name' => uniqid(), '$ext' => $file->getExtension()];
         $newName = strtr('$name.$ext', $vars);
 
-        $path = Storage::disk('private')->putFileAs('uploads', $file, $newName);
+        $path = Storage::disk('public')->putFileAs('uploads', $file, $newName);
 
         return [
             'original_name' => $file->getFilename(),

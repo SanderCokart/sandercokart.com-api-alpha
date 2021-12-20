@@ -5,6 +5,7 @@ use App\Http\Controllers\EmailController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\PasswordController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -37,6 +38,7 @@ Route::group([], function () {
 
     Route::apiResources(([
         'posts' => PostController::class,
+        'roles' => RoleController::class
     ]));
 });
 
@@ -63,6 +65,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     /*RESOURCES WITH AUTH*/
     Route::apiResources(([
         'files' => FileController::class,
+        'users' => UserController::class
     ]));
     /*RESOURCES WITH AUTH*/
 });

@@ -37,8 +37,14 @@ use OwenIt\Auditing\Models\Audit;
  * @property string|null $remember_token
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property-read Collection|Audit[] $audits
+ * @property-read int|null $audits_count
  * @property-read DatabaseNotificationCollection|DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
+ * @property-read Collection|Post[] $posts
+ * @property-read int|null $posts_count
+ * @property-read Collection|Role[] $roles
+ * @property-read int|null $roles_count
  * @property-read Collection|PersonalAccessToken[] $tokens
  * @property-read int|null $tokens_count
  * @method static UserFactory factory(...$parameters)
@@ -54,41 +60,22 @@ use OwenIt\Auditing\Models\Audit;
  * @method static Builder|User whereRememberToken($value)
  * @method static Builder|User whereUpdatedAt($value)
  * @mixin Eloquent
- * @property-read Collection|Audit[] $audits
- * @property-read int|null $audits_count
- * @property-read Collection|Post[] $posts
- * @property-read int|null $posts_count
  */
 class User extends Authenticatable implements MustVerifyEmailContract, CanResetPasswordContract, CanChangeEmailContract, AuditableContract
 {
     use HasFactory, Notifiable, MustVerifyEmail, CanChangePassword, CanResetPassword, HasApiTokens, CanChangeEmail, Auditable;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
+    protected $with = ['roles'];
+
     protected $fillable = [
         'name',
         'email',
         'password',
     ];
-
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
     protected $hidden = [
         'password',
         'remember_token',
     ];
-
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
@@ -97,4 +84,10 @@ class User extends Authenticatable implements MustVerifyEmailContract, CanResetP
     {
         return $this->hasMany(Post::class);
     }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
 }

@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Storage;
  * @property int|null $fileable_id
  * @property string $original_name
  * @property string $mime_type
- * @property int $is_private
+ * @property bool $is_private
  * @property string $relative_url
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
@@ -45,6 +45,17 @@ class File extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'is_private' => 'boolean'
+    ];
+
+    protected static function booted()
+    {
+        static::deleted(function ($file) {
+            Storage::disk($file['is_private'] ? 'private' : 'public')->delete($file['relative_url']);
+        });
+    }
+
     public function fileable(): MorphTo
     {
         return $this->morphTo('fileable');
@@ -66,12 +77,5 @@ class File extends Model
             Storage::move('private/' . $this->relative_url, 'public/' . $this->relative_url);
             $this->save();
         }
-    }
-
-    protected static function booted()
-    {
-        static::deleted(function ($file) {
-            Storage::disk($file['is_private'] ? 'private' : 'public')->delete($file['relative_url']);
-        });
     }
 }

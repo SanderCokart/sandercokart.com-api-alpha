@@ -7,6 +7,8 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class PostResource extends JsonResource
 {
+    public static $wrap = false;
+
     /**
      * Transform the resource into an array.
      *
@@ -22,7 +24,7 @@ class PostResource extends JsonResource
             'createdAt' => $this->created_at,
             'updatedAt' => $this->updated_at,
             'slug' => $this->slug,
-            'user' => $this->whenLoaded('user'),
+            'author' => $this->whenLoaded('user'),
             'banner' => new FileResource($this->whenLoaded('banner'))
         ];
     }

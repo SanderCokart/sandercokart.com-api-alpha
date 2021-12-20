@@ -18,17 +18,20 @@ use Spatie\Sluggable\SlugOptions;
  *
  * @property int $id
  * @property string $title
+ * @property string $excerpt
  * @property string $markdown
- * @property string $slug
+ * @property string|null $slug
  * @property int $user_id
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
+ * @property-read File|null $banner
  * @property-read User $user
  * @method static PostFactory factory(...$parameters)
  * @method static Builder|Post newModelQuery()
  * @method static Builder|Post newQuery()
  * @method static Builder|Post query()
  * @method static Builder|Post whereCreatedAt($value)
+ * @method static Builder|Post whereExcerpt($value)
  * @method static Builder|Post whereId($value)
  * @method static Builder|Post whereMarkdown($value)
  * @method static Builder|Post whereSlug($value)
@@ -36,14 +39,13 @@ use Spatie\Sluggable\SlugOptions;
  * @method static Builder|Post whereUpdatedAt($value)
  * @method static Builder|Post whereUserId($value)
  * @mixin Eloquent
- * @property-read File|null $media
- * @property-read \App\Models\File|null $files
  */
 class Post extends Model
 {
     use HasFactory, HasSlug;
 
     protected $with = ['user:id,name', 'banner'];
+    protected $fillable = ['title', 'markdown', 'excerpt'];
 
     public function getSlugOptions(): SlugOptions
     {
