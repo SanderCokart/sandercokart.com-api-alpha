@@ -15,7 +15,7 @@ class ChangeEmailController extends Controller
     public function __invoke(Request $request, User $user): void
     {
         $validatedData = $request->validate([
-            'email' => 'required|email|unique:users,email'
+            'email' => ['required', 'email', 'unique:users,email']
         ]);
 
         $oldEmail = $user->email;
