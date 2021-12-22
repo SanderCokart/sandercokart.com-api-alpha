@@ -60,11 +60,13 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
+     * @param Request $request
+     * @param User $user
      * @return Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, User $user): Response
     {
-        //
+        $user->delete();
+        return response()->noContent();
     }
 }

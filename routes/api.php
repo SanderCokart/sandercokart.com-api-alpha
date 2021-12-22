@@ -59,7 +59,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::group(['prefix' => 'account'], function () {
         Route::group(['prefix' => 'email'], function () {
             Route::patch('/change/{user}', [ChangeEmailController::class, 'changeEmail']);
-            Route::get('/verify/{id}/{hash}', VerifyEmailController::class)->name('verification.verify')->middleware('signed:relative');
+            Route::post('/verify/{id}/{hash}', VerifyEmailController::class)->name('verification.verify')->middleware('signed:relative');
         });
 
         Route::group(['prefix' => 'password'], function () {
