@@ -20,7 +20,7 @@ class PostController extends Controller
     public function index(Request $request): PostCollection
     {
         $validatedData = $request->validate(['cursor' => 'numeric|integer', 'perPage' => 'numeric|integer|max:30']);
-        $perPage = $validatedData['perPage'] ?? 5;
+        $perPage = $validatedData['perPage'] ?? null;
         $cursor = $validatedData['cursor'] ?? null;
 
         $postCollection = new PostCollection(Post::latest()->when(isset($cursor), function ($query) use ($cursor) {

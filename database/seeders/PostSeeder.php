@@ -16,6 +16,6 @@ class PostSeeder extends Seeder
      */
     public function run()
     {
-        Post::factory()->hasBanner(1)->create();
+        Post::factory(10)->hasBanner(1)->create();
     }
 }
