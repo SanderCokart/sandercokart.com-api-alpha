@@ -7,6 +7,7 @@ use App\Http\Resources\PostCollection;
 use App\Http\Resources\PostResource;
 use App\Models\File;
 use App\Models\Post;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -53,6 +54,8 @@ class PostController extends Controller
         $post->banner()->save(File::find($validatedData['banner_image']['id']));
         $post->load('banner');
 
+        $post->banner->makePublic();
+
         return new PostResource($post);
     }
 
@@ -88,5 +91,12 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         //
+    }
+
+    public function slugs(): JsonResponse
+    {
+        return response()->json(Post::pluck('slug')->transform(function ($item, $key) {
+            return ['params' => ['slug' => $item]];
+        }));
     }
 }

@@ -41,10 +41,15 @@ Route::group([], function () {
         Route::patch('/compromised/{user}/{token}', ResetEmailController::class)->name('email.compromised');
     });
 
-    Route::apiResources(([
+    Route::get('posts/slugs', [PostController::class, 'slugs']);
+
+    Route::get('/posts/{post:slug}', [PostController::class, 'show']);
+    Route::apiResources([
         'posts' => PostController::class,
+    ], ['except' => ['show']]);
+    Route::apiResources([
         'roles' => RoleController::class
-    ]));
+    ]);
 });
 
 /*NO AUTH REQUIRED*/

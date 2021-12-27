@@ -26,6 +26,7 @@ class FileFactory extends Factory
             'original_name' => $file->getFilename(),
             'mime_type' => $file->getMimeType(),
             'relative_url' => $path,
+            'is_private' => false
         ];
     }
 }
