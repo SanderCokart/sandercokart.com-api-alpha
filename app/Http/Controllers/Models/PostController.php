@@ -7,6 +7,7 @@ use App\Http\Resources\PostCollection;
 use App\Http\Resources\PostResource;
 use App\Models\File;
 use App\Models\Post;
+use App\Models\Status;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -46,15 +47,15 @@ class PostController extends Controller
             'excerpt' => ['string', 'required'],
             'banner_image' => ['array', 'required'],
             'markdown' => ['string', 'required'],
+            'publish_now' => ['boolean', 'required'],
         ]);
 
         $validatedData['banner_image'] = $validatedData['banner_image'][0];
 
         $post = $request->user()->posts()->create($validatedData);
         $post->banner()->save(File::find($validatedData['banner_image']['id']));
-        $post->load('banner');
-
-        $post->banner->makePublic();
+        $post->status()->save(Status::find($validatedData['publish_now'] ? Status::PUBLISHED : Status::UNLISTED));
+        $post->refresh();
 
         return new PostResource($post);
     }

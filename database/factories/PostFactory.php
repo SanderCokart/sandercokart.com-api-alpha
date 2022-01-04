@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Post;
+use App\Models\Status;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class PostFactory extends Factory
@@ -31,7 +32,7 @@ Curabitur sodales at lacus sed fermentum. Sed fermentum felis semper pharetra co
 
 * List Item 1.
 * List Item 2.
- * List Subitem 1
+   * List Subitem 1
 
 | Tables   |      Are      |  Cool |
 |----------|:-------------:|------:|
@@ -48,5 +49,15 @@ Curabitur sodales at lacus sed fermentum. Sed fermentum felis semper pharetra co
             'excerpt' => substr($markdown, 0, 100),
             'user_id' => 1,
         ];
+    }
+
+    public function published(): Factory
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'published_at' => now(),
+                'status_id' => Status::PUBLISHED
+            ];
+        });
     }
 }

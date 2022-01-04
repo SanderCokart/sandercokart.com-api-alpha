@@ -2,43 +2,11 @@
 
 namespace App\Models;
 
-use Database\Factories\FileFactory;
-use Eloquent;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
-use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 
-/**
- * App\Models\File
- *
- * @property int $id
- * @property string|null $fileable_type
- * @property int|null $fileable_id
- * @property string $original_name
- * @property string $mime_type
- * @property bool $is_private
- * @property string $relative_url
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property-read Model|Eloquent $fileable
- * @method static FileFactory factory(...$parameters)
- * @method static Builder|File newModelQuery()
- * @method static Builder|File newQuery()
- * @method static Builder|File query()
- * @method static Builder|File whereCreatedAt($value)
- * @method static Builder|File whereFileableId($value)
- * @method static Builder|File whereFileableType($value)
- * @method static Builder|File whereId($value)
- * @method static Builder|File whereIsPrivate($value)
- * @method static Builder|File whereMimeType($value)
- * @method static Builder|File whereOriginalName($value)
- * @method static Builder|File whereRelativeUrl($value)
- * @method static Builder|File whereUpdatedAt($value)
- * @mixin Eloquent
- */
 class File extends Model
 {
     use HasFactory;

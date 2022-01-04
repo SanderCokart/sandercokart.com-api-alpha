@@ -18,7 +18,7 @@ class CreateFilesTable extends Migration
             $table->nullableMorphs('fileable');
             $table->string('original_name');
             $table->string('mime_type');
-            $table->boolean('is_private')->default(true);
+            $table->boolean('is_private')->nullable()->default(true);
             $table->string('relative_url');
             $table->timestampsTz();
         });

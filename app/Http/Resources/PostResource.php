@@ -22,9 +22,13 @@ class PostResource extends JsonResource
             'title' => $this->title,
             'markdown' => $this->markdown,
             'createdAt' => $this->created_at,
+            'publishedAt' => $this->published_at,
             'updatedAt' => $this->updated_at,
             'slug' => $this->slug,
-            'author' => $this->whenLoaded('user'),
+            'author' => new UserResource($this->whenLoaded('user')),
+            'status' => $this->whenLoaded('status', function () {
+                return $this->status->name;
+            }),
             'banner' => new FileResource($this->whenLoaded('banner'))
         ];
     }
