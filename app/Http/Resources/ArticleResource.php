@@ -2,34 +2,39 @@
 
 namespace App\Http\Resources;
 
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use JsonSerializable;
 
-class PostResource extends JsonResource
+class ArticleResource extends JsonResource
 {
-    public static $wrap = false;
-
     /**
      * Transform the resource into an array.
      *
      * @param Request $request
-     * @return array
+     * @return array|Arrayable|JsonSerializable
      */
-    public function toArray($request): array
+    public function toArray($request): array|JsonSerializable|Arrayable
     {
         return [
             'id' => $this->id,
             'title' => $this->title,
+            'excerpt' => $this->excerpt,
             'markdown' => $this->markdown,
             'createdAt' => $this->created_at,
             'publishedAt' => $this->published_at,
             'updatedAt' => $this->updated_at,
             'slug' => $this->slug,
-            'author' => new UserResource($this->whenLoaded('user')),
-            'status' => $this->whenLoaded('status', function () {
-                return $this->status->name;
+            'author' => $this->whenLoaded('user', function () {
+                return new AuthorResource($this->user);
             }),
-            'banner' => new FileResource($this->whenLoaded('banner'))
+            'status' => $this->whenLoaded('status', function () {
+                return new StatusResource($this->status);
+            }),
+            'banner' => $this->whenLoaded('banner', function () {
+                return new FileResource($this->banner);
+            }),
         ];
     }
 }

@@ -2,21 +2,22 @@
 
 namespace App\Http\Resources;
 
+use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
-use Illuminate\Support\Collection;
+use JsonSerializable;
 
-class PostCollection extends ResourceCollection
+class ArticleCollection extends ResourceCollection
 {
-    public static $wrap = 'posts';
+    public static $wrap = 'articles';
 
     /**
      * Transform the resource collection into an array.
      *
      * @param Request $request
-     * @return Collection
+     * @return array|Arrayable|JsonSerializable
      */
-    public function toArray($request): Collection
+    public function toArray($request): array|JsonSerializable|Arrayable
     {
         return $this->collection;
     }

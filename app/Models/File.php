@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Events\FileModelDeleted;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
@@ -17,16 +18,13 @@ class File extends Model
         'is_private' => 'boolean'
     ];
 
-    protected static function booted()
-    {
-        static::deleted(function ($file) {
-            Storage::disk($file['is_private'] ? 'private' : 'public')->delete($file['relative_url']);
-        });
-    }
+    protected $dispatchesEvents = [
+//        'deleted' => FileModelDeleted::class
+    ];
 
     public function fileable(): MorphTo
     {
-        return $this->morphTo('fileable');
+        return $this->morphTo('fileable', 'fileable_type', 'fileable_id');
     }
 
     public function makePrivate(): void

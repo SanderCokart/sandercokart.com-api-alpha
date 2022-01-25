@@ -2,10 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\Role;
 use Illuminate\Database\Seeder;
 
-class RoleSeeder extends Seeder
+class ArticleSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,9 +13,6 @@ class RoleSeeder extends Seeder
      */
     public function run()
     {
-        Role::insert([
-            ['name' => 'user'],
-            ['name' => 'admin']
-        ]);
+        //
     }
 }

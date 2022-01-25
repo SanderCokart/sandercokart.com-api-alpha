@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Models;
 
+use App\Events\PostStatusUpdated;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PostCollection;
 use App\Http\Resources\PostResource;
@@ -45,16 +46,14 @@ class PostController extends Controller
         $validatedData = $request->validate([
             'title' => ['string', 'max:255', 'required'],
             'excerpt' => ['string', 'required'],
-            'banner_image' => ['array', 'required'],
+            'banner' => ['integer', 'required'],
             'markdown' => ['string', 'required'],
-            'publish_now' => ['boolean', 'required'],
+            'status' => ['integer', 'required'],
         ]);
 
-        $validatedData['banner_image'] = $validatedData['banner_image'][0];
-
         $post = $request->user()->posts()->create($validatedData);
-        $post->banner()->save(File::find($validatedData['banner_image']['id']));
-        $post->status()->save(Status::find($validatedData['publish_now'] ? Status::PUBLISHED : Status::UNLISTED));
+        $post->banner()->sync(File::find($validatedData['banner']));
+        $post->status()->sync(Status::find($validatedData['status']));
         $post->refresh();
 
         return new PostResource($post);
@@ -66,7 +65,7 @@ class PostController extends Controller
      * @param Post $post
      * @return PostResource
      */
-    public function show(Post $post)
+    public function show(Post $post): PostResource
     {
         return new PostResource($post);
     }
@@ -78,9 +77,29 @@ class PostController extends Controller
      * @param Post $post
      * @return Response
      */
-    public function update(Request $request, Post $post)
+    public function update(Request $request, Post $post): Response
     {
-        //
+        $validatedData = $request->validate([
+            'title' => ['string', 'max:255', 'required'],
+            'excerpt' => ['string', 'required'],
+            'banner' => ['integer', 'required'],
+            'markdown' => ['string', 'required'],
+            'status' => ['integer', 'required'],
+        ]);
+
+        $post->update($validatedData);
+
+        if ($post->banner->id !== $validatedData['banner']) {
+            $post->banner()->delete();
+            $post->banner()->sync($validatedData['banner']);
+        }
+
+        if ($post->status->id !== $validatedData['status']) {
+            $post->status()->sync($validatedData['status']);
+            event(new PostStatusUpdated($post->refresh()));
+        }
+
+        return response()->noContent();
     }
 
     /**
@@ -99,5 +118,20 @@ class PostController extends Controller
         return response()->json(Post::pluck('slug')->transform(function ($item, $key) {
             return ['params' => ['slug' => $item]];
         }));
+    }
+
+    public function recent(Request $request): PostCollection
+    {
+        $validatedData = $request->validate(['cursor' => 'numeric|integer', 'perPage' => 'numeric|integer|max:30']);
+        $perPage = $validatedData['perPage'] ?? null;
+        $cursor = $validatedData['cursor'] ?? null;
+
+        $postCollection = new PostCollection(Post::published()->latest()->when(isset($cursor), function ($query) use ($cursor) {
+            $query->where('id', '<=', $cursor);
+        })->simplePaginate($perPage)->appends(['cursor' => $cursor]));
+
+        if (!isset($cursor)) $cursor = $postCollection->collection->first()->id ?? null;
+
+        return ($postCollection)->additional(['meta' => ['cursor' => $cursor]]);
     }
 }

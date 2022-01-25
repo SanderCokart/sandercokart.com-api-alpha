@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
@@ -13,7 +14,6 @@ class Post extends Model
 {
     use HasFactory, HasSlug;
 
-    protected $with = ['user:id,name', 'banner', 'status'];
     protected $fillable = ['title', 'excerpt', 'markdown'];
 
     public function getSlugOptions(): SlugOptions
@@ -30,7 +30,7 @@ class Post extends Model
 
     public function banner(): MorphOne
     {
-        return $this->morphOne(File::class, 'fileable');
+        return $this->morphOne(File::class, 'fileable', 'fileable_type', 'fileable_id');
     }
 
     public function scopePublished($query)
@@ -38,8 +38,8 @@ class Post extends Model
         return $query->where('status_id', Status::PUBLISHED);
     }
 
-    public function status(): MorphOne
+    public function statuses(): MorphToMany
     {
-        return $this->morphOne(Status::class, 'statusable');
+        return $this->morphToMany(Status::class, 'statusable');
     }
 }

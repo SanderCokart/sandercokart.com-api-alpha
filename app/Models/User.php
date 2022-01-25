@@ -34,9 +34,9 @@ class User extends Authenticatable implements MustVerifyEmailContract, CanResetP
         'email_verified_at' => 'datetime',
     ];
 
-    public function posts(): HasMany
+    public function articles(): HasMany
     {
-        return $this->hasMany(Post::class);
+        return $this->hasMany(Article::class);
     }
 
     public function roles()

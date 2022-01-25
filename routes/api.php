@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ChangeEmailController;
 use App\Http\Controllers\Auth\ChangePasswordController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\Auth\VerifyEmailController;
 use App\Http\Controllers\Models\FileController;
 use App\Http\Controllers\Models\PostController;
 use App\Http\Controllers\Models\RoleController;
+use App\Http\Controllers\Models\StatusController;
 use App\Http\Controllers\Models\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -42,11 +44,14 @@ Route::group([], function () {
     });
 
     Route::get('posts/slugs', [PostController::class, 'slugs']);
+    Route::get('posts/recent', [PostController::class, 'recent']);
 
-    Route::get('/posts/{post:slug}', [PostController::class, 'show']);
-    Route::apiResources([
-        'posts' => PostController::class,
-    ], ['except' => ['show']]);
+//    Route::get('/articles/{articleType}/{article:slug}', [ArticleController::class, 'show']);
+    Route::apiResource('articleType.articles', ArticleController::class)->except(['show']);
+//    Route::apiResources([
+//        'articleType.articles' => ArticleController::class,
+//    ], ['except' => ['show']]);
+
     Route::apiResources([
         'roles' => RoleController::class
     ]);
@@ -78,8 +83,11 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     /*RESOURCES WITH AUTH*/
     Route::apiResources(([
         'files' => FileController::class,
-        'users' => UserController::class
+        'users' => UserController::class,
     ]));
+    /*STATUS RESOURCE*/
+    Route::get('/status/post', [StatusController::class, 'post']);
+    /*STATUS RESOURCE*/
     /*RESOURCES WITH AUTH*/
 });
 /*AUTH REQUIRED*/

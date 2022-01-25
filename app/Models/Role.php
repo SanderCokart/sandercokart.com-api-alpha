@@ -10,12 +10,10 @@ class Role extends Model
 {
     use HasFactory;
 
-    const GUEST = 1;
+    const USER = 1;
     const ADMIN = 2;
-    const VERIFIED = 3;
 
     public $timestamps = false;
-
     protected $guarded = [];
     protected $hidden = ['pivot'];
 
