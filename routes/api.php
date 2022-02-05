@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\ChangeEmailController;
 use App\Http\Controllers\Auth\ChangePasswordController;
@@ -10,8 +9,8 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetEmailController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\VerifyEmailController;
+use App\Http\Controllers\Models\ArticleController;
 use App\Http\Controllers\Models\FileController;
-use App\Http\Controllers\Models\PostController;
 use App\Http\Controllers\Models\RoleController;
 use App\Http\Controllers\Models\StatusController;
 use App\Http\Controllers\Models\UserController;
@@ -43,14 +42,14 @@ Route::group([], function () {
         Route::patch('/compromised/{user}/{token}', ResetEmailController::class)->name('email.compromised');
     });
 
-    Route::get('posts/slugs', [PostController::class, 'slugs']);
-    Route::get('posts/recent', [PostController::class, 'recent']);
-
-//    Route::get('/articles/{articleType}/{article:slug}', [ArticleController::class, 'show']);
-    Route::apiResource('articleType.articles', ArticleController::class)->except(['show']);
-//    Route::apiResources([
-//        'articleType.articles' => ArticleController::class,
-//    ], ['except' => ['show']]);
+    Route::get('/articles/{articleType:name}/recent', [ArticleController::class, 'recent']);
+    Route::get('/articles/{articleType:name}/slugs', [ArticleController::class, 'slugs']);
+    Route::get('/articles/{articleType:name}', [ArticleController::class, 'index']);
+    Route::get('/articles/{articleType:name}/{article:slug}', [ArticleController::class, 'show']);
+    Route::post('/articles/{articleType:name}', [ArticleController::class, 'store']);
+    Route::patch('/articles/{articleType:name}/{article}', [ArticleController::class, 'update']);
+    Route::put('/articles/{articleType:name}/{article}', [ArticleController::class, 'update']);
+    Route::delete('/articles/{articleType:name}/{article}', [ArticleController::class, 'destroy']);
 
     Route::apiResources([
         'roles' => RoleController::class

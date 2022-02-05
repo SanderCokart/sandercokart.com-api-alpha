@@ -19,7 +19,7 @@ class File extends Model
     ];
 
     protected $dispatchesEvents = [
-//        'deleted' => FileModelDeleted::class
+        'deleted' => FileModelDeleted::class
     ];
 
     public function fileable(): MorphTo

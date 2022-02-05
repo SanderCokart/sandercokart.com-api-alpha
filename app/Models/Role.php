@@ -15,7 +15,6 @@ class Role extends Model
 
     public $timestamps = false;
     protected $guarded = [];
-    protected $hidden = ['pivot'];
 
     public function users()
     {

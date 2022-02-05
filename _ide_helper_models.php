@@ -25,10 +25,21 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\ArticleType|null $articleType
+ * @property-read \App\Models\File|null $banner
+ * @property-read mixed $status
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Status[] $statuses
+ * @property-read int|null $statuses_count
+ * @property-read \App\Models\User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder|Article courses()
  * @method static \Database\Factories\ArticleFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|Article newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Article newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Article posts()
+ * @method static \Illuminate\Database\Eloquent\Builder|Article published()
  * @method static \Illuminate\Database\Eloquent\Builder|Article query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Article thoughts()
+ * @method static \Illuminate\Database\Eloquent\Builder|Article tips()
+ * @method static \Illuminate\Database\Eloquent\Builder|Article unpublished()
  * @method static \Illuminate\Database\Eloquent\Builder|Article whereArticleTypeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Article whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Article whereExcerpt($value)
@@ -93,41 +104,6 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * App\Models\Post
- *
- * @property int $id
- * @property string $title
- * @property string $excerpt
- * @property string $markdown
- * @property string|null $slug
- * @property int $user_id
- * @property string|null $published_at
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\File|null $banner
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Status[] $statuses
- * @property-read int|null $statuses_count
- * @property-read \App\Models\User|null $user
- * @method static \Database\Factories\PostFactory factory(...$parameters)
- * @method static \Illuminate\Database\Eloquent\Builder|Post newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Post newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Post published()
- * @method static \Illuminate\Database\Eloquent\Builder|Post query()
- * @method static \Illuminate\Database\Eloquent\Builder|Post whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Post whereExcerpt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Post whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Post whereMarkdown($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Post wherePublishedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Post whereSlug($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Post whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Post whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Post whereUserId($value)
- */
-	class Post extends \Eloquent {}
-}
-
-namespace App\Models{
-/**
  * App\Models\Role
  *
  * @property int $id
@@ -150,8 +126,8 @@ namespace App\Models{
  *
  * @property int $id
  * @property string $name
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Post[] $posts
- * @property-read int|null $posts_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Article[] $articles
+ * @property-read int|null $articles_count
  * @method static \Database\Factories\StatusFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|Status newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Status newQuery()
@@ -175,12 +151,12 @@ namespace App\Models{
  * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Article[] $articles
+ * @property-read int|null $articles_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\OwenIt\Auditing\Models\Audit[] $audits
  * @property-read int|null $audits_count
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Post[] $posts
- * @property-read int|null $posts_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Role[] $roles
  * @property-read int|null $roles_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Sanctum\PersonalAccessToken[] $tokens

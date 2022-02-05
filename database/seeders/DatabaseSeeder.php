@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Post;
-use App\Models\Status;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -19,14 +19,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             StatusSeeder::class,
             RoleSeeder::class,
-            ArticleTypeSeeder::class
-//            UserSeeder::class,
-        ]);
-
-        $user = User::factory()->create([
-            'email' => 'cokart32@gmail.com',
-            'name' => 'Sander Cokart',
-            'password' => bcrypt('Pa$$w0rd'),
+            ArticleTypeSeeder::class,
+            UserSeeder::class,
         ]);
     }
 }

@@ -9,6 +9,9 @@ use JsonSerializable;
 
 class ArticleResource extends JsonResource
 {
+
+    public static $wrap = false;
+
     /**
      * Transform the resource into an array.
      *
@@ -29,7 +32,7 @@ class ArticleResource extends JsonResource
             'author' => $this->whenLoaded('user', function () {
                 return new AuthorResource($this->user);
             }),
-            'status' => $this->whenLoaded('status', function () {
+            'status' => $this->whenLoaded('statuses', function () {
                 return new StatusResource($this->status);
             }),
             'banner' => $this->whenLoaded('banner', function () {

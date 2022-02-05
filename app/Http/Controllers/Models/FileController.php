@@ -33,13 +33,13 @@ class FileController extends Controller
     {
         $validatedData = $request->validate(['file' => 'image|required|max:10000']);
 
-        $vars = ['$name' => uniqid(), '$ext' => $validatedData['file']->getClientOriginalExtension()];
+        $vars = ['$name' => uniqid(), '$ext' => $validatedData['file']->extension()];
         $newName = strtr('$name.$ext', $vars);
 
         $relativePath = Storage::disk('private')->putFileAs('uploads', $validatedData['file'], $newName);
 
         return new FileResource(File::create([
-            'original_name' => $validatedData['file']->getClientOriginalName(),
+            'original_name' => $validatedData['file']->hashName(),
             'mime_type' => $validatedData['file']->getMimeType(),
             'relative_url' => $relativePath,
             'is_private' => true,

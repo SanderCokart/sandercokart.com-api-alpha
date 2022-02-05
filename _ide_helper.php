@@ -3,7 +3,7 @@
 
 /**
  * A helper file for Laravel, to provide autocomplete information to your IDE
- * Generated for Laravel 8.76.2.
+ * Generated for Laravel 8.80.0.
  *
  * This file should not be included in your code, only analyzed by your IDE!
  *
@@ -2337,6 +2337,19 @@
                         return $instance->compileString($value);
         }
                     /**
+         * Evaluate and render a Blade string to HTML.
+         *
+         * @param string $string
+         * @param array $data
+         * @param bool $deleteCachedView
+         * @return string 
+         * @static 
+         */ 
+        public static function render($string, $data = [], $deleteCachedView = false)
+        {
+                        return \Illuminate\View\Compilers\BladeCompiler::render($string, $data, $deleteCachedView);
+        }
+                    /**
          * Strip the parentheses from the given expression.
          *
          * @param string $expression
@@ -3185,6 +3198,18 @@
         {
                         /** @var \Illuminate\Support\Testing\Fakes\BusFake $instance */
                         $instance->assertBatched($callback);
+        }
+                    /**
+         * Assert the number of batches that have been dispatched.
+         *
+         * @param int $count
+         * @return void 
+         * @static 
+         */ 
+        public static function assertBatchCount($count)
+        {
+                        /** @var \Illuminate\Support\Testing\Fakes\BusFake $instance */
+                        $instance->assertBatchCount($count);
         }
                     /**
          * Get all of the jobs matching a truth-test callback.
@@ -4433,7 +4458,7 @@
      * @method static \Illuminate\Support\Carbon now($tz = null)
      * @method static \Illuminate\Support\Carbon parse($time = null, $tz = null)
      * @method static \Illuminate\Support\Carbon setHumanDiffOptions($humanDiffOptions)
-     * @method static \Illuminate\Support\Carbon setTestNow($testNow = null)
+     * @method static void setTestNow($testNow = null)
      * @method static \Illuminate\Support\Carbon setUtf8($utf8)
      * @method static \Illuminate\Support\Carbon today($tz = null)
      * @method static \Illuminate\Support\Carbon tomorrow($tz = null)
@@ -4561,6 +4586,22 @@
         {
                         /** @var \Illuminate\Database\DatabaseManager $instance */
                         return $instance->connection($name);
+        }
+                    /**
+         * Register a custom Doctrine type.
+         *
+         * @param string $class
+         * @param string $name
+         * @param string $type
+         * @return void 
+         * @throws \Doctrine\DBAL\DBALException
+         * @throws \RuntimeException
+         * @static 
+         */ 
+        public static function registerDoctrineType($class, $name, $type)
+        {
+                        /** @var \Illuminate\Database\DatabaseManager $instance */
+                        $instance->registerDoctrineType($class, $name, $type);
         }
                     /**
          * Disconnect from the given database and remove from local cache.
@@ -7620,17 +7661,6 @@
                         return $instance->driver($driver);
         }
                     /**
-         * 
-         *
-         * @return array 
-         * @static 
-         */ 
-        public static function getChannels()
-        {
-                        /** @var \Illuminate\Log\LogManager $instance */
-                        return $instance->getChannels();
-        }
-                    /**
          * Get the default log driver name.
          *
          * @return string|null 
@@ -7677,6 +7707,17 @@
         {
                         /** @var \Illuminate\Log\LogManager $instance */
                         return $instance->forgetChannel($driver);
+        }
+                    /**
+         * Get all of the resolved log channels.
+         *
+         * @return array 
+         * @static 
+         */ 
+        public static function getChannels()
+        {
+                        /** @var \Illuminate\Log\LogManager $instance */
+                        return $instance->getChannels();
         }
                     /**
          * System is unusable.
@@ -9759,6 +9800,18 @@
                         return $instance->merge($input);
         }
                     /**
+         * Merge new input into the request's input, but only when that key is missing from the request.
+         *
+         * @param array $input
+         * @return \Illuminate\Http\Request 
+         * @static 
+         */ 
+        public static function mergeIfMissing($input)
+        {
+                        /** @var \Illuminate\Http\Request $instance */
+                        return $instance->mergeIfMissing($input);
+        }
+                    /**
          * Replace the input for the current request.
          *
          * @param array $input
@@ -11306,6 +11359,20 @@
         {
                         /** @var \Illuminate\Http\Request $instance */
                         return $instance->boolean($key, $default);
+        }
+                    /**
+         * Retrieve input from the request as a Carbon instance.
+         *
+         * @param string $key
+         * @param string|null $format
+         * @param string|null $tz
+         * @return \Illuminate\Support\Carbon|null 
+         * @static 
+         */ 
+        public static function date($key, $format = null, $tz = null)
+        {
+                        /** @var \Illuminate\Http\Request $instance */
+                        return $instance->date($key, $format, $tz);
         }
                     /**
          * Retrieve input from the request as a collection.
@@ -12981,8 +13048,6 @@
          * @param string $name
          * @param string $type
          * @return void 
-         * @throws \Doctrine\DBAL\DBALException
-         * @throws \RuntimeException
          * @static 
          */ 
         public static function registerCustomDoctrineType($class, $name, $type)
@@ -13859,6 +13924,18 @@
                         return $instance->extend($driver, $callback);
         }
                     /**
+         * Set the application instance used by the manager.
+         *
+         * @param \Illuminate\Contracts\Foundation\Application $app
+         * @return \Illuminate\Filesystem\FilesystemManager 
+         * @static 
+         */ 
+        public static function setApplication($app)
+        {
+                        /** @var \Illuminate\Filesystem\FilesystemManager $instance */
+                        return $instance->setApplication($app);
+        }
+                    /**
          * Assert that the given file exists.
          *
          * @param string|array $path
@@ -14300,6 +14377,18 @@
         {
                         /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
                         return $instance->getDriver();
+        }
+                    /**
+         * Define a custom temporary URL builder callback.
+         *
+         * @param \Closure $callback
+         * @return void 
+         * @static 
+         */ 
+        public static function buildTemporaryUrlsUsing($callback)
+        {
+                        /** @var \Illuminate\Filesystem\FilesystemAdapter $instance */
+                        $instance->buildTemporaryUrlsUsing($callback);
         }
                     /**
          * Register a custom macro.
@@ -15096,6 +15185,21 @@
         {
                         /** @var \Illuminate\View\Factory $instance */
                         return $instance->renderWhen($condition, $view, $data, $mergeData);
+        }
+                    /**
+         * Get the rendered content of the view based on the negation of a given condition.
+         *
+         * @param bool $condition
+         * @param string $view
+         * @param \Illuminate\Contracts\Support\Arrayable|array $data
+         * @param array $mergeData
+         * @return string 
+         * @static 
+         */ 
+        public static function renderUnless($condition, $view, $data = [], $mergeData = [])
+        {
+                        /** @var \Illuminate\View\Factory $instance */
+                        return $instance->renderUnless($condition, $view, $data, $mergeData);
         }
                     /**
          * Get the rendered contents of a partial from a loop.
@@ -17592,18 +17696,6 @@ namespace  {
             }
              
                 /**
-             * Explains the query.
-             *
-             * @return \Illuminate\Support\Collection 
-             * @static 
-             */ 
-            public static function explain()
-            {
-                                /** @var \Illuminate\Database\Eloquent\Builder $instance */
-                                return $instance->explain();
-            }
-             
-                /**
              * Chunk the results of the query.
              *
              * @param int $count
@@ -18873,6 +18965,35 @@ namespace  {
             }
              
                 /**
+             * Add a "where fulltext" clause to the query.
+             *
+             * @param string|string[] $columns
+             * @param string $value
+             * @param string $boolean
+             * @return \Illuminate\Database\Query\Builder 
+             * @static 
+             */ 
+            public static function whereFullText($columns, $value, $options = [], $boolean = 'and')
+            {
+                                /** @var \Illuminate\Database\Query\Builder $instance */
+                                return $instance->whereFullText($columns, $value, $options, $boolean);
+            }
+             
+                /**
+             * Add a "or where fulltext" clause to the query.
+             *
+             * @param string|string[] $columns
+             * @param string $value
+             * @return \Illuminate\Database\Query\Builder 
+             * @static 
+             */ 
+            public static function orWhereFullText($columns, $value, $options = [])
+            {
+                                /** @var \Illuminate\Database\Query\Builder $instance */
+                                return $instance->orWhereFullText($columns, $value, $options);
+            }
+             
+                /**
              * Add a "group by" clause to the query.
              *
              * @param array|string $groups
@@ -19707,6 +19828,18 @@ namespace  {
             {
                                 /** @var \Illuminate\Database\Query\Builder $instance */
                                 return $instance->dd();
+            }
+             
+                /**
+             * Explains the query.
+             *
+             * @return \Illuminate\Support\Collection 
+             * @static 
+             */ 
+            public static function explain()
+            {
+                                /** @var \Illuminate\Database\Query\Builder $instance */
+                                return $instance->explain();
             }
              
                 /**

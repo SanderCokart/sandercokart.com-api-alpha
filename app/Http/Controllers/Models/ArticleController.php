@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Models;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreArticleRequest;
 use App\Http\Requests\UpdateArticleRequest;
 use App\Http\Resources\ArticleCollection;
@@ -11,7 +12,7 @@ use App\Models\ArticleType;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Cache;
+use function response;
 
 class ArticleController extends Controller
 {
@@ -22,32 +23,26 @@ class ArticleController extends Controller
      * @return ArticleCollection
      * @throws Exception
      */
-    public function index(Request $request): ArticleCollection
+    public function index(Request $request, ArticleType $articleType): ArticleCollection
     {
-
-        $articleTypes = Cache::get('article_types', function () {
-            $result = ArticleType::pluck('name')->toArray();
-            Cache::put('article_types', $result);
-            return $result;
-        });
-
-        dd($articleTypes);
-
         $validatedData = $request->validate([
-            'page' => 'integer|min:1',
-            'per_page' => 'integer|min:1|max:100',
-            'sort_by' => 'string|in:id,title,created_at,updated_at',
-            'sort_direction' => 'string|in:asc,desc',
-            'article_type' => 'string|in:' . implode(',', ArticleType::pluck('name')->toArray()),
+            'perPage' => 'integer|min:1|max:100',
+            'sortBy' => 'string|in:id,title,created_at,updated_at',
+            'sortDirection' => 'string|in:asc,desc',
+            'articleType' => 'string|in:' . implode(',', ArticleType::pluck('name')->toArray()),
         ]);
 
-        //set default values
-        $page = $validatedData['page'] ?? 1;
-        $perPage = $validatedData['per_page'] ?? 100;
-        $sortBy = $validatedData['sort_by'] ?? 'created_at';
-        $sortDirection = $validatedData['sort_direction'] ?? 'desc';
+        $perPage = $validatedData['perPage'] ?? 100;
+        $sortBy = $validatedData['sortBy'] ?? 'id';
+        $sortDirection = $validatedData['sortDirection'] ?? 'desc';
 
-        return new ArticleCollection(Article::with('statuses', 'articleType', 'user')->orderBy($sortBy, $sortDirection)->cursorPaginate($perPage));
+        return new ArticleCollection(
+            Article::with(['user', 'statuses', 'banner'])
+                ->where('article_type_id', $articleType->id)
+                ->orderBy($sortBy, $sortDirection)
+                ->paginate($perPage)
+                ->withQueryString()
+        );
     }
 
     /**
@@ -76,12 +71,13 @@ class ArticleController extends Controller
     /**
      * Display the specified resource.
      *
+     * @param Request $request
+     * @param ArticleType $articleType
      * @param Article $article
      * @return ArticleResource
      */
-    public function show(Article $article, ArticleType $articleType): ArticleResource
+    public function show(Request $request, ArticleType $articleType, Article $article): ArticleResource
     {
-        dd($articleType);
         return new ArticleResource($article);
     }
 
@@ -104,6 +100,15 @@ class ArticleController extends Controller
         ]);
 
         $article->update($validatedData);
+
+        if ($article->status->id !== $validatedData['status']) {
+            $article->statuses()->sync($validatedData['status']);
+            $article->togglePrivacy();
+        }
+
+        if ($article->banner->id !== $validatedData['banner']) {
+            $article->banner()->save($validatedData['banner']);
+        }
     }
 
     /**
@@ -115,5 +120,14 @@ class ArticleController extends Controller
     public function destroy(Article $article)
     {
         //
+    }
+
+    public function recent(Request $request, ArticleType $articleType): ArticleCollection
+    {
+        return new ArticleCollection(Article::with(['user', 'statuses', 'banner'])
+            ->published()
+            ->whereBelongsTo($articleType)
+            ->orderBy('id', 'desc')
+            ->cursorPaginate(5));
     }
 }

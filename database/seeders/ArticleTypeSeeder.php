@@ -15,10 +15,10 @@ class ArticleTypeSeeder extends Seeder
     public function run()
     {
         ArticleType::insert([
-            ['name' => 'post'],
-            ['name' => 'tip'],
-            ['name' => 'course'],
-            ['name' => 'thought']
+            ['name' => 'posts'],
+            ['name' => 'tips'],
+            ['name' => 'courses'],
+            ['name' => 'thoughts']
         ]);
     }
 }

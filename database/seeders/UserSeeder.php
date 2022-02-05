@@ -20,7 +20,6 @@ class UserSeeder extends Seeder
         User::factory()
             ->hasAttached(Role::find([
                 Role::ADMIN,
-                Role::VERIFIED,
             ]))
             ->create([
                 'email' => 'cokart32@gmail.com',
