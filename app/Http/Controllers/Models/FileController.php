@@ -31,7 +31,7 @@ class FileController extends Controller
      */
     public function store(Request $request): FileResource
     {
-        $validatedData = $request->validate(['file' => 'image|required|max:10000']);
+        $validatedData = $request->validate(['file' => 'file|image|required|size:50000']);
 
         $vars = ['$name' => uniqid(), '$ext' => $validatedData['file']->extension()];
         $newName = strtr('$name.$ext', $vars);

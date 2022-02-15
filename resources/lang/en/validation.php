@@ -135,8 +135,8 @@ return [
     */
 
     'custom' => [
-        'attribute-name' => [
-            'rule-name' => 'custom-message',
+        'email' => [
+            'exists' => 'This :attribute does not exist.'
         ],
     ],
 
