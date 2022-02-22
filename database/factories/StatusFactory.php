@@ -11,7 +11,7 @@ class StatusFactory extends Factory
      *
      * @return array
      */
-    public function definition()
+    public function definition(): array
     {
         return [
             'name' =>  $this->faker->words(1, true),
