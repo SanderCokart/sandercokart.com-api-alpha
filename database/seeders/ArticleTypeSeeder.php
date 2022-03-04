@@ -16,9 +16,8 @@ class ArticleTypeSeeder extends Seeder
     {
         ArticleType::insert([
             ['name' => 'posts'],
-            ['name' => 'tips'],
+            ['name' => 'tips-&-tutorials'],
             ['name' => 'courses'],
-            ['name' => 'thoughts']
         ]);
     }
 }

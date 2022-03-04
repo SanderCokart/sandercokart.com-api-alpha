@@ -13,7 +13,6 @@ class ArticleType extends Model
     const POST = 1;
     const TIP = 2;
     const COURSE = 3;
-    const THOUGHT = 4;
 
     public function articles(): HasMany
     {

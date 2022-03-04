@@ -114,20 +114,26 @@ class ArticleController extends Controller
     /**
      * Remove the specified resource from storage.
      *
+     * @param ArticleType $articleType
      * @param Article $article
      * @return Response
      */
-    public function destroy(Article $article)
+    public function destroy(ArticleType $articleType, Article $article)
     {
-        //
+        $article->delete();
+        return response()->noContent();
     }
 
     public function recent(Request $request, ArticleType $articleType): ArticleCollection
     {
+        $request->validate([
+            'articleType' => 'string|in:posts,tips-&-tutorials'
+        ]);
+
         return new ArticleCollection(Article::with(['user', 'statuses', 'banner'])
             ->published()
             ->whereBelongsTo($articleType)
             ->orderBy('id', 'desc')
-            ->cursorPaginate(5));
+            ->cursorPaginate(10));
     }
 }

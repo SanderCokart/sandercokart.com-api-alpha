@@ -46,10 +46,10 @@ Route::group([], function () {
     Route::get('/articles/{articleType:name}/slugs', [ArticleController::class, 'slugs']);
     Route::get('/articles/{articleType:name}', [ArticleController::class, 'index']);
     Route::get('/articles/{articleType:name}/{article:slug}', [ArticleController::class, 'show']);
-    Route::post('/articles/{articleType:name}', [ArticleController::class, 'store']);
-    Route::patch('/articles/{articleType:name}/{article}', [ArticleController::class, 'update']);
-    Route::put('/articles/{articleType:name}/{article}', [ArticleController::class, 'update']);
-    Route::delete('/articles/{articleType:name}/{article}', [ArticleController::class, 'destroy']);
+    Route::post('/articles', [ArticleController::class, 'store']);
+    Route::patch('/articles/{article}', [ArticleController::class, 'update']);
+    Route::put('/articles/{article}', [ArticleController::class, 'update']);
+    Route::delete('/articles/{article}', [ArticleController::class, 'destroy']);
 
     Route::apiResources([
         'roles' => RoleController::class
