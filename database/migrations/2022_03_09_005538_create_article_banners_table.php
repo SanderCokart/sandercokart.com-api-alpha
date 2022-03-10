@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      *
@@ -13,9 +12,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('statusables', function (Blueprint $table) {
-            $table->integer('status_id');
-            $table->nullableMorphs('statusable');
+        Schema::create('article_banners', function (Blueprint $table) {
+            $table->id();
+            $table->string('relative_url');
         });
     }
 
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('statusables');
+        Schema::dropIfExists('article_banners');
     }
 };

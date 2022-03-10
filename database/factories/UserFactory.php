@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Models\Role;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class UserFactory extends Factory
@@ -33,5 +35,31 @@ class UserFactory extends Factory
                 'email_verified_at' => null,
             ];
         });
+    }
+
+    public function createAdmin()
+    {
+        return User::factory()
+            ->hasAttached(Role::find([
+                Role::ADMIN,
+            ]))
+            ->create([
+                'email' => $this->faker->unique()->safeEmail(),
+                'name' => $this->faker->name(),
+                'password' => bcrypt('Pa$$w0rd'),
+            ]);
+    }
+
+    public function createUser()
+    {
+        return User::factory()
+            ->hasAttached(Role::find([
+                Role::USER,
+            ]))
+            ->create([
+                'email' => $this->faker->unique()->safeEmail(),
+                'name' => $this->faker->name(),
+                'password' => bcrypt('Pa$$w0rd'),
+            ]);
     }
 }

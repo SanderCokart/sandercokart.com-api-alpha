@@ -1,5 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="serve" type="PhpLocalRunConfigurationType" factoryName="PHP Console" activateToolWindowBeforeRun="false" path="$PROJECT_DIR$/api/artisan" scriptParameters="serve --host 192.168.2.160 --port 80">
+    <CommandLine workingDirectory="$PROJECT_DIR$/api" />
     <method v="2" />
   </configuration>
 </component>

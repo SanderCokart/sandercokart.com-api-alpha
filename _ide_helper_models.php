@@ -18,28 +18,23 @@ namespace App\Models{
  * @property string $title
  * @property string $excerpt
  * @property string $markdown
- * @property string|null $slug
+ * @property string $slug
  * @property string|null $published_at
- * @property int|null $user_id
- * @property int|null $article_type_id
+ * @property int $user_id
+ * @property int $article_banner_id
+ * @property int $article_type_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\ArticleType|null $articleType
- * @property-read \App\Models\File|null $banner
- * @property-read mixed $status
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Status[] $statuses
- * @property-read int|null $statuses_count
- * @property-read \App\Models\User|null $user
- * @method static \Illuminate\Database\Eloquent\Builder|Article courses()
+ * @property-read \App\Models\User|null $author
+ * @property-read \App\Models\ArticleBanner $banner
+ * @property-read \App\Models\ArticleType|null $type
+ * @method static \Illuminate\Database\Eloquent\Builder|Article drafts()
  * @method static \Database\Factories\ArticleFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|Article newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Article newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Article posts()
  * @method static \Illuminate\Database\Eloquent\Builder|Article published()
  * @method static \Illuminate\Database\Eloquent\Builder|Article query()
- * @method static \Illuminate\Database\Eloquent\Builder|Article thoughts()
- * @method static \Illuminate\Database\Eloquent\Builder|Article tips()
- * @method static \Illuminate\Database\Eloquent\Builder|Article unpublished()
+ * @method static \Illuminate\Database\Eloquent\Builder|Article whereArticleBannerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Article whereArticleTypeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Article whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Article whereExcerpt($value)
@@ -56,12 +51,30 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\ArticleBanner
+ *
+ * @property int $id
+ * @property string $relative_url
+ * @property-read \App\Models\Article|null $article
+ * @method static \Database\Factories\ArticleBannerFactory factory(...$parameters)
+ * @method static \Illuminate\Database\Eloquent\Builder|ArticleBanner newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ArticleBanner newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ArticleBanner query()
+ * @method static \Illuminate\Database\Eloquent\Builder|ArticleBanner whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ArticleBanner whereRelativeUrl($value)
+ */
+	class ArticleBanner extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\ArticleType
  *
  * @property int $id
  * @property string $name
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Article[] $articles
  * @property-read int|null $articles_count
+ * @method static \Database\Factories\ArticleTypeFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|ArticleType newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ArticleType newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ArticleType query()
@@ -122,32 +135,14 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * App\Models\Status
- *
- * @property int $id
- * @property string $name
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Article[] $articles
- * @property-read int|null $articles_count
- * @method static \Database\Factories\StatusFactory factory(...$parameters)
- * @method static \Illuminate\Database\Eloquent\Builder|Status newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Status newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|Status query()
- * @method static \Illuminate\Database\Eloquent\Builder|Status whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Status whereName($value)
- */
-	class Status extends \Eloquent {}
-}
-
-namespace App\Models{
-/**
  * App\Models\User
  *
  * @property int $id
  * @property string $name
  * @property string $email
  * @property \Illuminate\Support\Carbon|null $email_verified_at
- * @property string $password
  * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property string $password
  * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at

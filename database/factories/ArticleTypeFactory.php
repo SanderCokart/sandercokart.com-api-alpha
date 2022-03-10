@@ -2,19 +2,23 @@
 
 namespace Database\Factories;
 
+use App\Models\ArticleType;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class StatusFactory extends Factory
+/**
+ * @extends Factory
+ */
+class ArticleTypeFactory extends Factory
 {
     /**
      * Define the model's default state.
      *
      * @return array
      */
-    public function definition(): array
+    public function definition()
     {
         return [
-            'name' =>  $this->faker->words(1, true),
+            'name' => $this->faker->word,
         ];
     }
 }

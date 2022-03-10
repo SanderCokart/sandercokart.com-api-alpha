@@ -18,10 +18,11 @@ return new class extends Migration
             $table->string('title');
             $table->text('excerpt');
             $table->longText('markdown');
-            $table->string('slug')->nullable();
+            $table->string('slug');
             $table->timeStamp('published_at')->nullable();
-            $table->foreignId('user_id')->nullable();
-            $table->foreignId('article_type_id')->nullable();
+            $table->foreignId('user_id');
+            $table->foreignId('article_banner_id')->unique();
+            $table->foreignId('article_type_id');
             $table->timestampsTz();
         });
     }

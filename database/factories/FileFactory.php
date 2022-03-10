@@ -20,7 +20,10 @@ class FileFactory extends Factory
         $vars = ['$name' => uniqid(), '$ext' => $file->getExtension()];
         $newName = strtr('$name.$ext', $vars);
 
-        $path = Storage::disk('private')->putFileAs('uploads', $file, $newName);
+        //if env is testing put in 'testing' otherwise in 'uploads'
+        $directoryToStoreFile = config('app.env') === 'testing' ? 'testing' : 'uploads';
+
+        $path = Storage::disk('private')->putFileAs($directoryToStoreFile, $file, $newName);
 
         return [
             'original_name' => $file->getFilename(),

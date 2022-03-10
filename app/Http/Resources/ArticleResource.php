@@ -29,11 +29,8 @@ class ArticleResource extends JsonResource
             'publishedAt' => $this->published_at,
             'updatedAt' => $this->updated_at,
             'slug' => $this->slug,
-            'author' => $this->whenLoaded('user', function () {
-                return new AuthorResource($this->user);
-            }),
-            'status' => $this->whenLoaded('statuses', function () {
-                return new StatusResource($this->status);
+            'author' => $this->whenLoaded('author', function () {
+                return new AuthorResource($this->author);
             }),
             'banner' => $this->whenLoaded('banner', function () {
                 return new FileResource($this->banner);

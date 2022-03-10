@@ -2,14 +2,8 @@
 
 namespace App\Providers;
 
-use App\Events\ArticleTypeCreated;
-use App\Events\ArticleTypeDeleted;
-use App\Events\ArticleTypeUpdated;
 use App\Events\FileModelDeleted;
-use App\Events\PostStatusUpdated;
-use App\Listeners\ArticleTypeCacheListener;
 use App\Listeners\DeleteFile;
-use App\Listeners\ArticleStatusListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 class EventServiceProvider extends ServiceProvider
@@ -22,19 +16,6 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         FileModelDeleted::class => [
             DeleteFile::class,
-        ],
-        PostStatusUpdated::class => [
-            ArticleStatusListener::class
-        ],
-        ArticleTypeCreated::class => [
-            ArticleTypeCacheListener::class
-        ],
-        ArticleTypeUpdated::class => [
-            ArticleTypeCacheListener::class
-
-        ],
-        ArticleTypeDeleted::class => [
-            ArticleTypeCacheListener::class
         ],
     ];
 
