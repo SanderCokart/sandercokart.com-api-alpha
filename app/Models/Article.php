@@ -12,7 +12,14 @@ use Spatie\Sluggable\SlugOptions;
 
 class Article extends Model
 {
-    protected $guarded = [];
+    protected $fillable = [
+        'title',
+        'excerpt',
+        'markdown',
+        'article_banner_id',
+        'article_type_id',
+        'published_at',
+    ];
 
     use HasFactory, HasSlug;
 
@@ -56,9 +63,9 @@ class Article extends Model
         return $query->whereNull('published_at');
     }
 
-    public function IsPublished(Builder $query): Builder
+    public function IsPublished(): bool
     {
-        return $query->whereNotNull('published_at');
+        return !!$this->published_at;
     }
 
     //</editor-fold>

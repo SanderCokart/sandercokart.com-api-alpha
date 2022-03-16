@@ -15,19 +15,19 @@ use App\Http\Controllers\Models\{ArticleController,
     UserController
 };
 
-Route::get('/user', [AuthController::class, 'user']);
-Route::post('/logout', LogoutController::class);
-
 Route::group(['prefix' => 'account'], function () {
     Route::group(['prefix' => 'email'], function () {
         Route::patch('/change/{user}', ChangeEmailController::class);
         Route::post('/verify/{id}/{hash}', VerifyEmailController::class)->name('verification.verify')->middleware('signed:relative');
+        Route::get('/verify/retry', [VerifyEmailController::class, 'retry']);
     });
 
     Route::group(['prefix' => 'password'], function () {
         Route::patch('/change', ChangePasswordController::class);
     });
 
+    Route::get('/user', AuthController::class);
+    Route::post('/logout', LogoutController::class);
 });
 
 /* Resources */

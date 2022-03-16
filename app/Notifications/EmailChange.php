@@ -2,52 +2,47 @@
 
 namespace App\Notifications;
 
-use Illuminate\Bus\Queueable;
+use Closure;
+use Illuminate\Notifications\AnonymousNotifiable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class EmailChange extends Notification
 {
-    use Queueable;
+    public static ?Closure $createUrlCallback = null;
+    public static ?Closure $toMailCallback = null;
+    private string $token;
 
-    private $token;
-    private $userId;
-
-    /**
-     * Create a new notification instance.
-     *
-     * @param string $token
-     * @param int $user
-     */
-    public function __construct(string $token, int $user)
+    public function __construct(string $token)
     {
         $this->token = $token;
-        $this->userId = $user;
     }
 
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @param mixed $notifiable
-     * @return array
-     */
-    public function via($notifiable): array
+    public static function createUrlUsing(Closure $callback): void
+    {
+        static::$createUrlCallback = $callback;
+    }
+
+    public static function toMailUsing(Closure $callback): void
+    {
+        static::$toMailCallback = $callback;
+    }
+
+    public function via(AnonymousNotifiable $notifiable): array
     {
         return ['mail'];
     }
 
-    /**
-     * Get the mail representation of the notification.
-     *
-     * @return MailMessage
-     */
-    public function toMail(): MailMessage
+    public function toMail(AnonymousNotifiable $notifiable): MailMessage
     {
-        $url = config('app.url') . route('email.compromised', [
-                'user' => $this->userId,
-                'token' => $this->token,
-            ], false);
+        if (static::$toMailCallback) {
+            return call_user_func(static::$toMailCallback, $notifiable, $this->token);
+        }
+        return $this->buildMailMessage($this->emailChangeUrl($notifiable));
+    }
 
+    public function buildMailMessage(string $url): MailMessage
+    {
         return (new MailMessage)
             ->subject('Email Change Notification')
             ->line('You are receiving this email because your email has been changed.')
@@ -56,15 +51,25 @@ class EmailChange extends Notification
             ->line('if it was indeed you, no further action is required.');
     }
 
+    public function emailChangeUrl(AnonymousNotifiable $notifiable): string
+    {
+        if (static::$createUrlCallback) {
+            return call_user_func(static::$createUrlCallback, $notifiable, $this->token);
+        }
+
+        return route('email.reset', ['token' => $this->token, 'user' => $notifiable->getKey()]);
+    }
+
     /**
      * Get the array representation of the notification.
      *
+     * @param AnonymousNotifiable $notifiable
      * @return array
      */
-    public function toArray(): array
+    public function toArray(AnonymousNotifiable $notifiable): array
     {
         return [
-            //
+
         ];
     }
 }

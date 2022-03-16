@@ -3,10 +3,10 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Password as PasswordRule;
 
-class PasswordCompromisedRequest extends FormRequest
+class RegisterRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -15,10 +15,7 @@ class PasswordCompromisedRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return !!DB::table('password_changes')
-            ->where('user_id', (int)$this->query('user'))
-            ->where('token', (string)$this->query('token'))
-            ->delete();
+        return is_null(Auth::user());
     }
 
     /**
@@ -29,9 +26,9 @@ class PasswordCompromisedRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'password' => [PasswordRule::min(8)->symbols()->mixedCase()->numbers(), 'required', 'max:50', 'confirmed'],
-            'token' => 'required|string',
-            'user' => 'required|integer',
+            'name' => 'required|string|max:255|min:2',
+            'email' => 'required|string||email|unique:users',
+            'password' => ['required', 'string', 'max:50', PasswordRule::min(8)->symbols()->mixedCase()->numbers()],
         ];
     }
 }

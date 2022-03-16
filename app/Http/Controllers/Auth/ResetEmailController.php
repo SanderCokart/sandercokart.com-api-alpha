@@ -10,6 +10,11 @@ use Illuminate\Validation\Rules\Password as PasswordRule;
 
 class ResetEmailController extends Controller
 {
+    /**
+     * @param Request $request
+     * @param User $user
+     * @return void
+     */
     public function __invoke(Request $request, User $user): void
     {
         $validatedData = $request->validate([

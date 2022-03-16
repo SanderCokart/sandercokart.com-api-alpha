@@ -32,7 +32,7 @@ class ArticleController extends Controller
         ]);
 
         /* Get ArticleType id by name */
-        $articleTypes = Cache::remember('articleTypes', 0, function () {
+        $articleTypes = Cache::remember('articleTypes', null, function () {
             return ArticleType::all();
         });
         $articleTypeId = $articleTypes->where('name', $articleTypeName)->firstOrFail()->id;
@@ -45,13 +45,15 @@ class ArticleController extends Controller
 
         /* Cache URLs */
         $cachedUrls = Cache::get('article-urls', []);
-        if (!in_array($request->fullUrl(), $cachedUrls)) {
+        $generatedCacheUrl = $request->fullUrl() . '&canViewAll=' . !!$request->user()?->can('viewAll', Article::class);
+        if (!in_array($generatedCacheUrl, $cachedUrls)) {
             Cache::put('article-urls', [...$cachedUrls, $request->fullUrl()]);
         }
 
-        return Cache::remember($request->fullUrl(), null, function () use ($articleTypeId, $perPage, $sortBy, $sortDirection) {
+        return Cache::remember($generatedCacheUrl, null, function () use ($request, $articleTypeId, $perPage, $sortBy, $sortDirection) {
             return new ArticleCollection(
                 Article::where('article_type_id', $articleTypeId)
+                    ->when(!$request->user()?->can('viewAll', Article::class), fn($query) => $query->published())
                     ->orderBy($sortBy, $sortDirection)
                     ->paginate($perPage)
                     ->withQueryString()
@@ -73,11 +75,17 @@ class ArticleController extends Controller
             'title' => ['string', 'max:255', 'required'],
             'excerpt' => ['string', 'required'],
             'markdown' => ['string', 'required'],
-            'article_banner_id' => ['integer', 'required', 'exists:files,id'],
+            'article_banner_id' => ['integer', 'required', 'exists:article_banners,id'],
             'article_type_id' => ['integer', 'required', 'exists:article_types,id'],
+            'published' => ['boolean', 'required'],
         ]);
 
-        $request->user()->articles()->create($validatedData);
+        $article = $request->user()->articles()->create($validatedData);
+
+        if ($validatedData['published']) {
+            $article->publish();
+            return response()->json(['message' => 'Article created and published successfully.'], Response::HTTP_CREATED);
+        }
 
         return response()->json(['message' => 'Article created successfully.'], Response::HTTP_CREATED);
     }
@@ -104,27 +112,24 @@ class ArticleController extends Controller
      * @param Request $request
      * @param Article $article
      * @return JsonResponse
+     * @throws AuthorizationException
      */
     public function update(Request $request, Article $article): JsonResponse
     {
+        $this->authorize('update', $article);
         $validatedData = $request->validate([
             'title' => ['string', 'max:255', 'required'],
             'excerpt' => ['string', 'required'],
-            'banner' => ['integer', 'required'],
             'markdown' => ['string', 'required'],
-            'status' => ['integer', 'required'],
-            'publish' => ['boolean', 'required'],
+            'article_banner_id' => ['integer', 'required', 'exists:article_banners,id'],
+            'article_type_id' => ['integer', 'required', 'exists:article_types,id'],
+            'published' => ['boolean', 'required'],
         ]);
 
         $article->update($validatedData);
 
-        if (!$article->published_at && $validatedData['publish']) $article->publish();
-        if ($article->published_at && !$validatedData['publish']) $article->unPublish();
-
-
-        if ($article->banner->id !== $validatedData['banner']) {
-            $article->banner()->save($validatedData['banner']);
-        }
+        if (!$article->published_at && $validatedData['published']) $article->publish();
+        if ($article->published_at && !$validatedData['published']) $article->unPublish();
 
         return response()->json(['message' => 'Article updated successfully.'], Response::HTTP_OK);
     }
@@ -135,9 +140,11 @@ class ArticleController extends Controller
      * @param ArticleType $articleType
      * @param Article $article
      * @return JsonResponse
+     * @throws AuthorizationException
      */
     public function destroy(ArticleType $articleType, Article $article): JsonResponse
     {
+        $this->authorize('delete', $article);
         $article->delete();
         return response()->json(['message' => 'Article deleted successfully.'], Response::HTTP_OK);
     }

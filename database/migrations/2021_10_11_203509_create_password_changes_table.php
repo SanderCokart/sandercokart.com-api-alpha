@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('password_changes', function (Blueprint $table) {
             $table->string('user_id')->index();
             $table->string('token');
-            $table->timestampTz('created_at')->nullable();
-            $table->timestampTz('expire_at')->nullable();
+            $table->timestampTz('created_at');
+            $table->timestampTz('expire_at');
         });
     }
 

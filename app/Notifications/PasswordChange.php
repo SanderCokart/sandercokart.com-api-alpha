@@ -2,55 +2,50 @@
 
 namespace App\Notifications;
 
-use Illuminate\Bus\Queueable;
+use App\Models\User;
+use Closure;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class PasswordChange extends Notification
 {
-    use Queueable;
 
-    /**
-     * @var string
-     */
-    private $token;
+    public static ?Closure $createUrlCallback = null;
+    public static ?Closure $toMailCallback = null;
+    public string $token;
 
-    /**
-     * Create a new notification instance.
-     *
-     * @return void
-     */
+
     public function __construct(string $token)
     {
-        //
         $this->token = $token;
     }
 
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @param mixed $notifiable
-     * @return array
-     */
-    public function via($notifiable)
+    public static function createUrlUsing(Closure $callback): void
+    {
+        static::$createUrlCallback = $callback;
+    }
+
+    public static function toMailUsing(Closure $callback): void
+    {
+        static::$toMailCallback = $callback;
+    }
+
+    public function via(User $notifiable): array
     {
         return ['mail'];
     }
 
-    /**
-     * Get the mail representation of the notification.
-     *
-     * @param mixed $notifiable
-     * @return MailMessage
-     */
-    public function toMail($notifiable): MailMessage
+    public function toMail(User $notifiable): MailMessage
     {
 
-        $url = config('app.url') . route('password.compromised', [
-                'user' => $notifiable->getKey(),
-                'token' => $this->token,
-            ], false);
+        if (static::$toMailCallback) {
+            return call_user_func(static::$toMailCallback, $notifiable, $this->token);
+        }
+        return $this->buildMailMessage($this->passwordChangeUrl($notifiable));
+    }
 
+    public function buildMailMessage(string $url): MailMessage
+    {
         return (new MailMessage)
             ->subject('Password Change Notification')
             ->line('You are receiving this email because your password has been changed.')
@@ -59,16 +54,11 @@ class PasswordChange extends Notification
             ->line('if it was indeed you, no further action is required.');
     }
 
-    /**
-     * Get the array representation of the notification.
-     *
-     * @param mixed $notifiable
-     * @return array
-     */
-    public function toArray($notifiable)
+    public function passwordChangeUrl(User $notifiable): string
     {
-        return [
-            //
-        ];
+        if (static::$createUrlCallback) {
+            return call_user_func(static::$createUrlCallback, $notifiable, $this->token);
+        }
+        return route('password.compromised', ['user' => $notifiable->getKey(), 'token' => $this->token]);
     }
 }

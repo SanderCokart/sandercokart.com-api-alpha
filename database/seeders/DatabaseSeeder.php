@@ -17,7 +17,8 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             ArticleTypeSeeder::class,
             UserSeeder::class,
-            ArticleSeeder::class,
+//            ArticleBannerSeeder::class,
+//            ArticleSeeder::class,
         ]);
     }
 }

@@ -1,26 +1,27 @@
 <?php
 
-use App\Models\ArticleType;
-use App\Http\Controllers\Auth\{LoginController, RegisterController, ResetEmailController, ResetPasswordController};
+use App\Http\Controllers\Auth\{LoginController, RegisterController, ResetEmailController, PasswordController};
 use App\Http\Controllers\Models\{ArticleController};
+use App\Models\ArticleType;
 
-//set json header
-Route::post('/register', RegisterController::class)->name('register');
-Route::post('/login', LoginController::class)->name('login');
+Route::group(['prefix' => 'account'], function () {
+    Route::post('/register', RegisterController::class);
+    Route::post('/login', LoginController::class);
 
-/* PASSWORD */
-Route::group(['prefix' => 'password', 'controller' => ResetPasswordController::class], function () {
-    Route::post('/request', 'requestPassword')->middleware('throttle:3:60');
-    Route::patch('/reset', 'passwordReset')->name('password.reset');
-    Route::patch('/compromised/{user}/{token}', 'passwordCompromised')->name('password.compromised');
+    Route::group(['prefix' => 'password', 'controller' => PasswordController::class], function () {
+        Route::post('/request', 'requestPassword')->middleware('throttle:3:60');
+        Route::patch('/reset', 'passwordReset');
+        Route::patch('/compromised', 'passwordCompromised');
+    });
+
+    Route::group(['prefix' => 'email'], function () {
+        Route::patch('/compromised/{user}/{token}', ResetEmailController::class)->name('email.compromised');
+    });
 });
 
-/* EMAIL */
-Route::group(['prefix' => 'email'], function () {
-    Route::patch('/compromised/{user}/{token}', ResetEmailController::class)->name('email.compromised');
-});
 
-/* ARTICLES */
+
+/* ARTICLE */
 Route::get('/articles/{articleType:name}/recent', [ArticleController::class, 'recent']);
 Route::get('/articles/{articleType:name}/slugs', [ArticleController::class, 'slugs']);
 Route::get('/articles/{articleType:name}', [ArticleController::class, 'index']);
@@ -31,12 +32,3 @@ Route::get('/articles/{articleType:name}/{article:slug}', [ArticleController::cl
 Route::apiResources([
 
 ]);
-
-
-Route::get('/test/{id}', function ($id) {
-//    $test = ArticleType::all();
-//    $found = $test->where('id', $id)->firstOrFail();
-
-
-    return ArticleType::where('id',$id)->firstOrFail();
-});

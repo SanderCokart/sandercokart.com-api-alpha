@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('email_changes', function (Blueprint $table) {
+        Schema::create('email_resets', function (Blueprint $table) {
             $table->integer('user_id')->index();
             $table->string('token');
             $table->timestampTz('created_at');
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('email_changes');
+        Schema::dropIfExists('email_resets');
     }
 };

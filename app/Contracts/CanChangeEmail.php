@@ -5,9 +5,12 @@ namespace App\Contracts;
 interface CanChangeEmail
 {
     /**
-     * Unmark the given user's email as verified
+     * Change the user's email.
+     * Stores token in the database. The token is used to verify the user's email.
+     * The old email is notified that the email has changed in case it has been compromised.
      *
-     * @return bool
+     * @param string $newEmail
+     * @return void
      */
-    public function markEmailAsUnverified(): bool;
+    public function changeEmailAndNotify(string $newEmail);
 }

@@ -3,25 +3,29 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RegisterRequest;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rules\Password as PasswordRule;
 
 class RegisterController extends Controller
 {
 
-    public function __invoke(Request $request): void
+    /**
+     * @param RegisterRequest $request
+     * @return JsonResponse
+     */
+    public function __invoke(RegisterRequest $request): JsonResponse
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string||email|unique:users',
-            'password' => ['string', 'required', 'max:50', PasswordRule::min(8)->symbols()->mixedCase()->numbers()],
-        ]);
+        $validatedData = $request->validated();
 
         $validatedData['password'] = bcrypt($validatedData['password']);
 
         $user = User::create($validatedData);
 
         $user->sendEmailVerificationNotification();
+
+        return response()->json(['message' => 'User created successfully.'], 201);
     }
 }
