@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
@@ -12,7 +13,7 @@ class LoginController extends Controller
     /**
      * @throws ValidationException
      */
-    public function __invoke(Request $request): \Illuminate\Http\Response
+    public function __invoke(Request $request): JsonResponse
     {
         $request->validate([
             'email' => 'required|string|email|exists:users,email',
@@ -27,7 +28,16 @@ class LoginController extends Controller
             // use token auth
         }
 
-        return response()->noContent();
+        $responses = [
+            'Hey ' . $request->user()->name . '! Welcome back!',
+            'You are logged in!',
+            'Welcome back!',
+            'We missed you!'
+        ];
+
+        return response()->json([
+            'message' => $responses[rand(0, sizeof($responses) - 1)],
+        ], JsonResponse::HTTP_OK);
     }
 
     /**

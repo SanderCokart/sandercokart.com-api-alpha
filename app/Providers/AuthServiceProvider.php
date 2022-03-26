@@ -38,11 +38,11 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         PasswordChange::createUrlUsing(function ($notifiable, $token) {
-            return url(config('app.url') . '/password/compromised?' . Arr::query(['user' => $notifiable->getKey(), 'token' => $token]));
+            return config('app.url') . '/password/compromised?' . Arr::query(['user' => $notifiable->getKey(), 'token' => $token]);
         });
 
         EmailChange::createUrlUsing(function ($notifiable, $token) {
-            return url(config('app.url') . '/email/compromised?' . Arr::query(['user' => $notifiable->getKey(), 'token' => $token]));
+            return config('app.url') . '/email/compromised?' . Arr::query(['user' => $notifiable->getKey(), 'token' => $token]);
         });
     }
 }

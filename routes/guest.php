@@ -1,8 +1,7 @@
 <?php
 
-use App\Http\Controllers\Auth\{LoginController, RegisterController, ResetEmailController, PasswordController};
+use App\Http\Controllers\Auth\{EmailController, LoginController, PasswordController, RegisterController};
 use App\Http\Controllers\Models\{ArticleController};
-use App\Models\ArticleType;
 
 Route::group(['prefix' => 'account'], function () {
     Route::post('/register', RegisterController::class);
@@ -14,11 +13,10 @@ Route::group(['prefix' => 'account'], function () {
         Route::patch('/compromised', 'passwordCompromised');
     });
 
-    Route::group(['prefix' => 'email'], function () {
-        Route::patch('/compromised/{user}/{token}', ResetEmailController::class)->name('email.compromised');
+    Route::group(['prefix' => 'email', 'controller' => EmailController::class], function () {
+        Route::patch('/compromised', 'emailCompromised');
     });
 });
-
 
 
 /* ARTICLE */

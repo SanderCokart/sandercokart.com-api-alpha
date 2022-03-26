@@ -2,8 +2,8 @@
 
 namespace App\Notifications;
 
+use App\Models\User;
 use Closure;
-use Illuminate\Notifications\AnonymousNotifiable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
@@ -28,12 +28,12 @@ class EmailChange extends Notification
         static::$toMailCallback = $callback;
     }
 
-    public function via(AnonymousNotifiable $notifiable): array
+    public function via(User $notifiable): array
     {
         return ['mail'];
     }
 
-    public function toMail(AnonymousNotifiable $notifiable): MailMessage
+    public function toMail(User $notifiable): MailMessage
     {
         if (static::$toMailCallback) {
             return call_user_func(static::$toMailCallback, $notifiable, $this->token);
@@ -51,7 +51,7 @@ class EmailChange extends Notification
             ->line('if it was indeed you, no further action is required.');
     }
 
-    public function emailChangeUrl(AnonymousNotifiable $notifiable): string
+    public function emailChangeUrl(User $notifiable): string
     {
         if (static::$createUrlCallback) {
             return call_user_func(static::$createUrlCallback, $notifiable, $this->token);
@@ -63,10 +63,10 @@ class EmailChange extends Notification
     /**
      * Get the array representation of the notification.
      *
-     * @param AnonymousNotifiable $notifiable
+     * @param User $notifiable
      * @return array
      */
-    public function toArray(AnonymousNotifiable $notifiable): array
+    public function toArray(User $notifiable): array
     {
         return [
 

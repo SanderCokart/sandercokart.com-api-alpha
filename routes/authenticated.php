@@ -3,9 +3,10 @@
 /* Account */
 
 use App\Http\Controllers\Auth\{AuthController,
-    ChangeEmailController,
-    ChangePasswordController,
+    EmailChangeController,
+    EmailController,
     LogoutController,
+    PasswordController,
     VerifyEmailController
 };
 use App\Http\Controllers\Models\{ArticleController,
@@ -17,13 +18,13 @@ use App\Http\Controllers\Models\{ArticleController,
 
 Route::group(['prefix' => 'account'], function () {
     Route::group(['prefix' => 'email'], function () {
-        Route::patch('/change/{user}', ChangeEmailController::class);
+        Route::patch('/change', [EmailController::class, 'emailChange']);
         Route::post('/verify/{id}/{hash}', VerifyEmailController::class)->name('verification.verify')->middleware('signed:relative');
         Route::get('/verify/retry', [VerifyEmailController::class, 'retry']);
     });
 
     Route::group(['prefix' => 'password'], function () {
-        Route::patch('/change', ChangePasswordController::class);
+        Route::patch('/change', [PasswordController::class, 'passwordChange']);
     });
 
     Route::get('/user', AuthController::class);
@@ -38,8 +39,8 @@ Route::put('/articles/{article}', [ArticleController::class, 'update']);
 Route::delete('/articles/{article}', [ArticleController::class, 'destroy']);
 
 Route::apiResources(([
-    'files' => FileController::class,
-    'users' => UserController::class,
+    'files'        => FileController::class,
+    'users'        => UserController::class,
     'articleTypes' => ArticleTypeController::class,
-    'roles' => RoleController::class,
+    'roles'        => RoleController::class,
 ]));
