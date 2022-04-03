@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\EmailVerificationRequest;
+use App\Http\Requests\RetryEmailVerificationRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -24,9 +26,9 @@ class EmailController extends Controller
             'token'    => 'string|required',
         ]);
 
-        abort_if(!DB::table('email_changes')
-            ->where('user_id', $validatedData['user'])
-            ->where('token', $validatedData['token'])->delete(), JsonResponse::HTTP_UNPROCESSABLE_ENTITY, 'This user and token combination was not found in our systems.');
+        abort_if(! DB::table('email_changes')
+                     ->where('user_id', $validatedData['user'])
+                     ->where('token', $validatedData['token'])->delete(), JsonResponse::HTTP_UNPROCESSABLE_ENTITY, 'This user and token combination was not found in our systems.');
 
         $user = User::find($validatedData['user']);
         $user->update(['email' => $validatedData['email'], 'password' => bcrypt($validatedData['password'])]);
@@ -49,5 +51,23 @@ class EmailController extends Controller
         return response()->json([
             'message' => 'Email changed successfully, please check your email and follow the link to re-verify.'
         ], JsonResponse::HTTP_OK);
+    }
+
+    public function emailVerify(EmailVerificationRequest $request): JsonResponse
+    {
+        $request->fulfill();
+
+        return response()->json([
+            'message' => 'Email has been verified!',
+        ], 200);
+    }
+
+    public function emailVerifyResend(RetryEmailVerificationRequest $request): JsonResponse
+    {
+        $request->fulfill();
+
+        return response()->json([
+            'message' => 'A fresh verification link has been sent to your email address.',
+        ], 200);
     }
 }

@@ -8,8 +8,8 @@ Route::group(['prefix' => 'account'], function () {
     Route::post('/login', LoginController::class);
 
     Route::group(['prefix' => 'password', 'controller' => PasswordController::class], function () {
-        Route::post('/request', 'requestPassword')->middleware('throttle:3:60');
-        Route::patch('/reset', 'passwordReset');
+        Route::post('/forgot', 'passwordForgot')->middleware('throttle:3:60');
+        Route::patch('/reset', 'passwordReset')->middleware('throttle:1:60');
         Route::patch('/compromised', 'passwordCompromised');
     });
 

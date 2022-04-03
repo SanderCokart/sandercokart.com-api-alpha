@@ -2,7 +2,7 @@
 
 namespace App\Contracts;
 
-interface CanResetEmail
+interface CanResetEmailContract
 {
     /**
      * Get the e-mail address where password reset links are sent.

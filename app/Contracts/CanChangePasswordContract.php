@@ -2,7 +2,7 @@
 
 namespace App\Contracts;
 
-interface CanChangePassword
+interface CanChangePasswordContract
 {
     /**
      * Change the user's password

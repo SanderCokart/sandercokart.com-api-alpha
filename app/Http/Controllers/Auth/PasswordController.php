@@ -12,16 +12,38 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password as PasswordRule;
 
 class PasswordController extends Controller
 {
+    public function passwordForgot(Request $request): JsonResponse
+    {
+        $validatedData = $request->validate([
+            'email' => 'string|required|email',
+        ]);
+
+        $user = User::where('email', $validatedData['email'])->first();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not found',
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        $user->sendPasswordResetNotification();
+
+        return response()->json([
+            'message' => 'Password reset link was sent to your email.',
+        ], Response::HTTP_OK);
+    }
+
     public function passwordReset(Request $request): string
     {
         $validatedData = $request->validate([
             'password' => [PasswordRule::min(8)->symbols()->mixedCase()->numbers(), 'required', 'max:50', 'confirmed'],
-            'email' => 'email|required',
-            'token' => 'required',
+            'email'    => 'email|required',
+            'token'    => 'required',
         ]);
 
         return Password::reset(
@@ -48,7 +70,7 @@ class PasswordController extends Controller
     {
         $validatedData = $request->validate([
             'current_password' => ['required', 'string'],
-            'password' => [PasswordRule::min(8)->symbols()->mixedCase()->numbers(), 'required', 'string', 'max:50', 'confirmed'],
+            'password'         => [PasswordRule::min(8)->symbols()->mixedCase()->numbers(), 'required', 'string', 'max:50', 'confirmed'],
         ]);
 
         /** @var User $user */

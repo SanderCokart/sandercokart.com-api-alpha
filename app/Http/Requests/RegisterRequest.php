@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Password as PasswordRule;
 
 class RegisterRequest extends FormRequest
@@ -15,7 +15,7 @@ class RegisterRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return is_null(Auth::user());
+        return ! $this->user();
     }
 
     /**
@@ -26,9 +26,20 @@ class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255|min:2',
-            'email' => 'required|string||email|unique:users',
+            'name'     => 'required|string|max:255|min:2',
+            'email'    => 'required|string||email|unique:users',
             'password' => ['required', 'string', 'max:50', PasswordRule::min(8)->symbols()->mixedCase()->numbers()],
         ];
     }
+
+    public function fulfill()
+    {
+        $validatedData = $this->validated();
+        $validatedData['password'] = bcrypt($validatedData['password']);
+
+        $user = User::create($validatedData);
+
+        $user->sendEmailVerificationNotification();
+    }
+
 }

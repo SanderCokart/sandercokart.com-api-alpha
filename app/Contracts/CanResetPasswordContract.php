@@ -2,15 +2,8 @@
 
 namespace App\Contracts;
 
-interface CanResetPassword
+interface CanResetPasswordContract
 {
-    /**
-     * Get the e-mail address where password reset links are sent.
-     *
-     * @return string
-     */
-    public function getEmailForPasswordReset(): string;
-
     /**
      * Send the password reset notification.
      *

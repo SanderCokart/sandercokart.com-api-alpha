@@ -2,13 +2,7 @@
 
 /* Account */
 
-use App\Http\Controllers\Auth\{AuthController,
-    EmailChangeController,
-    EmailController,
-    LogoutController,
-    PasswordController,
-    VerifyEmailController
-};
+use App\Http\Controllers\Auth\{AuthController, EmailController, LogoutController, PasswordController};
 use App\Http\Controllers\Models\{ArticleController,
     ArticleTypeController,
     FileController,
@@ -19,8 +13,8 @@ use App\Http\Controllers\Models\{ArticleController,
 Route::group(['prefix' => 'account'], function () {
     Route::group(['prefix' => 'email'], function () {
         Route::patch('/change', [EmailController::class, 'emailChange']);
-        Route::post('/verify/{id}/{hash}', VerifyEmailController::class)->name('verification.verify')->middleware('signed:relative');
-        Route::get('/verify/retry', [VerifyEmailController::class, 'retry']);
+        Route::post('/verify', [EmailController::class, 'emailVerify']);
+        Route::post('/verify/retry', [EmailController::class, 'emailVerifyResend']);
     });
 
     Route::group(['prefix' => 'password'], function () {

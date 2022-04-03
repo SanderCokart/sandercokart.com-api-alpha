@@ -2,7 +2,7 @@
 
 namespace App\Contracts;
 
-interface CanChangeEmail
+interface CanChangeEmailContract
 {
     /**
      * Change the user's email.

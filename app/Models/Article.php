@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
@@ -26,8 +25,8 @@ class Article extends Model
     public function getSlugOptions(): SlugOptions
     {
         return SlugOptions::create()
-            ->generateSlugsFrom('title')
-            ->saveSlugsTo('slug');
+                          ->generateSlugsFrom('title')
+                          ->saveSlugsTo('slug');
     }
 
 
@@ -65,7 +64,7 @@ class Article extends Model
 
     public function IsPublished(): bool
     {
-        return !!$this->published_at;
+        return ! ! $this->published_at;
     }
 
     //</editor-fold>
