@@ -4,18 +4,7 @@ namespace App\Contracts;
 
 interface CanResetEmailContract
 {
-    /**
-     * Get the e-mail address where password reset links are sent.
-     *
-     * @return string
-     */
-    public function getEmailForEmailReset(): string;
+    public function resetEmailAndNotify(string $newEmail): void;
 
-    /**
-     * Send the email reset notification.
-     *
-     * @param $token
-     * @return void
-     */
-    public function sendEmailResetNotification($token): void;
+    public function sendEmailResetNotification(): void;
 }

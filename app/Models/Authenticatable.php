@@ -6,11 +6,13 @@ use App\Contracts\CanChangeEmailContract;
 use App\Contracts\CanChangePasswordContract;
 use App\Contracts\CanResetEmailContract;
 use App\Contracts\CanResetPasswordContract;
+use App\Contracts\CanUnverifyEmailContract;
 use App\Contracts\MustVerifyEmailContract;
 use App\Traits\CanChangeEmail;
 use App\Traits\CanChangePassword;
 use App\Traits\CanResetEmail;
 use App\Traits\CanResetPassword;
+use App\Traits\CanUnverifyEmail;
 use App\Traits\MustVerifyEmail;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -25,14 +27,16 @@ class Authenticatable extends Model implements
     CanChangePasswordContract,
     CanChangeEmailContract,
     CanResetEmailContract,
-    MustVerifyEmailContract
+    MustVerifyEmailContract,
+    CanUnverifyEmailContract
 {
     use Authorizable,
+        MustVerifyEmail,
+        CanUnverifyEmail,
+        CanResetEmail,
         CanChangeEmail,
         CanResetPassword,
-        CanResetEmail,
         CanChangePassword,
-        MustVerifyEmail,
         Notifiable,
         \Illuminate\Auth\Authenticatable;
 }

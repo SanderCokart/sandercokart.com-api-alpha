@@ -16,6 +16,7 @@ class RegisterController extends Controller
     public function __invoke(RegisterRequest $request): JsonResponse
     {
         $request->fulfill();
-        return response()->json(['message' => 'User created successfully.'], 201);
+        $validatedData = $request->validated();
+        return response()->json(['message' => 'Your account has been registered, please login and verify your email.'], 201);
     }
 }

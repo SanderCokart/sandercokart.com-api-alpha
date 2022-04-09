@@ -12,5 +12,12 @@ interface CanChangeEmailContract
      * @param string $newEmail
      * @return void
      */
-    public function changeEmailAndNotify(string $newEmail);
+    public function changeEmailAndNotify(string $newEmail): void;
+
+    /**
+     * Send an email change notification to the user's email.
+     *
+     * @return void
+     */
+    public function sendEmailChangeNotification(): void;
 }

@@ -94,7 +94,30 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Authenticatable newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Authenticatable query()
  */
-	class Authenticatable extends \Eloquent implements \Illuminate\Contracts\Auth\Authenticatable, \Illuminate\Contracts\Auth\Access\Authorizable, \App\Contracts\CanResetPasswordContract, \App\Contracts\CanChangePasswordContract, \App\Contracts\CanChangeEmailContract, \App\Contracts\CanResetEmailContract, \App\Contracts\MustVerifyEmailContract {}
+	class Authenticatable extends \Eloquent implements \Illuminate\Contracts\Auth\Authenticatable, \Illuminate\Contracts\Auth\Access\Authorizable, \App\Contracts\CanResetPasswordContract, \App\Contracts\CanChangePasswordContract, \App\Contracts\CanChangeEmailContract, \App\Contracts\CanResetEmailContract, \App\Contracts\MustVerifyEmailContract, \App\Contracts\CanUnverifyEmailContract {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\EmailVerification
+ *
+ * @property int $id
+ * @property int $user_id
+ * @property string $identifier
+ * @property string $token
+ * @property string $expires_at
+ * @property-read \App\Models\User|null $user
+ * @method static \Database\Factories\EmailVerificationFactory factory(...$parameters)
+ * @method static \Illuminate\Database\Eloquent\Builder|EmailVerification newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|EmailVerification newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|EmailVerification query()
+ * @method static \Illuminate\Database\Eloquent\Builder|EmailVerification whereExpiresAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EmailVerification whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EmailVerification whereIdentifier($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EmailVerification whereToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EmailVerification whereUserId($value)
+ */
+	class EmailVerification extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -163,6 +186,7 @@ namespace App\Models{
  * @property-read int|null $articles_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\OwenIt\Auditing\Models\Audit[] $audits
  * @property-read int|null $audits_count
+ * @property-read \App\Models\EmailVerification|null $emailVerification
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Role[] $roles

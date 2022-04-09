@@ -9,15 +9,9 @@ use Illuminate\Support\Str;
 
 trait CanChangeEmail
 {
-    /**
-     * Change the user's email.
-     * Stores token in the database. The token is used to verify the user's email.
-     * The old email is notified that the email has changed in case it has been compromised.
-     *
-     * @param string $newEmail
-     * @return void
-     */
-    public function changeEmailAndNotify(string $newEmail)
+    use HasTokenSecurity;
+
+    public function changeEmailAndNotify(string $newEmail): void
     {
         $token = hash_hmac('sha256', Str::random(40), config('app.key'));
         DB::table('email_changes')->insert([
@@ -37,14 +31,9 @@ trait CanChangeEmail
         $this->sendEmailVerificationNotification();
     }
 
-    /**
-     * Email the user to notify that the email has changed.
-     *
-     * @param string $token
-     * @return void
-     */
-    public function sendEmailChangeNotification(string $token)
+    public function sendEmailChangeNotification(): void
     {
-        $this->notify(new EmailChange($token));
+//        $this->notify(new EmailChange());
     }
+
 }

@@ -10,6 +10,7 @@ use Illuminate\Support\Str;
 
 trait CanChangePassword
 {
+    use HasTokenSecurity;
 
     /**
      * Send the change email notification

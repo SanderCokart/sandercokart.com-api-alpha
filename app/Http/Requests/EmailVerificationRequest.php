@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\EmailVerification;
+use App\Models\User;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class EmailVerificationRequest extends FormRequest
@@ -15,22 +16,34 @@ class EmailVerificationRequest extends FormRequest
      * @return bool
      * @throws ValidationException
      */
+
     public function authorize(): bool
     {
         $this->getValidatorInstance()->validate();
         $validatedData = $this->validated();
-        $entry = DB::table('email_verifications')
-                   ->where('identifier', $validatedData['identifier'])
-                   ->where('token', $validatedData['token'])
-                   ->first();
-        dd($entry);
+
+        /** @var EmailVerification $emailVerification */
+        $emailVerification = EmailVerification::where('identifier', $validatedData['identifier'])
+                                              ->where('token', $validatedData['token'])
+                                              ->first();
+
+        if (!$emailVerification) abort(404, 'Invalid verification identifier and or token');
+
+        if ($emailVerification && $this->tokenIsExpired($emailVerification)) {
+            $emailVerification->delete();
+            throw ValidationException::withMessages([
+                'identifier' => ['The verification token has expired.'],
+            ]);
+        }
+
+        return $emailVerification->delete();
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
+    public function tokenIsExpired(EmailVerification $emailVerification): bool
+    {
+        return $emailVerification->expires_at < now();
+    }
+
     public function rules(): array
     {
         return [

@@ -5,7 +5,6 @@ namespace App\Notifications;
 use App\Models\User;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use Illuminate\Support\Arr;
 
 class VerifyEmailNotification extends Notification
 {
@@ -16,7 +15,7 @@ class VerifyEmailNotification extends Notification
 
     public function toMail(User $notifiable): MailMessage
     {
-        return $this->buildMailMessage($notifiable->generateVerificationUrl());
+        return $this->buildMailMessage($notifiable->generateUrlWithIdentifierAndToken('email_verifications', 'verify', 'email.verify' ));
     }
 
     public function buildMailMessage(string $url): MailMessage

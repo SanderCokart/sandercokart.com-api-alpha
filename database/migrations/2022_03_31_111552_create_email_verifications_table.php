@@ -13,7 +13,8 @@ return new class extends Migration {
     public function up()
     {
         Schema::create('email_verifications', function (Blueprint $table) {
-            $table->uuid('identifier')->index();
+            $table->id();
+            $table->uuid('identifier');
             $table->string('token');
             $table->timestampTz('expires_at');
         });

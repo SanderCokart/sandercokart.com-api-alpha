@@ -50,14 +50,18 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function withUser()
+function withUser(bool $unverified = false): User
 {
-    $user = User::factory()->createUser();
+    $user = User::factory()
+                ->when($unverified, function ($query) {
+                    $query->unverified();
+                })->createUser();
     Sanctum::actingAs($user);
+
     return $user;
 }
 
-function withAdmin(): Authenticatable
+function withAdmin(): User
 {
     $user = User::factory()->createAdmin();
     Sanctum::actingAs($user);

@@ -7,7 +7,7 @@ use function Pest\Laravel\{postJson};
 
 it('can register new users', function ($assertedStatus, $user) {
     Notification::fake();
-    postJson('/account/register', $user)
+    postJson(route('account.register'), $user)
         ->assertStatus($assertedStatus)
         ->assertJsonStructure(['message']);
 
@@ -15,16 +15,10 @@ it('can register new users', function ($assertedStatus, $user) {
         Notification::assertSentTo(User::find(1), VerifyEmailNotification::class);
 })->with('registerUserData');
 
-it('can verify email', function () {
-    /** @var User $user */
-    $user = withUser();
+it('can verify email', function ($data) {
+    postJson($data['urlToTest'])
+        ->assertStatus($data['assertedStatus'])
+        ->assertJsonStructure(['message'])
+        ->assertJsonFragment(['message' => $data['assertedMessage']]);
 
-    $identifier = $user->generateEmailVerificationIdentifier();
-    $token = $user->generateEmailVerificationToken();
-
-    $user->insertVerificationTokenIntoDatabase($identifier, $token);
-
-    postJson('/account/email/verify', ['identifier' => $identifier, 'token' => $token])
-        ->assertStatus(200)
-        ->assertJsonStructure(['message']);
-})->only();
+})->with('verifyEmailData')->only();

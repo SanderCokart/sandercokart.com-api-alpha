@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Laravel\Sanctum\HasApiTokens;
 use OwenIt\Auditing\Auditable;
 use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
@@ -28,13 +30,27 @@ class User extends Authenticatable implements AuditableContract
         return $this->hasMany(Article::class);
     }
 
-    public function roles(): BelongsToMany
+    //<editor-fold desc="Relationships">
+
+    protected function email(): Attribute
     {
-        return $this->belongsToMany(Role::class);
+        return new Attribute(
+            set: fn($value) => strtolower($value),
+        );
     }
 
     public function isAdmin(): bool
     {
         return $this->roles->contains(Role::ADMIN);
     }
+
+    //</editor-fold>
+
+    //<editor-fold desc="Attributes">
+
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class);
+    }
+    //</editor-fold>
 }

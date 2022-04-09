@@ -41,20 +41,20 @@ class Handler extends ExceptionHandler
             //
         });
 
-        $this->renderable(function (ItemNotFoundException $e, Request $request) {
-            if ($request->wantsJson()) {
-                return response()->json([
-                    'message' => 'Not found',
-                ], 404);
-            }
-        });
-
-        $this->renderable(function (NotFoundHttpException $e, Request $request) {
-            if ($request->wantsJson()) {
-                return response()->json([
-                    'message' => 'Not found',
-                ], 404);
-            }
-        });
+//        $this->renderable(function (ItemNotFoundException $e, Request $request) {
+//            if ($request->wantsJson()) {
+//                return response()->json([
+//                    'message' => 'Not found',
+//                ], 404);
+//            }
+//        });
+//
+//        $this->renderable(function (NotFoundHttpException $e, Request $request) {
+//            if ($request->wantsJson()) {
+//                return response()->json([
+//                    'message' => 'Not found',
+//                ], 404);
+//            }
+//        });
     }
 }
