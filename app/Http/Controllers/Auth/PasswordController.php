@@ -38,12 +38,7 @@ class PasswordController extends Controller
 
     public function passwordCompromised(PasswordCompromisedRequest $request): JsonResponse
     {
-        $validatedData = $request->validated();
-        $user = User::find($validatedData['user']);
-
-        $user->forceFill(['password' => bcrypt($validatedData['password'])])->save();
-
-        DB::table('sessions')->where('user_id', $user['id'])->delete();
+        $request->fulfill();
         return response()->json(['message' => 'Password was reset successfully and you have been logged out of all devices.'], JsonResponse::HTTP_OK);
     }
 

@@ -30,4 +30,4 @@ test('user can reset a compromised email address',
 
         if ($data['assertNotificationSent']) Notification::assertSentTo($data['user'], EmailChangedNotification::class);
         else Notification::assertNothingSent();
-    })->with('compromisedEmailData')->only();
+    })->with('compromisedEmailData');

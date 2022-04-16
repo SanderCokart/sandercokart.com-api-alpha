@@ -99,21 +99,40 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * App\Models\EmailCompromised
+ * App\Models\CompromisedEmail
  *
- * @property int $user_id
+ * @property string $identifier
  * @property string $token
- * @property string $created_at
- * @property string $expire_at
- * @method static \Illuminate\Database\Eloquent\Builder|EmailCompromised newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|EmailCompromised newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|EmailCompromised query()
- * @method static \Illuminate\Database\Eloquent\Builder|EmailCompromised whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|EmailCompromised whereExpireAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|EmailCompromised whereToken($value)
- * @method static \Illuminate\Database\Eloquent\Builder|EmailCompromised whereUserId($value)
+ * @property int $user_id
+ * @property string $expires_at
+ * @method static \Illuminate\Database\Eloquent\Builder|CompromisedEmail newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|CompromisedEmail newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|CompromisedEmail query()
+ * @method static \Illuminate\Database\Eloquent\Builder|CompromisedEmail whereExpiresAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CompromisedEmail whereIdentifier($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CompromisedEmail whereToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CompromisedEmail whereUserId($value)
  */
-	class EmailCompromised extends \Eloquent {}
+	class CompromisedEmail extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\CompromisedPassword
+ *
+ * @property string $identifier
+ * @property string $token
+ * @property int $user_id
+ * @property string $expires_at
+ * @method static \Illuminate\Database\Eloquent\Builder|CompromisedPassword newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|CompromisedPassword newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|CompromisedPassword query()
+ * @method static \Illuminate\Database\Eloquent\Builder|CompromisedPassword whereExpiresAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CompromisedPassword whereIdentifier($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CompromisedPassword whereToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CompromisedPassword whereUserId($value)
+ */
+	class CompromisedPassword extends \Eloquent {}
 }
 
 namespace App\Models{

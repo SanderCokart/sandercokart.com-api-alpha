@@ -2,7 +2,7 @@
 
 namespace App\Http\Requests;
 
-use App\Models\EmailCompromised;
+use App\Models\CompromisedEmail;
 use App\Models\User;
 use App\Notifications\EmailChangedNotification;
 use App\Notifications\PasswordChangedNotification;
@@ -43,7 +43,7 @@ class EmailCompromisedRequest extends FormRequest
     public function fulfill()
     {
         $validatedData = $this->validated();
-        $compromisedEmail = EmailCompromised::where('identifier', $validatedData['identifier'])
+        $compromisedEmail = CompromisedEmail::where('identifier', $validatedData['identifier'])
                                             ->where('token', $validatedData['token'])
                                             ->first();
 
