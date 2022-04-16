@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
-class RetryEmailVerificationRequest extends FormRequest
+class ForgotPasswordRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +14,7 @@ class RetryEmailVerificationRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return ! request()->user()->hasVerifiedEmail();
+        return true;
     }
 
     /**
@@ -21,15 +22,18 @@ class RetryEmailVerificationRequest extends FormRequest
      *
      * @return array
      */
-    public function rules(): array
+    public function rules()
     {
         return [
-            //
+            'email' => 'string|required|email',
         ];
     }
 
     public function fulfill()
     {
-        request()->user()->sendEmailVerificationNotification();
+        $validatedData = $this->validated();
+        $user = User::where('email', $validatedData['email'])->first();
+
+        $user?->sendPasswordResetNotification();
     }
 }

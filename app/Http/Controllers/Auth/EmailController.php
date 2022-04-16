@@ -3,53 +3,33 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\EmailCompromisedRequest;
 use App\Http\Requests\EmailVerificationRequest;
 use App\Http\Requests\RetryEmailVerificationRequest;
-use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rules\Password as PasswordRule;
 
 class EmailController extends Controller
 {
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
-    public function emailCompromised(Request $request): JsonResponse
+    public function emailCompromised(EmailCompromisedRequest $request): JsonResponse
     {
-        $validatedData = $request->validate([
-            'email'    => 'string|email|unique:users,email',
-            'password' => ['string', PasswordRule::min(8)->symbols()->mixedCase()->numbers(), 'required', 'max:50', 'confirmed'],
-            'user'     => 'integer|required',
-            'token'    => 'string|required',
-        ]);
-
-        abort_if(! DB::table('email_changes')
-                     ->where('user_id', $validatedData['user'])
-                     ->where('token', $validatedData['token'])->delete(), JsonResponse::HTTP_UNPROCESSABLE_ENTITY, 'This user and token combination was not found in our systems.');
-
-        $user = User::find($validatedData['user']);
-        $user->update(['email' => $validatedData['email'], 'password' => bcrypt($validatedData['password'])]);
-
-        DB::table('sessions')->where('user_id', $user['id'])->delete();
+        $request->fulfill();
 
         return response()->json([
-            'message' => 'Your email has been changed to ' . $validatedData['email'] . '.'
+            'message' => 'Email changed successfully, please check your email and follow the link to re-verify.',
         ], JsonResponse::HTTP_OK);
     }
 
     public function emailChange(Request $request): JsonResponse
     {
         $validatedData = $request->validate([
-            'email' => 'string|required|email|unique:users,email'
+            'email' => 'string|required|email|unique:users,email',
         ]);
 
         $request->user()->changeEmailAndNotify($validatedData['email']);
 
         return response()->json([
-            'message' => 'Email changed successfully, please check your email and follow the link to re-verify.'
+            'message' => 'Email changed successfully, please check your email and follow the link to re-verify.',
         ], JsonResponse::HTTP_OK);
     }
 
@@ -62,7 +42,7 @@ class EmailController extends Controller
         ], 200);
     }
 
-    public function emailVerifyResend(RetryEmailVerificationRequest $request): JsonResponse
+    public function emailVerifyRetry(RetryEmailVerificationRequest $request): JsonResponse
     {
         $request->fulfill();
 

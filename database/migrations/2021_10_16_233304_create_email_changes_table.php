@@ -14,10 +14,10 @@ return new class extends Migration
     public function up()
     {
         Schema::create('email_changes', function (Blueprint $table) {
-            $table->integer('user_id')->index();
+            $table->uuid('identifier');
             $table->string('token');
-            $table->timestampTz('created_at');
-            $table->timestampTz('expire_at');
+            $table->unsignedInteger('user_id')->unique();
+            $table->timestamp('expires_at');
         });
     }
 

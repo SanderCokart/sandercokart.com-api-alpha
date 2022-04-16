@@ -14,35 +14,13 @@ class EmailVerificationRequest extends FormRequest
      * Determine if the user is authorized to make this request.
      *
      * @return bool
-     * @throws ValidationException
      */
 
     public function authorize(): bool
     {
-        $this->getValidatorInstance()->validate();
-        $validatedData = $this->validated();
-
-        /** @var EmailVerification $emailVerification */
-        $emailVerification = EmailVerification::where('identifier', $validatedData['identifier'])
-                                              ->where('token', $validatedData['token'])
-                                              ->first();
-
-        if (!$emailVerification) abort(404, 'Invalid verification identifier and or token');
-
-        if ($emailVerification && $this->tokenIsExpired($emailVerification)) {
-            $emailVerification->delete();
-            throw ValidationException::withMessages([
-                'identifier' => ['The verification token has expired.'],
-            ]);
-        }
-
-        return $emailVerification->delete();
+        return true;
     }
 
-    public function tokenIsExpired(EmailVerification $emailVerification): bool
-    {
-        return $emailVerification->expires_at < now();
-    }
 
     public function rules(): array
     {
@@ -54,10 +32,28 @@ class EmailVerificationRequest extends FormRequest
 
     public function fulfill()
     {
+        $validatedData = $this->validated();
+
+        /** @var EmailVerification $emailVerification */
+        $emailVerification = EmailVerification::where('identifier', $validatedData['identifier'])
+                                              ->where('token', $validatedData['token'])
+                                              ->first();
+
+        if (! $emailVerification) abort(404, 'Invalid identifier and or token.');
+
+        if ($emailVerification && $this->tokenIsExpired($emailVerification)) {
+            $emailVerification->delete();
+            abort(401, 'Token has expired');
+        }
+
+
         if (! $this->user()->hasVerifiedEmail()) {
             $this->user()->markEmailAsVerified();
-
-            event(new Verified($this->user()));
         }
+    }
+
+    public function tokenIsExpired(EmailVerification $emailVerification): bool
+    {
+        return $emailVerification->expires_at < now();
     }
 }

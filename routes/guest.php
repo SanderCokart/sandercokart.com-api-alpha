@@ -7,14 +7,14 @@ Route::group(['prefix' => 'account'], function () {
     Route::post('/register', RegisterController::class)->name('account.register');
     Route::post('/login', LoginController::class)->name('account.login');
 
-    Route::group(['prefix' => 'password', 'controller' => PasswordController::class], function () {
-        Route::post('/forgot', 'passwordForgot')->middleware('throttle:3:60')->name('password.forgot');
-        Route::patch('/reset', 'passwordReset')->middleware('throttle:1:60')->name('password.reset');
-        Route::patch('/compromised', 'passwordCompromised')->middleware('throttle:1:60')->name('password.compromised');
+    Route::group(['prefix' => 'password', 'controller' => PasswordController::class, 'middleware' => 'guest'], function () {
+        Route::post('/forgot', 'passwordForgot')->middleware('throttle:1,10')->name('password.forgot');
+        Route::patch('/reset', 'passwordReset')->middleware('throttle:1,10')->name('password.reset');
+        Route::patch('/compromised', 'passwordCompromised')->middleware('throttle:1,60')->name('password.compromised');
     });
 
-    Route::group(['prefix' => 'email', 'controller' => EmailController::class], function () {
-        Route::patch('/compromised', 'emailCompromised')->middleware('throttle:1:60')->name('email.compromised');
+    Route::group(['prefix' => 'email', 'controller' => EmailController::class, 'middleware' => 'guest'], function () {
+        Route::patch('/compromised', 'emailCompromised')->middleware('throttle:1,60')->name('email.compromised');
     });
 });
 

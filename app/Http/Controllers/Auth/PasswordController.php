@@ -3,56 +3,37 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ForgotPasswordRequest;
 use App\Http\Requests\PasswordCompromisedRequest;
+use App\Http\Requests\PasswordResetRequest;
 use App\Models\User;
-use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Password;
-use Illuminate\Support\Str;
 use Illuminate\Validation\Rules\Password as PasswordRule;
 
 class PasswordController extends Controller
 {
-    public function passwordForgot(Request $request): JsonResponse
+    public function passwordForgot(ForgotPasswordRequest $request): JsonResponse
     {
-        $validatedData = $request->validate([
-            'email' => 'string|required|email',
-        ]);
-
-        $user = User::where('email', $validatedData['email'])->first();
-
-        if (!$user) {
-            return response()->json([
-                'message' => 'User not found',
-            ], Response::HTTP_NOT_FOUND);
-        }
-
-        $user->sendPasswordResetNotification();
+        $request->fulfill();
 
         return response()->json([
-            'message' => 'Password reset link was sent to your email.',
-        ], Response::HTTP_OK);
+            'message' => 'If a user with that email address exists, you will receive an email with instructions on how to reset your password.',
+        ], JsonResponse::HTTP_OK);
     }
 
-    public function passwordReset(Request $request): string
+    public function passwordReset(PasswordResetRequest $request): JsonResponse
     {
-        $validatedData = $request->validate([
-            'password' => [PasswordRule::min(8)->symbols()->mixedCase()->numbers(), 'required', 'max:50', 'confirmed'],
-            'email'    => 'email|required',
-            'token'    => 'required',
-        ]);
+        $request->fulfill();
 
-        return Password::reset(
-            $validatedData,
-            function ($user, $password) {
-                $user->fill(['password' => bcrypt($password),])->save();
-                event(new PasswordReset($user));
-            }
-        );
+        /*SEND SUCCESSFUL PASSWORD RESET COMPROMISED EMAIL*/
+
+        return response()->json([
+            'message' => 'Password reset successfully.',
+        ], Response::HTTP_OK);
     }
 
     public function passwordCompromised(PasswordCompromisedRequest $request): JsonResponse
@@ -77,22 +58,14 @@ class PasswordController extends Controller
         $user = $request->user();
 
 
-        if (!Hash::check($validatedData['current_password'], $user->password)) {
-            abort(Response::HTTP_UNPROCESSABLE_ENTITY, 'The current password didn\'t match the password in our system, please check if you entered the current password correctly');
+        if (! Hash::check($validatedData['current_password'], $user->password)) {
+            abort(Response::HTTP_UNPROCESSABLE_ENTITY, 'This is not your current password.');
         }
 
         $user->changePasswordAndNotify($validatedData['password']);
 
-        $responses = [
-            'Password changed successfully.',
-            'Your password has been changed successfully.',
-            'The process of changing your password was successful.',
-            'The password has been changed successfully.',
-            'Hey ' . $user->name . '! Your password has been changed successfully!',
-        ];
-
         return response()->json([
-            'message' => $responses[rand(0, sizeof($responses) - 1)],
+            'message' => 'Password changed successfully.',
         ], JsonResponse::HTTP_OK);
     }
 }

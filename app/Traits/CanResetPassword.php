@@ -2,14 +2,14 @@
 
 namespace App\Traits;
 
-use App\Notifications\ResetPasswordNotification;
+use App\Notifications\ForgotPasswordNotification;
 
 trait CanResetPassword
 {
     use HasTokenSecurity;
 
-    public function sendPasswordResetNotification(string $token): void
+    public function sendPasswordResetNotification(): void
     {
-        $this->notify(new ResetPasswordNotification($token));
+        $this->notify(new ForgotPasswordNotification());
     }
 }

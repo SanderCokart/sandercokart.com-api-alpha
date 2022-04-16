@@ -6,7 +6,7 @@ interface MustVerifyEmailContract
 {
     public function hasVerifiedEmail(): bool;
 
-    public function markEmailAsVerified(): void;
+    public function markEmailAsVerified(): bool;
 
-    public function sendEmailVerificationNotification(?string $token): void;
+    public function sendEmailVerificationNotification(): void;
 }

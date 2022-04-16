@@ -10,5 +10,5 @@ interface CanResetPasswordContract
      * @param string $token
      * @return void
      */
-    public function sendPasswordResetNotification(string $token): void;
+    public function sendPasswordResetNotification(): void;
 }

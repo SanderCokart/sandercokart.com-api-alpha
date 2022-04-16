@@ -6,7 +6,7 @@ use App\Models\User;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class VerifyEmailNotification extends Notification
+class EmailVerificationNotification extends Notification
 {
     public function via(User $notifiable): array
     {
@@ -15,10 +15,11 @@ class VerifyEmailNotification extends Notification
 
     public function toMail(User $notifiable): MailMessage
     {
-        return $this->buildMailMessage($notifiable->generateUrlWithIdentifierAndToken('email_verifications', 'verify', 'email.verify' ));
+        $url = $notifiable->generateUrlWithIdentifierAndToken('email_verifications', 'verify', 'email.verify');
+        return $this->buildMessage($url, $notifiable);
     }
 
-    public function buildMailMessage(string $url): MailMessage
+    public function buildMessage(string $url, User $notifiable): MailMessage
     {
         return (new MailMessage)
             ->subject('Verify Email Address')
@@ -27,3 +28,5 @@ class VerifyEmailNotification extends Notification
             ->line('Thank you for using our application!');
     }
 }
+
+//$notifiable->generateUrlWithIdentifierAndToken('email_verifications', 'verify', 'email.verify')

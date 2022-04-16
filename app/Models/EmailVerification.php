@@ -11,5 +11,5 @@ class EmailVerification extends Model
     use HasFactory;
 
     public $timestamps = false;
-    protected $guarded = [];
+    protected $fillable = ['identifier', 'token', 'expires_at'];
 }

@@ -3,7 +3,8 @@
 namespace App\Traits;
 
 use App\Models\User;
-use App\Notifications\VerifyEmailNotification;
+use App\Notifications\EmailVerificationNotification;
+use Illuminate\Support\Facades\URL;
 
 /**
  * @mixin User
@@ -17,15 +18,15 @@ trait MustVerifyEmail
         return ! is_null($this->email_verified_at);
     }
 
-    public function markEmailAsVerified(): void
+    public function markEmailAsVerified(): bool
     {
-        $this->forceFill([
+        return $this->forceFill([
             'email_verified_at' => $this->freshTimestamp(),
         ])->save();
     }
 
-    public function sendEmailVerificationNotification(?string $token = null): void
+    public function sendEmailVerificationNotification(): void
     {
-        $this->notify(new VerifyEmailNotification());
+        $this->notify(new EmailVerificationNotification());
     }
 }

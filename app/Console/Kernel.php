@@ -27,7 +27,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->call(function () {
-            DB::table('password_change')->where('expire_at', '<', now())->delete();
+            DB::table('password_changes')->where('expires_at', '<', now())->delete();
         })->yearly();
     }
 

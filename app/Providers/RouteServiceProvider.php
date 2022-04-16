@@ -7,6 +7,8 @@ use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvi
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\URL;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -36,17 +38,18 @@ class RouteServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->configureRateLimiting();
+        $this->setRootUrl();
 
         $this->routes(function () {
             Route::middleware(['api'])->group(function () {
                 Route::namespace($this->namespace)
-                    ->group(base_path('routes/guest.php'));
+                     ->group(base_path('routes/guest.php'));
                 Route::namespace($this->namespace)
-                    ->middleware(['auth:sanctum'])
-                    ->group(base_path('routes/authenticated.php'));
+                     ->middleware(['auth:sanctum'])
+                     ->group(base_path('routes/authenticated.php'));
                 Route::namespace($this->namespace)
-                    ->middleware(['auth:sanctum', 'verified'])
-                    ->group(base_path('routes/verified.php'));
+                     ->middleware(['auth:sanctum', 'verified'])
+                     ->group(base_path('routes/verified.php'));
             });
         });
     }
@@ -61,6 +64,10 @@ class RouteServiceProvider extends ServiceProvider
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(120)->by(optional($request->user())->id ?: $request->ip());
         });
+    }
 
+    protected function setRootUrl()
+    {
+        URL::forceRootUrl(config('app.url'));
     }
 }
