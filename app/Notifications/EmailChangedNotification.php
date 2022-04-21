@@ -15,7 +15,7 @@ class EmailChangedNotification extends Notification
 
     public function toMail(User $notifiable): MailMessage
     {
-        $url = $notifiable->generateUrlWithIdentifierAndToken('email_changes', 'email_change', 'email.change', user: $notifiable);
+        $url = $notifiable->generateUrlWithIdentifierAndToken('email_changes', 'email_change', 'email.compromised', user: $notifiable);
         return $this->buildMailMessage($url);
     }
 

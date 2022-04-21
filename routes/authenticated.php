@@ -29,19 +29,25 @@ Route::group(['prefix' => 'account'], function () {
              ->name('password.change');
     });
 
-    Route::get('/user', AuthController::class)->name('account.user');
-    Route::post('/logout', LogoutController::class)->name('account.logout');
+    Route::get('/user', AuthController::class)
+         ->name('account.user');
+    Route::post('/logout', LogoutController::class)
+         ->name('account.logout');
 });
 
 /* Resources */
-/* Article */
-Route::post('/articles', [ArticleController::class, 'store'])->name('articles.store');
-Route::patch('/articles/{article}', [ArticleController::class, 'update'])->name('articles.update');
-Route::delete('/articles/{article}', [ArticleController::class, 'destroy'])->name('articles.destroy');
+Route::post('/articles', [ArticleController::class, 'store'])
+     ->name('articles.store');
+Route::patch('/articles/{article}', [ArticleController::class, 'update'])
+     ->name('articles.update');
+Route::delete('/articles/{article}', [ArticleController::class, 'destroy'])
+     ->name('articles.destroy');
+
+Route::apiResource('users', UserController::class)
+     ->except(['update']);
 
 Route::apiResources([
     'files'        => FileController::class,
-    'users'        => UserController::class,
     'articleTypes' => ArticleTypeController::class,
     'roles'        => RoleController::class,
 ]);

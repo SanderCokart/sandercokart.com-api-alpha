@@ -14,11 +14,3 @@ test('can register new users', function ($assertedStatus, $user) {
     if ($assertedStatus === 201)
         Notification::assertSentTo(User::find(1), EmailVerificationNotification::class);
 })->with('registerUserData');
-
-test('user can verify email', function ($data) {
-    Notification::fake();
-    postJson($data['urlToTest'])
-        ->assertStatus($data['assertedStatus'])
-        ->assertJsonFragment(['message' => $data['assertedMessage']]);
-
-})->with('verifyEmailData');

@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class UserFactory extends Factory
@@ -18,15 +19,6 @@ class UserFactory extends Factory
             'email_verified_at' => now()->toDateTimeLocalString(),
             'password'          => bcrypt('Pa$$w0rd'),
         ];
-    }
-
-    public function unverified(): Factory
-    {
-        return $this->state(function (array $attributes) {
-            return [
-                'email_verified_at' => null,
-            ];
-        });
     }
 
     public function unencrypted(): Factory
@@ -51,16 +43,28 @@ class UserFactory extends Factory
                    ]);
     }
 
-    public function createUser()
+    public function createUser(?bool $unverified = false)
     {
         return User::factory()
                    ->hasAttached(Role::find([
                        Role::USER,
                    ]))
+                   ->when($unverified, function (UserFactory $factory) {
+                       return $factory->unverified();
+                   })
                    ->create([
                        'email'    => $this->faker->unique()->safeEmail(),
                        'name'     => $this->faker->name(),
                        'password' => bcrypt('Pa$$w0rd'),
                    ]);
+    }
+
+    public function unverified(): Factory
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'email_verified_at' => null,
+            ];
+        });
     }
 }

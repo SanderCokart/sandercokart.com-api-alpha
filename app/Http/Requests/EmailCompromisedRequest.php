@@ -34,7 +34,7 @@ class EmailCompromisedRequest extends FormRequest
     {
         return [
             'email'      => ['string', 'email', 'unique:users,email'],
-            'password'   => ['string', PasswordRule::min(8)->symbols()->mixedCase()->numbers(), 'required', 'max:50', 'confirmed'],
+            'password'   => ['string', PasswordRule::defaults(), 'required', 'max:50', 'confirmed'],
             'identifier' => ['string', 'required'],
             'token'      => ['string', 'required'],
         ];

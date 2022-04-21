@@ -8,6 +8,7 @@ use App\Http\Requests\EmailVerificationRequest;
 use App\Http\Requests\RetryEmailVerificationRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class EmailController extends Controller
 {
@@ -33,13 +34,11 @@ class EmailController extends Controller
         ], JsonResponse::HTTP_OK);
     }
 
-    public function emailVerify(EmailVerificationRequest $request): JsonResponse
+    public function emailVerify(EmailVerificationRequest $request): Response
     {
         $request->fulfill();
 
-        return response()->json([
-            'message' => 'Email has been verified!',
-        ], 200);
+        return response()->noContent();
     }
 
     public function emailVerifyRetry(RetryEmailVerificationRequest $request): JsonResponse

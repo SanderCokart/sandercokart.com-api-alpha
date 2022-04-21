@@ -29,4 +29,4 @@ it('user can reset a compromised password',
         if ($data['assertNotificationSent']) Notification::assertSentTo($data['user'], PasswordChangedNotification::class);
         else Notification::assertNothingSent();
 
-    })->with('compromisedPasswordData')->only();
+    })->with('compromisedPasswordData');

@@ -46,7 +46,7 @@ class PasswordController extends Controller
     {
         $validatedData = $request->validate([
             'current_password' => ['required', 'string'],
-            'password'         => [PasswordRule::min(8)->symbols()->mixedCase()->numbers(), 'required', 'string', 'max:50', 'confirmed'],
+            'password'         => [PasswordRule::defaults(), 'required', 'string', 'max:50', 'confirmed'],
         ]);
 
         /** @var User $user */

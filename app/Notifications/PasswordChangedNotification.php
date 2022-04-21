@@ -15,7 +15,7 @@ class PasswordChangedNotification extends Notification
 
     public function toMail(User $notifiable): MailMessage
     {
-        $url = $notifiable->generateUrlWithIdentifierAndToken('password_changes', 'password_change', 'password.change', user: $notifiable);
+        $url = $notifiable->generateUrlWithIdentifierAndToken('password_changes', 'password_change', 'password.compromised', user: $notifiable);
         return $this->buildMailMessage($url, $notifiable);
     }
 

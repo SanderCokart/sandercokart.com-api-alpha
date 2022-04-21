@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Laravel\Sanctum\HasApiTokens;
 use OwenIt\Auditing\Auditable;
 use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
@@ -15,6 +14,7 @@ class User extends Authenticatable implements AuditableContract
 {
     use HasFactory, HasApiTokens, Auditable;
 
+    protected $with = ['roles'];
     protected $fillable = ['name', 'email', 'password'];
 
     protected $hidden = [
@@ -39,6 +39,10 @@ class User extends Authenticatable implements AuditableContract
         );
     }
 
+    //</editor-fold>
+
+    //<editor-fold desc="Attributes">
+
     public function isAdmin(): bool
     {
         return $this->roles->contains(Role::ADMIN);
@@ -46,11 +50,8 @@ class User extends Authenticatable implements AuditableContract
 
     //</editor-fold>
 
-    //<editor-fold desc="Attributes">
-
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany(Role::class);
     }
-    //</editor-fold>
 }

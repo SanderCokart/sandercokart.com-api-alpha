@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 
@@ -13,12 +13,12 @@ class LoginController extends Controller
     /**
      * @throws ValidationException
      */
-    public function __invoke(Request $request): JsonResponse
+    public function __invoke(Request $request): Response
     {
         $request->validate([
-            'email' => 'required|string|email|exists:users,email',
-            'password' => 'required|string',
-            'remember_me' => 'required|boolean',
+            'email'       => 'string|required|email',
+            'password'    => 'string|required',
+            'remember_me' => 'boolean|required',
         ]);
 
 
@@ -28,16 +28,7 @@ class LoginController extends Controller
             // use token auth
         }
 
-        $responses = [
-            'Hey ' . $request->user()->name . '! Welcome back!',
-            'You are logged in!',
-            'Welcome back!',
-            'We missed you!'
-        ];
-
-        return response()->json([
-            'message' => $responses[rand(0, sizeof($responses) - 1)],
-        ], JsonResponse::HTTP_OK);
+        return response()->noContent();
     }
 
     /**
@@ -45,13 +36,16 @@ class LoginController extends Controller
      */
     private function authenticateFrontend()
     {
-        if (!auth()->guard('web')
+        if (! auth()
+            ->guard('web')
             ->attempt(
                 request()->only(['email', 'password']),
-                request()->boolean('remember_me')
-            )) {
+                request()->boolean('remember_me'))
+
+        ) {
+
             throw ValidationException::withMessages([
-                'email' => __('auth.email_match_password'),
+                'email'    => __('auth.email_match_password'),
                 'password' => __('auth.password_match_email'),
             ]);
         }

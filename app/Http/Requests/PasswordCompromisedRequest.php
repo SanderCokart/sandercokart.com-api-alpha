@@ -32,7 +32,7 @@ class PasswordCompromisedRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'password' => [PasswordRule::min(8)->symbols()->mixedCase()->numbers(), 'required', 'max:50', 'confirmed'],
+            'password' => [PasswordRule::defaults(), 'required', 'max:50', 'confirmed'],
             'token'    => 'required|string',
             'identifier'    => 'required|string',
         ];

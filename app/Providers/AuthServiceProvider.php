@@ -2,12 +2,8 @@
 
 namespace App\Providers;
 
-use App\Notifications\EmailChangedNotification;
-use App\Notifications\PasswordChangedNotification;
-use Illuminate\Auth\Notifications\VerifyEmail;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\URL;
+use Illuminate\Validation\Rules\Password;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -25,9 +21,12 @@ class AuthServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         $this->registerPolicies();
+        Password::defaults(function () {
+            return Password::min(8)->symbols()->mixedCase()->numbers();
+        });
 
 //        VerifyEmail::createUrlUsing(function ($notifiable) {
 //            return config('app.url') .

@@ -25,7 +25,7 @@ class UserResource extends JsonResource
             'updatedAt' => $this->updated_at,
             'emailVerifiedAt' => $this->email_verified_at,
             'roles' => $this->whenLoaded('roles', function () {
-                return $this->roles->pluck('name');
+                return RoleResource::collection($this->roles);
             }),
         ];
     }

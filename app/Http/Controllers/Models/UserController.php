@@ -4,69 +4,73 @@ namespace App\Http\Controllers\Models;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserCollection;
+use App\Http\Resources\UserResource;
+use App\Models\Role;
 use App\Models\User;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Validation\Rules\Password as PasswordRule;
 
 class UserController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @param Request $request
-     * @return UserCollection
+     * @throws AuthorizationException
      */
     public function index(Request $request): UserCollection
     {
+        $this->authorize('viewAny', User::class);
         $validatedData = $request->validate(['perPage' => 'numeric|integer|max:30']);
         $perPage = $validatedData['perPage'] ?? 100;
         return new UserCollection(User::simplePaginate($perPage));
     }
 
+
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param Request $request
-     * @return Response
+     * @throws AuthorizationException
      */
-    public function store(Request $request)
+    public function store(Request $request): JsonResponse
     {
-        //
+        $this->authorize('create', User::class);
+        $validatedData = $request->validate([
+            'name'     => 'required|string|max:255|min:2',
+            'email'    => 'required|string|email|unique:users',
+            'password' => ['required', 'string', 'max:50', PasswordRule::defaults()],
+            'roles'    => 'required|array',
+            'roles.*'  => 'exists:roles,id',
+        ]);
+
+        $user = User::create($validatedData);
+        $user->roles()->attach($validatedData['roles']);
+
+        $user->sendEmailVerificationNotification();
+
+        return response()->json(['message' => 'User created successfully.'], JsonResponse::HTTP_CREATED);
+    }
+
+
+    /**
+     * @throws AuthorizationException
+     */
+    public function show($userId): UserResource
+    {
+        $user = User::with('roles')->find($userId);
+        $this->authorize('view', $user);
+        return new UserResource($user);
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     * @return Response
+     * @throws AuthorizationException
      */
-    public function show($id)
+    public function destroy(Request $request, User $user): JsonResponse
     {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param Request $request
-     * @param int $id
-     * @return Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param Request $request
-     * @param User $user
-     * @return Response
-     */
-    public function destroy(Request $request, User $user): Response
-    {
+        $this->authorize('delete', $user);
         $user->delete();
-        return response()->noContent();
+
+        if (auth()->user()->id === $user->id)
+            return response()->json(['message' => 'Account deleted.'], Response::HTTP_OK);
+
+        return response()->json(['message' => 'User deleted.'], Response::HTTP_OK);
     }
 }

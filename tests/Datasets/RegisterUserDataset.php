@@ -23,7 +23,7 @@ dataset('verifyEmailData', function () {
         $generatedUrl = $user->generateUrlWithIdentifierAndToken('email_verifications', 'verify', 'email.verify', true, $identifier, $token);
         $urlToTest = $generatedUrl;
         return [
-            'assertedStatus'  => 200,
+            'assertedStatus'  => 204,
             'assertedMessage' => 'Email has been verified!',
             'urlToTest'       => $urlToTest
         ];

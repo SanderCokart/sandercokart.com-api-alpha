@@ -12,11 +12,14 @@ trait CanChangeEmail
 
     public function changeEmailAndNotify(string $newEmail): void
     {
+        $this->notify(new EmailChangedNotification());
+
         $this->forceFill([
             'email'             => $newEmail,
             'email_verified_at' => null,
         ])->save();
 
-        $this->notify(new EmailChangedNotification());
+        $this->sendEmailVerificationNotification();
+
     }
 }
