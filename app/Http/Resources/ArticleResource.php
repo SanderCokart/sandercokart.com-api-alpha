@@ -25,9 +25,9 @@ class ArticleResource extends JsonResource
             'title' => $this->title,
             'excerpt' => $this->excerpt,
             'markdown' => $this->markdown,
-            'createdAt' => $this->created_at,
+            'created_at' => $this->created_at,
             'publishedAt' => $this->published_at,
-            'updatedAt' => $this->updated_at,
+            'updated_at' => $this->updated_at,
             'slug' => $this->slug,
             'author' => $this->whenLoaded('author', function () {
                 return new AuthorResource($this->author);

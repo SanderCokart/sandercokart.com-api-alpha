@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Models;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
-use App\Models\Role;
 use App\Models\User;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\JsonResponse;
@@ -21,9 +20,22 @@ class UserController extends Controller
     public function index(Request $request): UserCollection
     {
         $this->authorize('viewAny', User::class);
-        $validatedData = $request->validate(['perPage' => 'numeric|integer|max:30']);
+        $validatedData = $request->validate([
+            'page'          => 'integer',
+            'perPage'       => 'integer|min:1|max:100',
+            'sortBy'        => 'string|in:id,title,created_at,updated_at',
+            'sortDirection' => 'string|in:asc,desc',
+        ]);
+
+        /* Pagination parameters */
         $perPage = $validatedData['perPage'] ?? 100;
-        return new UserCollection(User::simplePaginate($perPage));
+        $sortBy = $validatedData['sortBy'] ?? 'id';
+        $sortDirection = $validatedData['sortDirection'] ?? 'asc';
+
+        return new UserCollection(
+            User::orderBy($sortBy, $sortDirection)
+                ->paginate($perPage)
+        );
     }
 
 

@@ -21,6 +21,7 @@ class User extends Authenticatable implements AuditableContract
         'password',
         'remember_token',
     ];
+
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
@@ -32,6 +33,15 @@ class User extends Authenticatable implements AuditableContract
 
     //<editor-fold desc="Relationships">
 
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
+    //</editor-fold>
+
+    //<editor-fold desc="Attributes">
+
     protected function email(): Attribute
     {
         return new Attribute(
@@ -41,17 +51,8 @@ class User extends Authenticatable implements AuditableContract
 
     //</editor-fold>
 
-    //<editor-fold desc="Attributes">
-
     public function isAdmin(): bool
     {
         return $this->roles->contains(Role::ADMIN);
-    }
-
-    //</editor-fold>
-
-    public function roles(): BelongsToMany
-    {
-        return $this->belongsToMany(Role::class);
     }
 }
