@@ -3,7 +3,8 @@
 /* Account */
 
 use App\Http\Controllers\Auth\{AuthController, EmailController, LogoutController, PasswordController};
-use App\Http\Controllers\Models\{ArticleController,
+use App\Http\Controllers\Models\{ArticleBannerController,
+    ArticleController,
     ArticleTypeController,
     FileController,
     RoleController,
@@ -45,6 +46,11 @@ Route::delete('/articles/{article}', [ArticleController::class, 'destroy'])
 
 Route::apiResource('users', UserController::class)
      ->except(['update']);
+
+Route::group(['controller' => ArticleBannerController::class, 'prefix' => 'articleBanners'], function () {
+    Route::get('/', 'index')->name('articleBanners.index');
+    Route::get('/{articleBanner:id}', 'show')->name('articleBanners.show');
+});
 
 Route::apiResources([
     'files'        => FileController::class,

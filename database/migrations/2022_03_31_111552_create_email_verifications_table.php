@@ -15,7 +15,7 @@ return new class extends Migration {
         Schema::create('email_verifications', function (Blueprint $table) {
             $table->uuid('identifier');
             $table->string('token');
-            $table->timestampTz('expires_at');
+            $table->timestampTz('expires_at')->default(now()->addMinutes(60)->toDateTimeLocalString());
         });
     }
 

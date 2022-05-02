@@ -17,7 +17,7 @@ class ArticlePolicy
      * @param User $user
      * @return bool
      */
-    public function viewAll(User $user): bool
+    public function viewAny(User $user): bool
     {
         return $user->isAdmin();
     }

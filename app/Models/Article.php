@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
@@ -36,9 +37,9 @@ class Article extends Model
         return $this->belongsTo(ArticleType::class);
     }
 
-    public function banner(): BelongsTo
+    public function banner(): HasOne
     {
-        return $this->belongsTo(ArticleBanner::class, 'article_banner_id');
+        return $this->hasOne(ArticleBanner::class);
     }
 
     public function author(): BelongsTo
@@ -62,7 +63,7 @@ class Article extends Model
         return $query->whereNull('published_at');
     }
 
-    public function IsPublished(): bool
+    public function isPublished(): bool
     {
         return ! ! $this->published_at;
     }
@@ -72,7 +73,7 @@ class Article extends Model
     //<editor-fold desc="Custom methods">
     public function publish()
     {
-        $this->published_at = now();
+        $this->published_at = now()->toDateTimeString();
         $this->banner->makePublic();
         $this->publicizeImagesWithinMarkdown();
 

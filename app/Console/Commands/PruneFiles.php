@@ -20,13 +20,19 @@ class PruneFiles extends Command
     public function handle()
     {
         $urls = ArticleBanner::pluck('relative_url')->toArray();
-        $allFiles = Storage::disk('private')->files('/uploads/models/ArticleBanner');
+
+        $allFiles = array_merge(
+            Storage::disk('private')->files('/uploads/models/ArticleBanner'),
+            Storage::disk('public')->files('/uploads/models/ArticleBanner')
+        );
+
         $differences = array_diff($allFiles, $urls);
+
         foreach ($differences as $difference) {
             Storage::disk('private')->delete($difference);
             Storage::disk('public')->delete($difference);
         }
 
-        return 'Done';
+        $this->info('Files pruned');
     }
 }

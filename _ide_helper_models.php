@@ -223,6 +223,21 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\RoleUser
+ *
+ * @property int $role_id
+ * @property int $user_id
+ * @method static \Illuminate\Database\Eloquent\Builder|RoleUser newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|RoleUser newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|RoleUser query()
+ * @method static \Illuminate\Database\Eloquent\Builder|RoleUser whereRoleId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|RoleUser whereUserId($value)
+ */
+	class RoleUser extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\User
  *
  * @property int $id

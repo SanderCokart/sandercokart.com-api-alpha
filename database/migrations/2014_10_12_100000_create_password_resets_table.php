@@ -16,7 +16,7 @@ return new class extends Migration {
             $table->uuid('identifier');
             $table->string('token');
             $table->unsignedInteger('user_id')->unique();
-            $table->timestamp('expires_at');
+            $table->timestamp('expires_at')->default(now()->addMinutes(60)->toDateTimeLocalString());
         });
     }
 

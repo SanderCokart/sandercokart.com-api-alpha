@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\{EmailController, LoginController, PasswordController, RegisterController};
-use App\Http\Controllers\Models\{ArticleController};
+use App\Http\Controllers\Models\{ArticleBannerController, ArticleController};
 
 Route::group(['prefix' => 'account'], function () {
     Route::post('/register', RegisterController::class)->name('account.register');
@@ -20,11 +20,12 @@ Route::group(['prefix' => 'account'], function () {
 
 
 /* ARTICLE */
-Route::get('/articles/{articleType:name}/recent', [ArticleController::class, 'recent'])->name('articles.recent');
-Route::get('/articles/{articleType:name}/slugs', [ArticleController::class, 'slugs'])->name('articles.slugs');
-Route::get('/articles/{articleType:name}', [ArticleController::class, 'index'])->name('articles.index');
-Route::get('/articles/{articleType:name}/{article:slug}', [ArticleController::class, 'show'])->name('articles.show');
-
+Route::group(['prefix' => 'articles', 'controller' => ArticleController::class], function () {
+    Route::get('/{articleType:name}/recent', 'recent')->name('articles.recent');
+    Route::get('/{articleType:name}/slugs', 'slugs')->name('articles.slugs');
+    Route::get('/{articleType:name}', 'index')->name('articles.index');
+    Route::get('/{articleType:name}/{article:slug}', 'show')->name('articles.show');
+});
 
 /* RESOURCES */
 Route::apiResources([

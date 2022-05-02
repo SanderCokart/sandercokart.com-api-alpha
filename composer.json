@@ -9,8 +9,6 @@
     "license": "MIT",
     "require": {
         "php": "^8.1.5",
-        "andreaselia/laravel-api-to-postman": "^1.7",
-        "fidum/laravel-eloquent-morph-to-one": "^2.1",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "intervention/image": "^2.7",
@@ -24,7 +22,6 @@
         "barryvdh/laravel-ide-helper": "^2.11",
         "fakerphp/faker": "^v1.17.0",
         "laravel/sail": "^1.13.1",
-        "laravel/telescope": "^4.7",
         "mockery/mockery": "^1.5.0",
         "nunomaduro/collision": "^6.1",
         "pestphp/pest": "^1.21",

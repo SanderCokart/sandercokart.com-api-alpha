@@ -13,6 +13,7 @@ class File extends Model
 {
     use HasFactory, CanPublicize;
 
+    protected $table = 'files';
     protected $guarded = [];
 
     protected $casts = [

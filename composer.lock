@@ -4,81 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "38d3aea1676d6fb8865c89785dbbd822",
+    "content-hash": "c7e1b659d29021899463202f454f1993",
     "packages": [
-        {
-            "name": "andreaselia/laravel-api-to-postman",
-            "version": "v1.11.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/andreaselia/laravel-api-to-postman.git",
-                "reference": "9f9e8231c90ad207377d396ccd890984116c3fd9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/andreaselia/laravel-api-to-postman/zipball/9f9e8231c90ad207377d396ccd890984116c3fd9",
-                "reference": "9f9e8231c90ad207377d396ccd890984116c3fd9",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "illuminate/config": "^6.0|^7.0|^8.0|^9.0",
-                "illuminate/console": "^6.0|^7.0|^8.0|^9.0",
-                "illuminate/contracts": "^6.0|^7.0|^8.0|^9.0",
-                "illuminate/routing": "^6.0|^7.0|^8.0|^9.0",
-                "illuminate/support": "^6.0|^7.0|^8.0|^9.0",
-                "php": "^7.4|^8.0"
-            },
-            "require-dev": {
-                "orchestra/testbench": "^6.12"
-            },
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "AndreasElia\\PostmanGenerator\\PostmanGeneratorServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "AndreasElia\\PostmanGenerator\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Andreas Elia",
-                    "email": "andreaselia@live.co.uk"
-                }
-            ],
-            "description": "Generate a Postman collection automatically from your Laravel API",
-            "keywords": [
-                "Postman",
-                "api",
-                "collection",
-                "generate",
-                "laravel"
-            ],
-            "support": {
-                "issues": "https://github.com/andreaselia/laravel-api-to-postman/issues",
-                "source": "https://github.com/andreaselia/laravel-api-to-postman/tree/v1.11.0"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/andreaselia",
-                    "type": "github"
-                },
-                {
-                    "url": "https://github.com/tomirons",
-                    "type": "github"
-                }
-            ],
-            "time": "2022-02-21T15:10:54+00:00"
-        },
         {
             "name": "asm89/stack-cors",
             "version": "v2.1.1",
@@ -565,66 +492,6 @@
                 }
             ],
             "time": "2021-10-11T09:18:27+00:00"
-        },
-        {
-            "name": "fidum/laravel-eloquent-morph-to-one",
-            "version": "2.1.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/fidum/laravel-eloquent-morph-to-one.git",
-                "reference": "8fefeb4e5728e803032a0481b3302778c900bc40"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/fidum/laravel-eloquent-morph-to-one/zipball/8fefeb4e5728e803032a0481b3302778c900bc40",
-                "reference": "8fefeb4e5728e803032a0481b3302778c900bc40",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/database": "^8.0|^9.0",
-                "illuminate/support": "^8.0|^9.0",
-                "php": "^7.3|^8.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^9.4",
-                "vimeo/psalm": "^4.1"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Fidum\\EloquentMorphToOne\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Daniel Mason",
-                    "email": "fidum.dev@gmail.com",
-                    "homepage": "https://fidum.uk",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Adds MorphToOne relation to Laravel eloquent",
-            "homepage": "https://github.com/fidum/laravel-eloquent-morph-to-one",
-            "keywords": [
-                "fidum",
-                "laravel",
-                "laravel-eloquent-morph-to-one"
-            ],
-            "support": {
-                "issues": "https://github.com/fidum/laravel-eloquent-morph-to-one/issues",
-                "source": "https://github.com/fidum/laravel-eloquent-morph-to-one/tree/2.1.1"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/dmason30",
-                    "type": "github"
-                }
-            ],
-            "time": "2022-01-21T15:12:49+00:00"
         },
         {
             "name": "fruitcake/laravel-cors",
@@ -6513,74 +6380,6 @@
                 "source": "https://github.com/laravel/sail"
             },
             "time": "2022-04-04T15:21:51+00:00"
-        },
-        {
-            "name": "laravel/telescope",
-            "version": "v4.8.3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/laravel/telescope.git",
-                "reference": "bb23d58161032c8745d38348452afcbcd8adfc78"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/laravel/telescope/zipball/bb23d58161032c8745d38348452afcbcd8adfc78",
-                "reference": "bb23d58161032c8745d38348452afcbcd8adfc78",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "laravel/framework": "^8.37|^9.0",
-                "php": "^7.3|^8.0",
-                "symfony/var-dumper": "^5.0|^6.0"
-            },
-            "require-dev": {
-                "ext-gd": "*",
-                "guzzlehttp/guzzle": "^6.0|^7.0",
-                "orchestra/testbench": "^6.0|^7.0"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "4.x-dev"
-                },
-                "laravel": {
-                    "providers": [
-                        "Laravel\\Telescope\\TelescopeServiceProvider"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Laravel\\Telescope\\": "src/",
-                    "Laravel\\Telescope\\Database\\Factories\\": "database/factories/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Taylor Otwell",
-                    "email": "taylor@laravel.com"
-                },
-                {
-                    "name": "Mohamed Said",
-                    "email": "mohamed@laravel.com"
-                }
-            ],
-            "description": "An elegant debug assistant for the Laravel framework.",
-            "keywords": [
-                "debugging",
-                "laravel",
-                "monitoring"
-            ],
-            "support": {
-                "issues": "https://github.com/laravel/telescope/issues",
-                "source": "https://github.com/laravel/telescope/tree/v4.8.3"
-            },
-            "time": "2022-04-11T14:29:02+00:00"
         },
         {
             "name": "mockery/mockery",

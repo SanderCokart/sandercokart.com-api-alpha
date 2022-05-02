@@ -2,9 +2,13 @@
 
 namespace App\Http\Resources;
 
+use App\Models\File;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @mixin File
+ */
 class FileResource extends JsonResource
 {
 
@@ -19,10 +23,9 @@ class FileResource extends JsonResource
     public function toArray($request): array
     {
         return [
-            'id' => $this['id'],
-            'original_name' => $this['original_name'],
-            'created_at' => $this['created_at'],
-            'relative_url' => $this->when($this['is_private'] == false, $this['relative_url'])
+            'id' => $this->id,
+            'original_name' => $this->original_name,
+            'relative_url' => $this->when($this->is_private === false, $this->relative_url)
         ];
     }
 }

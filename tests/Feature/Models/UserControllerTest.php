@@ -16,7 +16,7 @@ test('only admins can request a list of users',
         $response = getJson(route('users.index'));
         expect($response->status())->toBe($data['expectedStatus']);
         expect($response->json('message'))->toBe($data['expectedMessage']);
-    })->with('userControllerIndexData')->only();
+    })->with('userControllerIndexData');
 
 test('only admins can create users and must have "user" Role',
     /**
@@ -43,7 +43,7 @@ test('only admins can create users and must have "user" Role',
                 }) ?? false
         )->toBe(! ! $data['expectedRoles']);
 
-    })->with('userControllerStoreData')->only();
+    })->with('userControllerStoreData');
 
 test('only admins can see an individual user or the user itself',
     /**
@@ -57,7 +57,7 @@ test('only admins can see an individual user or the user itself',
         $response = getJson(route('users.show', ['user' => $data['userToView']->id]));
         expect($response->status())->toBe($data['expectedStatus']);
         expect($response->json('message'))->toBe($data['expectedMessage']);
-    })->with('userControllerShowData')->only();
+    })->with('userControllerShowData');
 
 
 test('admins can delete users and verified users can delete themselves',
@@ -72,4 +72,4 @@ test('admins can delete users and verified users can delete themselves',
         $response = deleteJson(route('users.destroy', ['user' => $data['userToDelete']->id]));
         expect($response->status())->toBe($data['expectedStatus']);
         expect($response->json('message'))->toBe($data['expectedMessage']);
-    })->with('userControllerDestroyData')->only();
+    })->with('userControllerDestroyData');

@@ -13,15 +13,13 @@ return new class extends Migration {
     public function up()
     {
         Schema::create('articles', function (Blueprint $table) {
-            $table->id();
+            $table->id()->index();
             $table->string('title');
             $table->text('excerpt');
             $table->longText('markdown');
             $table->string('slug')->unique();
             $table->timeStamp('published_at')->nullable();
             $table->foreignId('user_id');
-            $table->foreignId('article_banner_id')->unique()->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('article_type_id');
             $table->timestampsTz();
         });
     }

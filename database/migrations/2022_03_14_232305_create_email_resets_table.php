@@ -11,13 +11,13 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('email_resets', function (Blueprint $table) {
             $table->integer('user_id')->index();
             $table->string('token');
             $table->timestampTz('created_at');
-            $table->timestampTz('expire_at');
+            $table->timestampTz('expires_at')->default(now()->addMinutes(60)->toDateTimeLocalString());
         });
     }
 
@@ -26,7 +26,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('email_resets');
     }

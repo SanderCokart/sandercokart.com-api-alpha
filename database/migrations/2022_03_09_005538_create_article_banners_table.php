@@ -13,8 +13,9 @@ return new class extends Migration {
     public function up()
     {
         Schema::create('article_banners', function (Blueprint $table) {
-            $table->id();
+            $table->id()->index();
             $table->string('relative_url');
+            $table->foreignId('article_id')->constrained()->onDelete('cascade');
         });
     }
 

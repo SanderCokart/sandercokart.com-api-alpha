@@ -1,63 +1,88 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# api.sandercokart.com 
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
 
-## About Laravel
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+# Getting started
+Run the following commands to get up and started
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+```bash
+composer install & artisan key:generate & php artisan migrate --seed & php artisan storage:link
+```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+# Routes
+Routes are split among the following files:
+## `routes/guest.php`
+anyone can use these routes
+## `routes/authenticated.php`
+only authenticated users can use these routes
+## `routes/verified.php`
+only verified users can use these routes
 
-## Learning Laravel
+# Added artisan commands
+```
+artisan prune:files
+```
+removes all files that are not used by the application
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+```
+artisan make:contract
+```
+Makes a php interface or as laravel refers to them as contracts and are stored in `\App\Contracts`
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```
+artisan make:trait
+```
+Makes a php trait and is stored in `\App\Traits`
 
-## Laravel Sponsors
+# Guidelines
+## Testing
+Testing is done using PEST (PHPUnit)
+For this vendor package there are 3 commands:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+```
+php artisan pest:test {name} //generates a test file
+```
 
-### Premium Partners
+```
+php artisan pest:dataset {name} //generates a dataset file
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[CMS Max](https://www.cmsmax.com/)**
+In order to run tests call the following command:
+```
+php `./vendor/bin/pest`
+```
 
-## Contributing
+# PHPStorm Support
+## Command Line Tool
+PHPStorm has a Run Anything feature that can be used to run any command.
+This includes scripts found in the package.json.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Adding Custom Tools
+We can add additional tools to the Run Anything command line.
+Go to file -> settings -> tools -> command line tool support
+#### Composer
+To add composer click the `+` button and select `Composer` from the dropdown.
+Then you can define this tool for global use or limit it to just this project.
+Use the projects default php interpreter and fill in the path to the composer.phar.
 
-## Code of Conduct
+If you installed composer on Windows via the Windows installer setup executable
+found on: https://getcomposer.org/download/ or via direct download: https://getcomposer.org/Composer-Setup.exe
+you can find it in `C:\ProgramData\ComposerSetup\bin\composer.phar`
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+You can now use composer in the Run Anything tool by prefixing your command with `c`as alias.
 
-## Security Vulnerabilities
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+#### Laravel Artisan
+To add artisan click the `+` button and select `Laravel` from the dropdown.
+Then you can define this tool for global use or limit it to just this project.
+Use the projects default php interpreter and fill in the path to the `artisan` executable at the root this project.
 
-## License
+You can now use artisan in the Run Anything tool by 
+prefixing your command with whatever alias you have decided to use.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+
+# Environment (.env)
+We have 4 .env files.
+* .env.local.example
+* .env.prod.example
+* .env.testing.example
