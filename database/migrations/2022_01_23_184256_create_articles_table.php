@@ -10,16 +10,17 @@ return new class extends Migration {
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('articles', function (Blueprint $table) {
             $table->id()->index();
             $table->string('title');
             $table->text('excerpt');
             $table->longText('markdown');
-            $table->string('slug')->unique();
-            $table->timeStamp('published_at')->nullable();
+            $table->string('slug')->index()->unique();
+            $table->timestampTz('published_at')->nullable();
             $table->foreignId('user_id');
+            $table->foreignId('article_type_id');
             $table->timestampsTz();
         });
     }
@@ -29,7 +30,7 @@ return new class extends Migration {
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('articles');
     }

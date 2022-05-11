@@ -3,8 +3,9 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Http\File;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\UploadedFile;
+use Str;
 
 class FileFactory extends Factory
 {
@@ -15,38 +16,37 @@ class FileFactory extends Factory
      */
     public function definition(): array
     {
-        $file = new File(Storage::disk('public')->path('/static/300x300.png'));
-
-        $vars = ['$name' => uniqid(), '$ext' => $file->getExtension()];
-        $newName = strtr('$name.$ext', $vars);
-
-        //if env is testing put in 'testing' otherwise in 'uploads'
-        $directoryToStoreFile = config('app.env') === 'testing' ? 'testing' : 'uploads';
-
-        $path = Storage::disk('private')->putFileAs($directoryToStoreFile, $file, $newName);
-
+        $file = Uploadedfile::fake()
+                            ->image('300x300.png', 300, 300);
         return [
-            'original_name' => $file->getFilename(),
-            'mime_type' => $file->getMimeType(),
-            'relative_url' => $path,
-            'is_private' => true
+            'relative_path' => $file->store('uploads/' . $file->getMimeType(), ['disk' => 'private']),
         ];
     }
 
-    public function public(): array
+    public function withCustomPath(string $path): static
     {
-        $file = new File(Storage::disk('public')->path('/static/300x300.png'));
+        return $this->state([
+            'relative_path' => Uploadedfile::fake()
+                                           ->image('300x300.png', 300, 300)
+                                           ->store($path, ['disk' => 'private']),
+        ]);
+    }
 
-        $vars = ['$name' => uniqid(), '$ext' => $file->getExtension()];
-        $newName = strtr('$name.$ext', $vars);
+    public function fromModel(Model|string $model): FileFactory
+    {
+        return $this->state([
+            'relative_path' => Uploadedfile::fake()
+                                           ->image('300x300.png', 300, 300)
+                                           ->store('uploads/models/' . $this->determineFolderName($model), ['disk' => 'private']),
+        ]);
+    }
 
-        $path = Storage::disk('public')->putFileAs('uploads', $file, $newName);
-
-        return [
-            'original_name' => $file->getFilename(),
-            'mime_type' => $file->getMimeType(),
-            'relative_url' => $path,
-            'is_private' => false
-        ];
+    private function determineFolderName(Model|string $model): string
+    {
+        if ($model instanceof Model) {
+            return Str::plural(Str::studly(class_basename($model)));
+        } else {
+            return Str::plural(Str::studly($model));
+        }
     }
 }

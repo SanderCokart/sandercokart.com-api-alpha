@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Models\ArticleBanner;
+use App\Models\Article;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Storage;
 
@@ -19,18 +19,19 @@ class PruneFiles extends Command
 
     public function handle()
     {
-        $urls = ArticleBanner::pluck('relative_url')->toArray();
+        $privateFiles = Storage::disk('private')->allFiles('uploads');
+        $publicFiles = Storage::disk('public')->allFiles('uploads');
+        $allFiles = array_merge($privateFiles, $publicFiles);
 
-        $allFiles = array_merge(
-            Storage::disk('private')->files('/uploads/models/ArticleBanner'),
-            Storage::disk('public')->files('/uploads/models/ArticleBanner')
-        );
+        $attachedFiles = Article::has('banner')->get()->map(function ($article) {
+            return $article->banner->relative_path;
+        })->toArray();
 
-        $differences = array_diff($allFiles, $urls);
+        $diff = array_diff($allFiles, $attachedFiles);
 
-        foreach ($differences as $difference) {
-            Storage::disk('private')->delete($difference);
-            Storage::disk('public')->delete($difference);
+        foreach ($diff as $file) {
+            Storage::disk('private')->delete($file);
+            Storage::disk('public')->delete($file);
         }
 
         $this->info('Files pruned');

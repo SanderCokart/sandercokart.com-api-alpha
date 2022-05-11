@@ -21,20 +21,19 @@ namespace App\Models{
  * @property string $slug
  * @property string|null $published_at
  * @property int $user_id
- * @property int $article_banner_id
  * @property int $article_type_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\ArticleType|null $articleType
  * @property-read \App\Models\User|null $author
- * @property-read \App\Models\ArticleBanner $banner
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\File[] $banner
+ * @property-read int|null $banner_count
  * @method static \Illuminate\Database\Eloquent\Builder|Article drafts()
  * @method static \Database\Factories\ArticleFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|Article newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Article newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Article published()
  * @method static \Illuminate\Database\Eloquent\Builder|Article query()
- * @method static \Illuminate\Database\Eloquent\Builder|Article whereArticleBannerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Article whereArticleTypeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Article whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Article whereExcerpt($value)
@@ -47,23 +46,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Article whereUserId($value)
  */
 	class Article extends \Eloquent {}
-}
-
-namespace App\Models{
-/**
- * App\Models\ArticleBanner
- *
- * @property int $id
- * @property string $relative_url
- * @property-read \App\Models\Article|null $article
- * @method static \Database\Factories\ArticleBannerFactory factory(...$parameters)
- * @method static \Illuminate\Database\Eloquent\Builder|ArticleBanner newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|ArticleBanner newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|ArticleBanner query()
- * @method static \Illuminate\Database\Eloquent\Builder|ArticleBanner whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|ArticleBanner whereRelativeUrl($value)
- */
-	class ArticleBanner extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -158,27 +140,18 @@ namespace App\Models{
  * App\Models\File
  *
  * @property int $id
- * @property string|null $fileable_type
- * @property int|null $fileable_id
- * @property string $original_name
- * @property string $mime_type
- * @property bool|null $is_private
- * @property string $relative_url
+ * @property string $relative_path
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $fileable
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Article[] $articles
+ * @property-read int|null $articles_count
  * @method static \Database\Factories\FileFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|File newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|File newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|File query()
  * @method static \Illuminate\Database\Eloquent\Builder|File whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|File whereFileableId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|File whereFileableType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|File whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|File whereIsPrivate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|File whereMimeType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|File whereOriginalName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|File whereRelativeUrl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|File whereRelativePath($value)
  * @method static \Illuminate\Database\Eloquent\Builder|File whereUpdatedAt($value)
  */
 	class File extends \Eloquent {}

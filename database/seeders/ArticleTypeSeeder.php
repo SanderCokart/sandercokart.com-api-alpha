@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\ArticleType;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class ArticleTypeSeeder extends Seeder
@@ -12,7 +13,7 @@ class ArticleTypeSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
         ArticleType::insert([
             ['name' => 'posts'],

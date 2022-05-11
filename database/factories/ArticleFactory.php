@@ -53,8 +53,7 @@ __Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt dolor quo ve
             'excerpt' => substr($markdown, 0, 100),
             'published_at' => null,
             'user_id' => 1,
-            'article_type_id' => ArticleType::POST,
-            'article_banner_id' => ArticleBanner::factory()
+            'article_type_id' => ArticleType::POSTS,
         ];
     }
 }

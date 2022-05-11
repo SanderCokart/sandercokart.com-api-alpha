@@ -39,9 +39,9 @@ Route::group(['prefix' => 'account'], function () {
 /* Resources */
 Route::post('/articles', [ArticleController::class, 'store'])
      ->name('articles.store');
-Route::patch('/articles/{article}', [ArticleController::class, 'update'])
+Route::patch('/articles/{articleType:name}/{article}', [ArticleController::class, 'update'])
      ->name('articles.update');
-Route::delete('/articles/{article}', [ArticleController::class, 'destroy'])
+Route::delete('/articles/{articleType:name}/{article}', [ArticleController::class, 'destroy'])
      ->name('articles.destroy');
 
 Route::apiResource('users', UserController::class)

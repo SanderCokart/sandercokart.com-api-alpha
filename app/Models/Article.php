@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
@@ -16,9 +16,12 @@ class Article extends Model
         'title',
         'excerpt',
         'markdown',
-        'article_banner_id',
         'article_type_id',
         'published_at',
+    ];
+
+    protected $casts = [
+        'published_at' => 'datetime',
     ];
 
     use HasFactory, HasSlug;
@@ -30,29 +33,24 @@ class Article extends Model
                           ->saveSlugsTo('slug');
     }
 
-
     //<editor-fold desc="Relationships">
     public function articleType(): BelongsTo
     {
         return $this->belongsTo(ArticleType::class);
     }
 
-    public function banner(): HasOne
-    {
-        return $this->hasOne(ArticleBanner::class);
-    }
-
     public function author(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
+
+    public function banner(): MorphToMany
+    {
+        return $this->morphToMany(File::class, 'fileable', 'fileables', 'file_id', 'fileable_id', 'id', 'id');
+    }
     //</editor-fold>
 
-    //<editor-fold desc="Scopes">\
-    /**
-     * @param Builder $query
-     * @return Builder
-     */
+    //<editor-fold desc="Scopes">
     public function scopePublished(Builder $query): Builder
     {
         return $query->whereNotNull('published_at');
@@ -62,21 +60,27 @@ class Article extends Model
     {
         return $query->whereNull('published_at');
     }
+    //</editor-fold>
 
+    //<editor-fold desc="Publishing">
     public function isPublished(): bool
     {
         return ! ! $this->published_at;
     }
 
-    //</editor-fold>
-
-    //<editor-fold desc="Custom methods">
     public function publish()
     {
         $this->published_at = now()->toDateTimeString();
         $this->banner->makePublic();
         $this->publicizeImagesWithinMarkdown();
 
+    }
+
+    public function unPublish()
+    {
+        $this->published_at = null;
+        $this->banner->makePrivate();
+        $this->privatizeImagesWithinMarkdown();
     }
 
     public function publicizeImagesWithinMarkdown()
@@ -102,12 +106,6 @@ class Article extends Model
         $this->fill(['markdown' => $markdown])->save();
     }
 
-    public function unPublish()
-    {
-        $this->published_at = null;
-        $this->banner->makePublic();
-        $this->publicizeImagesWithinMarkdown();
-    }
 
     public function privatizeImagesWithinMarkdown()
     {
@@ -132,4 +130,12 @@ class Article extends Model
         $this->fill(['markdown' => $markdown])->save();
     }
     //</editor-fold>
+
+    //<editor-fold desc="Mutators">
+    protected function getBannerAttribute(): ?File
+    {
+        return $this->banner()->first();
+    }
+    //</editor-fold>
+
 }

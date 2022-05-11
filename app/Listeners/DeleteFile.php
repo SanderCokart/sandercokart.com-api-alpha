@@ -26,9 +26,10 @@ class DeleteFile
      * @param FileModelDeleted $event
      * @return void
      */
-    public function handle(FileModelDeleted $event)
+    public function handle(FileModelDeleted $event): void
     {
         $file = $event->file;
-        Storage::disk($file['is_private'] ? 'private' : 'public')->delete($file['relative_url']);
+        Storage::disk('private')->delete($file->relative_path);
+        Storage::disk('public')->delete($file->relative_path);
     }
 }

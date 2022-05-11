@@ -2,83 +2,62 @@
 
 namespace App\Http\Controllers\Models;
 
+use App\Enums\ArticleType;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\FileResource;
 use App\Models\File;
+use App\Services\FileUploadService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Illuminate\Http\Response;
 use Storage;
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use Str;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class FileController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return AnonymousResourceCollection
-     */
     public function index(): AnonymousResourceCollection
     {
         return FileResource::collection(File::all());
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param Request $request
-     * @return FileResource
-     */
-    public function store(Request $request): FileResource
+    public function store(Request $request, FileUploadService $fileUploadService): FileResource
     {
-        $validatedData = $request->validate(['file' => 'file|image|required|size:50000']);
+        $mimeType = $request->file('file')->getMimeType();
 
-        $vars = ['$name' => uniqid(), '$ext' => $validatedData['file']->extension()];
-        $newName = strtr('$name.$ext', $vars);
+        if (! $mimeType) abort(422, 'Could not process file.');
 
-        $relativePath = Storage::disk('private')->putFileAs('uploads', $validatedData['file'], $newName);
+        if (Str::contains($mimeType, 'image')) {
+            $validatedData = $request->validate(['file' => 'file|image|required|max:50000']);
+        } else {
+            $validatedData = $request->validate(['file' => 'file|required|max:50000']);
+        }
+
+        $relativePath = $fileUploadService->handleFileUpload(
+            $validatedData['file'],
+            $mimeType,
+            ArticleType::PRIVATE
+        );
 
         return new FileResource(File::create([
-            'original_name' => $validatedData['file']->hashName(),
-            'mime_type' => $validatedData['file']->getMimeType(),
-            'relative_url' => $relativePath,
-            'is_private' => true,
+            'relative_path' => $relativePath,
         ]));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param Request $request
-     * @param File $file
-     * @return StreamedResponse
-     */
-    public function show(Request $request, File $file): StreamedResponse
+    public function show(Request $request, File $file): BinaryFileResponse
     {
-        return Storage::disk('private')->response($file->relative_url);
+        $this->authorize('view', $file);
+        return response()->download(Storage::disk('private')->path($file->relative_path));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param Request $request
-     * @param int $id
-     * @return Response
-     */
     public function update(Request $request, $id)
     {
-        //
+
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param Request $request
-     * @param File $file
-     * @return bool
-     */
-    public function destroy(Request $request, File $file): bool
+    public function destroy(Request $request, File $file): JsonResponse
     {
-        return $file->delete();
+        $file->delete();
+        return response()->json(['message' => 'File deleted.']);
     }
 }

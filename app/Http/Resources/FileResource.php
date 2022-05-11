@@ -24,8 +24,7 @@ class FileResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'original_name' => $this->original_name,
-            'relative_url' => $this->when($this->is_private === false, $this->relative_url)
+            'relative_path' => $this->when($this->articles()->first()?->isPublished(), $this->relative_path),
         ];
     }
 }

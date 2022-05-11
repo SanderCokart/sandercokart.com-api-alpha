@@ -10,9 +10,9 @@ class ArticleType extends Model
 {
     use HasFactory;
 
-    const POST = 1;
-    const TIPS_AND_TUTORIALS = 2;
-    const COURSE = 3;
+    const POSTS = ['id' => 1, 'name' => 'posts'];
+    const TIPS_AND_TUTORIALS = ['id' => 2, 'name' => 'tips-&-tutorials'];
+    const COURSES = ['id' => 3, 'name' => 'courses'];
 
     public $timestamps = false;
     protected $fillable = ['name'];

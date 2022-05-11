@@ -18,16 +18,12 @@ uses()->group('models')->in('./Feature/Models');
 
 uses()->beforeEach(function () {
     seed([ArticleTypeSeeder::class, RoleSeeder::class]);
-})->afterEach(function () {
-    Storage::disk('public')->deleteDirectory('testing');
-    Storage::disk('private')->deleteDirectory('testing');
 })->in(__DIR__);
 
 function withUser(bool $unverified = false): User
 {
     $user = User::factory()->createUser($unverified);
     Sanctum::actingAs($user);
-
     return $user;
 }
 

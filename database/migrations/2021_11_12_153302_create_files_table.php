@@ -11,15 +11,11 @@ return new class extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('files', function (Blueprint $table) {
-            $table->id();
-            $table->nullableMorphs('fileable');
-            $table->string('original_name');
-            $table->string('mime_type');
-            $table->boolean('is_private')->nullable()->default(true);
-            $table->string('relative_url');
+            $table->id()->index();
+            $table->string('relative_path');
             $table->timestampsTz();
         });
     }
@@ -29,7 +25,7 @@ return new class extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('files');
     }

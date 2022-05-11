@@ -9,6 +9,7 @@ use App\Models\Article;
 use App\Models\ArticleType;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -38,7 +39,7 @@ class ArticleController extends Controller
 
 
         return new ArticleCollection(
-            Article::where('article_type_id', $articleTypeId)
+            Article::with(['author'])->where('article_type_id', $articleTypeId)
                    ->orderBy($sortBy, $sortDirection)
                    ->paginate($perPage)
                    ->withQueryString()
@@ -52,12 +53,14 @@ class ArticleController extends Controller
             'title'             => ['string', 'max:255', 'required'],
             'excerpt'           => ['string', 'required'],
             'markdown'          => ['string', 'required'],
-            'article_banner_id' => ['integer', 'required', 'exists:article_banners,id'],
-            'article_type_id'   => ['integer', 'required', 'exists:article_types,id'],
             'published'         => ['boolean', 'required'],
+            'article_banner_id' => ['integer', 'required', 'exists:files,id'],
+            'article_type_id'   => ['integer', 'required', 'exists:article_types,id'],
         ]);
 
+        /** @var Article $article */
         $article = $request->user()->articles()->create($validatedData);
+        $article->banner()->sync([$validatedData['article_banner_id']]);
 
         if ($validatedData['published']) {
             $article->publish();
@@ -67,25 +70,26 @@ class ArticleController extends Controller
         return response()->json(['message' => 'Article created successfully.'], Response::HTTP_CREATED);
     }
 
-    public function show(Request $request, ArticleType $articleType, Article $article): ArticleResource
+    public function show(Request $request, string $articleTypeName, string $articleSlug): ArticleResource
     {
+        $article = Article::with(['banner', 'author'])->where('slug', $articleSlug)->firstOrFail();
         $this->authorize('view', $article);
         return new ArticleResource($article);
     }
 
-    public function update(Request $request, Article $article): JsonResponse
+    public function update(Request $request, string $articleTypeName, Article $article): JsonResponse
     {
         $this->authorize('update', $article);
         $validatedData = $request->validate([
             'title'             => ['string', 'max:255', 'required'],
             'excerpt'           => ['string', 'required'],
             'markdown'          => ['string', 'required'],
-            'article_banner_id' => ['integer', 'required', 'exists:article_banners,id'],
-            'article_type_id'   => ['integer', 'required', 'exists:article_types,id'],
+            'article_banner_id' => ['integer', 'required'],
             'published'         => ['boolean', 'required'],
         ]);
 
         $article->update($validatedData);
+        $article->banner()->sync([$validatedData['article_banner_id']]);
 
         if (! $article->published_at && $validatedData['published']) $article->publish();
         if ($article->published_at && ! $validatedData['published']) $article->unPublish();
@@ -93,20 +97,22 @@ class ArticleController extends Controller
         return response()->json(['message' => 'Article updated successfully.'], Response::HTTP_OK);
     }
 
-    public function destroy(ArticleType $articleType, Article $article): JsonResponse
+    public
+    function destroy(ArticleType $articleType, Article $article): JsonResponse
     {
         $this->authorize('delete', $article);
         $article->delete();
         return response()->json(['message' => 'Article deleted successfully.'], Response::HTTP_OK);
     }
 
-    public function recent(Request $request, ArticleType $articleType): ArticleCollection
+    public
+    function recent(Request $request, ArticleType $articleType): ArticleCollection
     {
         $collection = new ArticleCollection(
             Article::with(['author', 'banner'])
-                   ->when(! $request->user()?->can('viewAny', Article::class), fn($query) => $query->published())
-                   ->whereBelongsTo($articleType, 'articleType')
+                   ->published()
                    ->latest()
+                   ->whereBelongsTo($articleType, 'articleType')
                    ->cursorPaginate(10)
         );
 
@@ -120,5 +126,15 @@ class ArticleController extends Controller
         }
 
         return $collection;
+    }
+
+    public
+    function slugs(): Collection
+    {
+        return Article::published()->pluck('slug')->map(fn($slug) => [
+            'params' => [
+                'slug' => $slug,
+            ],
+        ]);
     }
 }

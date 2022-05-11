@@ -7,13 +7,10 @@ use Database\Seeders\RoleSeeder;
 use function Pest\Laravel\actingAs;
 
 beforeEach(function () {
-    $this->seed(RoleSeeder::class);
-    $user = User::factory()->hasAttached(Role::find(Role::ADMIN))->create();
-    actingAs($user);
+    withAdmin();
 });
 
 it('has a working ArticleType index page', function () {
-    ArticleType::factory()->count(3)->create();
     $this->get('/articleTypes')
         ->assertJsonCount(3)
         ->assertStatus(200);

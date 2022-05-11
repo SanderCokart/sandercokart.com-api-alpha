@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('article_types', function (Blueprint $table) {
             $table->id()->index();
-            $table->string('name')->unique();
+            $table->string('name')->index()->unique();
         });
     }
 

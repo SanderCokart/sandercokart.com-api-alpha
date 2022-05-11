@@ -31,10 +31,7 @@ class ArticlePolicy
      */
     public function view(?User $user, Article $article): bool
     {
-        if (!$user || !$user->isAdmin()) {
-            return $article->isPublished();
-        }
-        return true;
+        return $article->isPublished() || $user->isAdmin();
     }
 
     /**
@@ -68,30 +65,6 @@ class ArticlePolicy
      * @return bool
      */
     public function delete(User $user, Article $article): bool
-    {
-        return $user->isAdmin();
-    }
-
-    /**
-     * Determine whether the user can restore the model.
-     *
-     * @param User $user
-     * @param Article $article
-     * @return bool
-     */
-    public function restore(User $user, Article $article): bool
-    {
-        return $user->isAdmin();
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     *
-     * @param User $user
-     * @param Article $article
-     * @return bool
-     */
-    public function forceDelete(User $user, Article $article): bool
     {
         return $user->isAdmin();
     }
