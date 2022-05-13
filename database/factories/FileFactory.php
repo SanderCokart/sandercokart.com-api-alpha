@@ -2,10 +2,10 @@
 
 namespace Database\Factories;
 
+use App\Enums\DisksEnum;
+use App\Models\File;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
-use Str;
 
 class FileFactory extends Factory
 {
@@ -16,37 +16,29 @@ class FileFactory extends Factory
      */
     public function definition(): array
     {
-        $file = Uploadedfile::fake()
-                            ->image('300x300.png', 300, 300);
         return [
-            'relative_path' => $file->store('uploads/' . $file->getMimeType(), ['disk' => 'private']),
+            'is_private'    => true,
         ];
     }
 
-    public function withCustomPath(string $path): static
+    //state is_private true
+    public function public(): FileFactory
     {
         return $this->state([
-            'relative_path' => Uploadedfile::fake()
-                                           ->image('300x300.png', 300, 300)
-                                           ->store($path, ['disk' => 'private']),
+            'is_private' => false,
         ]);
     }
 
-    public function fromModel(Model|string $model): FileFactory
+    public function configure(): FileFactory
     {
-        return $this->state([
-            'relative_path' => Uploadedfile::fake()
-                                           ->image('300x300.png', 300, 300)
-                                           ->store('uploads/models/' . $this->determineFolderName($model), ['disk' => 'private']),
-        ]);
+        $uploadedFile = Uploadedfile::fake()
+                                    ->image('300x300.png', 300, 300);
+        return $this->afterMaking(function (File $file) use ($uploadedFile) {
+            $file->relative_path = $uploadedFile->store(
+                'uploads/' . $uploadedFile->getMimeType(),
+                ['disk' => $file->is_private ? DisksEnum::PRIVATE->value : DisksEnum::PUBLIC->value]
+            );
+        });
     }
 
-    private function determineFolderName(Model|string $model): string
-    {
-        if ($model instanceof Model) {
-            return Str::plural(Str::studly(class_basename($model)));
-        } else {
-            return Str::plural(Str::studly($model));
-        }
-    }
 }

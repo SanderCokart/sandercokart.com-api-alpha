@@ -13,14 +13,13 @@ class ArticleTypeController extends Controller
 {
     public function index(): JsonResponse
     {
+        $this->authorize('viewAny', ArticleType::class);
         return response()->json(ArticleType::all());
     }
 
-    /**
-     * @throws ValidationException
-     */
     public function store(Request $request): Response
     {
+        $this->authorize('create', ArticleType::class);
         $validatedData = $this->validate($request, [
             'name' => 'required|string',
         ]);
@@ -32,14 +31,13 @@ class ArticleTypeController extends Controller
 
     public function show(ArticleType $articleType): JsonResponse
     {
+        $this->authorize('view', $articleType);
         return response()->json($articleType);
     }
 
-    /**
-     * @throws ValidationException
-     */
     public function update(Request $request, ArticleType $articleType): Response
     {
+        $this->authorize('update', $articleType);
         $validatedData = $this->validate($request, [
             'name' => 'required|string',
         ]);
@@ -51,6 +49,7 @@ class ArticleTypeController extends Controller
 
     public function destroy(ArticleType $articleType)
     {
+        $this->authorize('delete', $articleType);
         $articleType->delete();
         response()->noContent();
     }

@@ -16,6 +16,7 @@ return new class extends Migration
         Schema::create('files', function (Blueprint $table) {
             $table->id()->index();
             $table->string('relative_path');
+            $table->boolean('is_private')->default(false);
             $table->timestampsTz();
         });
     }

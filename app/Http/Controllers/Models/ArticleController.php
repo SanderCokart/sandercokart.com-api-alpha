@@ -108,24 +108,18 @@ class ArticleController extends Controller
     public
     function recent(Request $request, ArticleType $articleType): ArticleCollection
     {
-        $collection = new ArticleCollection(
+        $cachedUrls = Cache::get('recent-article-urls', []);
+        if (! in_array($request->fullUrl(), $cachedUrls)) {
+            Cache::put('recent-article-urls', [...$cachedUrls, $request->fullUrl()]);
+        }
+
+        return Cache::rememberForever($request->fullUrl(), fn() => new ArticleCollection(
             Article::with(['author', 'banner'])
                    ->published()
                    ->latest()
                    ->whereBelongsTo($articleType, 'articleType')
                    ->cursorPaginate(10)
-        );
-
-        if (! $request->user() || ! $request->user()->isAdmin()) {
-            $cachedUrls = Cache::get('recent-article-urls', []);
-            if (! in_array($request->fullUrl(), $cachedUrls)) {
-                Cache::put('recent-article-urls', [...$cachedUrls, $request->fullUrl()]);
-            }
-
-            return Cache::rememberForever($request->fullUrl(), fn() => $collection);
-        }
-
-        return $collection;
+        ));
     }
 
     public

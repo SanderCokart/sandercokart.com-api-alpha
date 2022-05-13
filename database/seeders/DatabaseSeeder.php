@@ -32,11 +32,6 @@ class DatabaseSeeder extends Seeder
                      ]);
 
         /*ARTICLES*/
-        $this->callWith(ArticleSeeder::class, ['user' => $admin, 'articleTypeId' => ArticleType::POSTS['id'], 'count' => 10, 'published' => true]);
-        $this->callWith(ArticleSeeder::class, ['user' => $admin, 'articleTypeId' => ArticleType::POSTS['id'], 'count' => 10, 'published' => false]);
-        $this->callWith(ArticleSeeder::class, ['user' => $admin, 'articleTypeId' => ArticleType::COURSES['id'], 'count' => 10, 'published' => true]);
-        $this->callWith(ArticleSeeder::class, ['user' => $admin, 'articleTypeId' => ArticleType::COURSES['id'], 'count' => 10, 'published' => false]);
-        $this->callWith(ArticleSeeder::class, ['user' => $admin, 'articleTypeId' => ArticleType::TIPS_AND_TUTORIALS['id'], 'count' => 10, 'published' => true]);
-        $this->callWith(ArticleSeeder::class, ['user' => $admin, 'articleTypeId' => ArticleType::TIPS_AND_TUTORIALS['id'], 'count' => 10, 'published' => false]);
+        $this->callWith(ArticleSeeder::class, ['count' => 10, 'articleTypeId' => ArticleType::POSTS['id'], 'amountPublished' => 5, 'userId' => $admin->id]);
     }
 }

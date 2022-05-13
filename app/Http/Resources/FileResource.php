@@ -18,13 +18,14 @@ class FileResource extends JsonResource
      * Transform the resource into an array.
      *
      * @param Request $request
+     *
      * @return array
      */
     public function toArray($request): array
     {
         return [
-            'id' => $this->id,
-            'relative_path' => $this->when($this->articles()->first()?->isPublished(), $this->relative_path),
+            'id'            => $this->id,
+            'relative_path' => $this->when(! $this->is_private, $this->relative_path),
         ];
     }
 }

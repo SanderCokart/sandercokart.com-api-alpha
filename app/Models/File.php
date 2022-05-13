@@ -38,18 +38,14 @@ class File extends Model
 
     public function makePrivate(): bool
     {
-        if ($this->articles()->first()->isPublished()) {
-            return Storage::move('/public/' . $this->relative_path, '/private/' . $this->relative_path);
-        }
-        return false;
+        $this->update(['is_private' => true]);
+        return Storage::move('/public/' . $this->relative_path, '/private/' . $this->relative_path);
     }
 
     public function makePublic(): bool
     {
-        if (! $this->articles()->first()->isPublished()) {
-            return Storage::move('/private/' . $this->relative_path, '/public/' . $this->relative_path);
-        }
-        return false;
+        $this->update(['is_private' => false]);
+        return Storage::move('/private/' . $this->relative_path, '/public/' . $this->relative_path);
     }
     //</editor-fold>
 }

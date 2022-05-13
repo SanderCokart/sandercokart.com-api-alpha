@@ -14,8 +14,8 @@ return new class extends Migration {
     {
         Schema::create('articles', function (Blueprint $table) {
             $table->id()->index();
-            $table->string('title');
-            $table->text('excerpt');
+            $table->string('title', 80);
+            $table->string('excerpt', 180);
             $table->longText('markdown');
             $table->string('slug')->index()->unique();
             $table->timestampTz('published_at')->nullable();

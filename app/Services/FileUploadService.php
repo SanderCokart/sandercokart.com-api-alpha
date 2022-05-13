@@ -3,15 +3,14 @@
 namespace App\Services;
 
 use App\Contracts\FileUploadServiceContract;
-use App\Enums\ArticleType;
-use App\Enums\VisibilityEnum;
+use App\Enums\DisksEnum;
 use Illuminate\Http\Response;
 use Illuminate\Http\UploadedFile;
 
 class FileUploadService implements FileUploadServiceContract
 {
     /**@return string relative path */
-    public function handleFileUpload(UploadedFile $file, string $mimeType, ?ArticleType $disk = ArticleType::PRIVATE): string
+    public function handleFileUpload(UploadedFile $file, string $mimeType, DisksEnum $disk = DisksEnum::PRIVATE): string
     {
         $relativePath = $file->store($this->determineFolderName($mimeType), ['disk' => $disk->value]);
 
