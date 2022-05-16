@@ -47,11 +47,6 @@ Route::delete('/articles/{articleType:name}/{article}', [ArticleController::clas
 Route::apiResource('users', UserController::class)
      ->except(['update']);
 
-Route::group(['controller' => ArticleBannerController::class, 'prefix' => 'articleBanners'], function () {
-    Route::get('/', 'index')->name('articleBanners.index');
-    Route::get('/{articleBanner:id}', 'show')->name('articleBanners.show');
-});
-
 Route::apiResources([
     'files'        => FileController::class,
     'articleTypes' => ArticleTypeController::class,

@@ -1,0 +1,444 @@
+[
+    {
+        "domain": null,
+        "method": "PATCH",
+        "uri": "account\/email\/change",
+        "name": "email.change",
+        "action": "App\\Http\\Controllers\\Auth\\EmailController@emailChange",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum",
+            "Illuminate\\Routing\\Middleware\\ThrottleRequests:3,60"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "PATCH",
+        "uri": "account\/email\/compromised",
+        "name": "email.compromised",
+        "action": "App\\Http\\Controllers\\Auth\\EmailController@emailCompromised",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\CustomGuestMiddleware",
+            "Illuminate\\Routing\\Middleware\\ThrottleRequests:1,60"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "POST",
+        "uri": "account\/email\/verify",
+        "name": "email.verify",
+        "action": "App\\Http\\Controllers\\Auth\\EmailController@emailVerify",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum",
+            "Illuminate\\Routing\\Middleware\\ThrottleRequests:3,10"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "POST",
+        "uri": "account\/email\/verify\/retry",
+        "name": "email.verify.retry",
+        "action": "App\\Http\\Controllers\\Auth\\EmailController@emailVerifyRetry",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum",
+            "Illuminate\\Routing\\Middleware\\ThrottleRequests:3,10"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "POST",
+        "uri": "account\/login",
+        "name": "account.login",
+        "action": "App\\Http\\Controllers\\Auth\\LoginController",
+        "middleware": [
+            "api"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "POST",
+        "uri": "account\/logout",
+        "name": "account.logout",
+        "action": "App\\Http\\Controllers\\Auth\\LogoutController",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "PATCH",
+        "uri": "account\/password\/change",
+        "name": "password.change",
+        "action": "App\\Http\\Controllers\\Auth\\PasswordController@passwordChange",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum",
+            "Illuminate\\Routing\\Middleware\\ThrottleRequests:3,60"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "PATCH",
+        "uri": "account\/password\/compromised",
+        "name": "password.compromised",
+        "action": "App\\Http\\Controllers\\Auth\\PasswordController@passwordCompromised",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\CustomGuestMiddleware",
+            "Illuminate\\Routing\\Middleware\\ThrottleRequests:1,60"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "POST",
+        "uri": "account\/password\/forgot",
+        "name": "password.forgot",
+        "action": "App\\Http\\Controllers\\Auth\\PasswordController@passwordForgot",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\CustomGuestMiddleware",
+            "Illuminate\\Routing\\Middleware\\ThrottleRequests:1,10"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "PATCH",
+        "uri": "account\/password\/reset",
+        "name": "password.reset",
+        "action": "App\\Http\\Controllers\\Auth\\PasswordController@passwordReset",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\CustomGuestMiddleware",
+            "Illuminate\\Routing\\Middleware\\ThrottleRequests:1,10"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "POST",
+        "uri": "account\/register",
+        "name": "account.register",
+        "action": "App\\Http\\Controllers\\Auth\\RegisterController",
+        "middleware": [
+            "api"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "GET|HEAD",
+        "uri": "account\/user",
+        "name": "account.user",
+        "action": "App\\Http\\Controllers\\Auth\\AuthController",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "GET|HEAD",
+        "uri": "articleBanners",
+        "name": "articleBanners.index",
+        "action": "App\\Http\\Controllers\\Models\\ArticleBannerController@index",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "GET|HEAD",
+        "uri": "articleBanners\/{articleBanner}",
+        "name": "articleBanners.show",
+        "action": "App\\Http\\Controllers\\Models\\ArticleBannerController@show",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "GET|HEAD",
+        "uri": "articleTypes",
+        "name": "articleTypes.index",
+        "action": "App\\Http\\Controllers\\Models\\ArticleTypeController@index",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "POST",
+        "uri": "articleTypes",
+        "name": "articleTypes.store",
+        "action": "App\\Http\\Controllers\\Models\\ArticleTypeController@store",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "GET|HEAD",
+        "uri": "articleTypes\/{articleType}",
+        "name": "articleTypes.show",
+        "action": "App\\Http\\Controllers\\Models\\ArticleTypeController@show",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "PUT|PATCH",
+        "uri": "articleTypes\/{articleType}",
+        "name": "articleTypes.update",
+        "action": "App\\Http\\Controllers\\Models\\ArticleTypeController@update",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "DELETE",
+        "uri": "articleTypes\/{articleType}",
+        "name": "articleTypes.destroy",
+        "action": "App\\Http\\Controllers\\Models\\ArticleTypeController@destroy",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "POST",
+        "uri": "articles",
+        "name": "articles.store",
+        "action": "App\\Http\\Controllers\\Models\\ArticleController@store",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "GET|HEAD",
+        "uri": "articles\/{articleType}",
+        "name": "articles.index",
+        "action": "App\\Http\\Controllers\\Models\\ArticleController@index",
+        "middleware": [
+            "api"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "GET|HEAD",
+        "uri": "articles\/{articleType}\/recent",
+        "name": "articles.recent",
+        "action": "App\\Http\\Controllers\\Models\\ArticleController@recent",
+        "middleware": [
+            "api"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "GET|HEAD",
+        "uri": "articles\/{articleType}\/slugs",
+        "name": "articles.slugs",
+        "action": "App\\Http\\Controllers\\Models\\ArticleController@slugs",
+        "middleware": [
+            "api"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "GET|HEAD",
+        "uri": "articles\/{articleType}\/{article}",
+        "name": "articles.show",
+        "action": "App\\Http\\Controllers\\Models\\ArticleController@show",
+        "middleware": [
+            "api"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "PATCH",
+        "uri": "articles\/{articleType}\/{article}",
+        "name": "articles.update",
+        "action": "App\\Http\\Controllers\\Models\\ArticleController@update",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "DELETE",
+        "uri": "articles\/{articleType}\/{article}",
+        "name": "articles.destroy",
+        "action": "App\\Http\\Controllers\\Models\\ArticleController@destroy",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "GET|HEAD",
+        "uri": "files",
+        "name": "files.index",
+        "action": "App\\Http\\Controllers\\Models\\FileController@index",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "POST",
+        "uri": "files",
+        "name": "files.store",
+        "action": "App\\Http\\Controllers\\Models\\FileController@store",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "GET|HEAD",
+        "uri": "files\/{file}",
+        "name": "files.show",
+        "action": "App\\Http\\Controllers\\Models\\FileController@show",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "PUT|PATCH",
+        "uri": "files\/{file}",
+        "name": "files.update",
+        "action": "App\\Http\\Controllers\\Models\\FileController@update",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "DELETE",
+        "uri": "files\/{file}",
+        "name": "files.destroy",
+        "action": "App\\Http\\Controllers\\Models\\FileController@destroy",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "GET|HEAD",
+        "uri": "roles",
+        "name": "roles.index",
+        "action": "App\\Http\\Controllers\\Models\\RoleController@index",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "POST",
+        "uri": "roles",
+        "name": "roles.store",
+        "action": "App\\Http\\Controllers\\Models\\RoleController@store",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "GET|HEAD",
+        "uri": "roles\/{role}",
+        "name": "roles.show",
+        "action": "App\\Http\\Controllers\\Models\\RoleController@show",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "PUT|PATCH",
+        "uri": "roles\/{role}",
+        "name": "roles.update",
+        "action": "App\\Http\\Controllers\\Models\\RoleController@update",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "DELETE",
+        "uri": "roles\/{role}",
+        "name": "roles.destroy",
+        "action": "App\\Http\\Controllers\\Models\\RoleController@destroy",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "GET|HEAD",
+        "uri": "users",
+        "name": "users.index",
+        "action": "App\\Http\\Controllers\\Models\\UserController@index",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "POST",
+        "uri": "users",
+        "name": "users.store",
+        "action": "App\\Http\\Controllers\\Models\\UserController@store",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "GET|HEAD",
+        "uri": "users\/{user}",
+        "name": "users.show",
+        "action": "App\\Http\\Controllers\\Models\\UserController@show",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    },
+    {
+        "domain": null,
+        "method": "DELETE",
+        "uri": "users\/{user}",
+        "name": "users.destroy",
+        "action": "App\\Http\\Controllers\\Models\\UserController@destroy",
+        "middleware": [
+            "api",
+            "App\\Http\\Middleware\\Authenticate:sanctum"
+        ]
+    }
+]
