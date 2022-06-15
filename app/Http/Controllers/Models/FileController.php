@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Models;
 
 use App\Enums\ArticleType;
+use App\Enums\DisksEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\FileResource;
 use App\Models\File;
@@ -36,11 +37,12 @@ class FileController extends Controller
         $relativePath = $fileUploadService->handleFileUpload(
             $validatedData['file'],
             $mimeType,
-            ArticleType::PRIVATE
+            DisksEnum::PRIVATE
         );
 
         return new FileResource(File::create([
             'relative_path' => $relativePath,
+            'is_private' => true,
         ]));
     }
 
