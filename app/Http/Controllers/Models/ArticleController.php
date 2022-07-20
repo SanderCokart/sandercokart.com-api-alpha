@@ -29,7 +29,8 @@ class ArticleController extends Controller
         $articleTypes = Cache::remember('articleTypes', null, function () {
             return ArticleType::all();
         });
-        $articleTypeId = $articleTypes->where('name', $articleTypeName)->firstOrFail()->id;
+        $articleTypeId = $articleTypes->where('name', $articleTypeName)
+            ->firstOrFail()->id;
 
 
         /* Pagination parameters */
@@ -38,12 +39,11 @@ class ArticleController extends Controller
         $sortDirection = $validatedData['sortDirection'] ?? 'desc';
 
 
-        return new ArticleCollection(
-            Article::with(['author'])->where('article_type_id', $articleTypeId)
-                   ->orderBy($sortBy, $sortDirection)
-                   ->paginate($perPage)
-                   ->withQueryString()
-        );
+        return new ArticleCollection(Article::with(['author'])
+            ->where('article_type_id', $articleTypeId)
+            ->orderBy($sortBy, $sortDirection)
+            ->paginate($perPage)
+            ->withQueryString());
     }
 
     public function store(Request $request): JsonResponse
@@ -59,8 +59,11 @@ class ArticleController extends Controller
         ]);
 
         /** @var Article $article */
-        $article = $request->user()->articles()->create($validatedData);
-        $article->banner()->sync([$validatedData['article_banner_id']]);
+        $article = $request->user()
+            ->articles()
+            ->create($validatedData);
+        $article->banner()
+            ->sync([$validatedData['article_banner_id']]);
 
         if ($validatedData['published']) {
             $article->publish();
@@ -72,7 +75,10 @@ class ArticleController extends Controller
 
     public function show(Request $request, string $articleTypeName, string $articleSlug): ArticleResource
     {
-        $article = Article::with(['banner', 'author'])->where('slug', $articleSlug)->firstOrFail();
+        $article = Article::with(['banner', 'author'])
+            ->where('slug', $articleSlug)
+            ->firstOrFail();
+
         $this->authorize('view', $article);
         return new ArticleResource($article);
     }
@@ -89,7 +95,8 @@ class ArticleController extends Controller
         ]);
 
         $article->update($validatedData);
-        $article->banner()->sync([$validatedData['article_banner_id']]);
+        $article->banner()
+            ->sync([$validatedData['article_banner_id']]);
 
         if (! $article->published_at && $validatedData['published']) $article->publish();
         if ($article->published_at && ! $validatedData['published']) $article->unPublish();
@@ -97,38 +104,38 @@ class ArticleController extends Controller
         return response()->json(['message' => 'Article updated successfully.'], Response::HTTP_OK);
     }
 
-    public
-    function destroy(ArticleType $articleType, Article $article): JsonResponse
+    public function destroy(ArticleType $articleType, Article $article): JsonResponse
     {
         $this->authorize('delete', $article);
         $article->delete();
         return response()->json(['message' => 'Article deleted successfully.'], Response::HTTP_OK);
     }
 
-    public
-    function recent(Request $request, ArticleType $articleType): ArticleCollection
+    public function recent(Request $request, ArticleType $articleType): ArticleCollection
     {
         $cachedUrls = Cache::get('recent-article-urls', []);
         if (! in_array($request->fullUrl(), $cachedUrls)) {
             Cache::put('recent-article-urls', [...$cachedUrls, $request->fullUrl()]);
         }
 
-        return Cache::rememberForever($request->fullUrl(), fn() => new ArticleCollection(
-            Article::with(['author', 'banner'])
-                   ->published()
-                   ->latest()
-                   ->whereBelongsTo($articleType, 'articleType')
-                   ->cursorPaginate(10)
-        ));
+        return
+            Cache::rememberForever($request->fullUrl(), fn() => new ArticleCollection(Article::with([
+                'author',
+                'banner',
+            ])->published()
+                ->latest()
+                ->whereBelongsTo($articleType, 'articleType')
+                ->cursorPaginate(10)));
     }
 
-    public
-    function slugs(): Collection
+    public function slugs(): Collection
     {
-        return Article::published()->pluck('slug')->map(fn($slug) => [
-            'params' => [
-                'slug' => $slug,
-            ],
-        ]);
+        return Article::published()
+            ->pluck('slug')
+            ->map(fn($slug) => [
+                'params' => [
+                    'slug' => $slug,
+                ],
+            ]);
     }
 }
