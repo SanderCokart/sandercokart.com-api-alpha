@@ -25,6 +25,7 @@ class LoginController extends Controller
         if (EnsureFrontendRequestsAreStateful::fromFrontend($request)) {
             $this->authenticateFrontend();
         } else {
+            dd(false);
             // use token auth
         }
 
@@ -34,7 +35,7 @@ class LoginController extends Controller
     /**
      * @throws ValidationException
      */
-    private function authenticateFrontend()
+    private function authenticateFrontend(): void
     {
         if (! auth()
             ->guard('web')

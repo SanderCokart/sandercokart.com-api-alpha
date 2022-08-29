@@ -10,8 +10,13 @@ use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Spatie\Sluggable\HasSlug;
 use Spatie\Sluggable\SlugOptions;
 
+/**
+ * @mixin Article
+ */
 class Article extends Model
 {
+    private File $banner;
+
     protected $fillable = [
         'title',
         'excerpt',
@@ -29,8 +34,8 @@ class Article extends Model
     public function getSlugOptions(): SlugOptions
     {
         return SlugOptions::create()
-                          ->generateSlugsFrom('title')
-                          ->saveSlugsTo('slug');
+            ->generateSlugsFrom('title')
+            ->saveSlugsTo('slug');
     }
 
     //<editor-fold desc="Relationships">
@@ -65,25 +70,24 @@ class Article extends Model
     //<editor-fold desc="Publishing">
     public function isPublished(): bool
     {
-        return ! ! $this->published_at;
+        return (bool)$this->published_at;
     }
 
-    public function publish()
+    public function publish(): void
     {
         $this->published_at = now()->toDateTimeString();
         $this->banner->makePublic();
         $this->publicizeImagesWithinMarkdown();
-
     }
 
-    public function unPublish()
+    public function unPublish(): void
     {
         $this->published_at = null;
         $this->banner->makePrivate();
         $this->privatizeImagesWithinMarkdown();
     }
 
-    public function publicizeImagesWithinMarkdown()
+    public function publicizeImagesWithinMarkdown(): void
     {
         $patternToGetUrl = '%\Q' . config('app.local_url') . '/files/\E\d%';
         $patternToGetId = '%\d+$%';
@@ -107,7 +111,7 @@ class Article extends Model
     }
 
 
-    public function privatizeImagesWithinMarkdown()
+    public function privatizeImagesWithinMarkdown(): void
     {
         $patternToGetPublicUrl = '%\Q' . config('app.local_url') . '/uploads/\E.+\.[A-z0-9]+%';
         $patternToGetRelativeUrl = '%\Quploads/\E.+\.[A-z0-9]+%';
