@@ -55,7 +55,6 @@ class ArticleController extends Controller
             'markdown'          => ['string', 'required'],
             'published'         => ['boolean', 'required'],
             'article_banner_id' => ['integer', 'required', 'exists:files,id'],
-            'article_type_id'   => ['integer', 'required', 'exists:article_types,id'],
         ]);
 
         /** @var Article $article */
@@ -90,8 +89,8 @@ class ArticleController extends Controller
             'title'             => ['string', 'max:255', 'required'],
             'excerpt'           => ['string', 'required'],
             'markdown'          => ['string', 'required'],
-            'article_banner_id' => ['integer', 'required'],
             'published'         => ['boolean', 'required'],
+            'article_banner_id' => ['integer', 'required'],
         ]);
 
         $article->update($validatedData);

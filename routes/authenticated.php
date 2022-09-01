@@ -37,7 +37,7 @@ Route::group(['prefix' => 'account'], function () {
 });
 
 /* Resources */
-Route::post('/articles', [ArticleController::class, 'store'])
+Route::post('/articles/{articleType:name}', [ArticleController::class, 'store'])
      ->name('articles.store');
 Route::patch('/articles/{articleType:name}/{article}', [ArticleController::class, 'update'])
      ->name('articles.update');
