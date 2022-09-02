@@ -28,7 +28,8 @@
         "pestphp/pest-plugin-laravel": "^1.2",
         "phpunit/phpunit": "^9.5.12",
         "psy/psysh": "0.11.2",
-        "spatie/laravel-ignition": "^1.0"
+        "spatie/laravel-ignition": "^1.0",
+        "spatie/laravel-ray": "^1.30"
     },
     "autoload": {
         "psr-4": {
