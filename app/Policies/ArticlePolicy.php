@@ -5,7 +5,6 @@ namespace App\Policies;
 use App\Models\Article;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Auth\Access\Response;
 
 class ArticlePolicy
 {
@@ -14,33 +13,38 @@ class ArticlePolicy
     /**
      * Determine whether the user can view any models.
      *
-     * @param User $user
+     * @param User    $user
+     * @param Article $article
+     *
      * @return bool
      */
-    public function viewAny(User $user): bool
+    public function viewAny(User $user, Article $article): bool
     {
-        return $user->isAdmin();
+        return $article->isPublished() || $user->isAdmin();
     }
 
     /**
      * Determine whether the user can view the model.
      *
      * @param User|null $user
-     * @param Article $article
+     * @param Article   $article
+     *
      * @return bool
      */
     public function view(?User $user, Article $article): bool
     {
-        return $article->isPublished() || $user->isAdmin();
+        return $article->isPublished() || $user?->isAdmin();
     }
 
     /**
      * Determine whether the user can create models.
      *
-     * @param User $user
+     * @param User    $user
+     * @param Article $article
+     *
      * @return bool
      */
-    public function create(User $user): bool
+    public function create(User $user, Article $article): bool
     {
         return $user->isAdmin();
     }
@@ -48,8 +52,9 @@ class ArticlePolicy
     /**
      * Determine whether the user can update the model.
      *
-     * @param User $user
+     * @param User    $user
      * @param Article $article
+     *
      * @return bool
      */
     public function update(User $user, Article $article): bool
@@ -60,8 +65,9 @@ class ArticlePolicy
     /**
      * Determine whether the user can delete the model.
      *
-     * @param User $user
+     * @param User    $user
      * @param Article $article
+     *
      * @return bool
      */
     public function delete(User $user, Article $article): bool

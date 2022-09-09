@@ -57,19 +57,21 @@ class ArticleController extends Controller
             'article_banner_id' => ['integer', 'required', 'exists:files,id'],
         ]);
 
-        /** @var Article $article */
-        $article = $request->user()
-            ->articles()
-            ->create($validatedData);
-        $article->banner()
-            ->sync([$validatedData['article_banner_id']]);
+        ray($validatedData);
 
-        if ($validatedData['published']) {
-            $article->publish();
-            return response()->json(['message' => 'Article created and published successfully.'], Response::HTTP_CREATED);
-        }
-
-        return response()->json(['message' => 'Article created successfully.'], Response::HTTP_CREATED);
+//        /** @var Article $article */
+//        $article = $request->user()
+//            ->articles()
+//            ->create($validatedData);
+//        $article->banner()
+//            ->sync([$validatedData['article_banner_id']]);
+//
+//        if ($validatedData['published']) {
+//            $article->publish();
+//            return response()->json(['message' => 'Article created and published successfully.'], Response::HTTP_CREATED);
+//        }
+//
+//        return response()->json(['message' => 'Article created successfully.'], Response::HTTP_CREATED);
     }
 
     public function show(Request $request, string $articleTypeName, string $articleSlug): ArticleResource
