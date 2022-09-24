@@ -33,5 +33,7 @@ class DatabaseSeeder extends Seeder
 
         /*ARTICLES*/
         $this->callWith(ArticleSeeder::class, ['count' => 10, 'articleTypeId' => ArticleType::POSTS['id'], 'amountPublished' => 5, 'userId' => $admin->id]);
+        $this->callWith(ArticleSeeder::class, ['count' => 10, 'articleTypeId' => ArticleType::COURSES['id'], 'amountPublished' => 5, 'userId' => $admin->id]);
+        $this->callWith(ArticleSeeder::class, ['count' => 10, 'articleTypeId' => ArticleType::TIPS_AND_TUTORIALS['id'], 'amountPublished' => 5, 'userId' => $admin->id]);
     }
 }
