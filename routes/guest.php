@@ -8,13 +8,13 @@ Route::group(['prefix' => 'account'], function () {
     Route::post('/login', LoginController::class)->name('account.login');
 
     Route::group(['prefix' => 'password', 'controller' => PasswordController::class, 'middleware' => 'guest'], function () {
-        Route::post('/forgot', 'passwordForgot')->middleware('throttle:1,10')->name('password.forgot');
-        Route::patch('/reset', 'passwordReset')->middleware('throttle:1,10')->name('password.reset');
-        Route::patch('/compromised', 'passwordCompromised')->middleware('throttle:1,60')->name('password.compromised');
+        Route::post('/forgot', 'passwordForgot')->middleware('throttle:credentials')->name('password.forgot');
+        Route::patch('/reset', 'passwordReset')->middleware('throttle:credentials')->name('password.reset');
+        Route::patch('/compromised', 'passwordCompromised')->middleware('throttle:credentials')->name('password.compromised');
     });
 
     Route::group(['prefix' => 'email', 'controller' => EmailController::class, 'middleware' => 'guest'], function () {
-        Route::patch('/compromised', 'emailCompromised')->middleware('throttle:1,60')->name('email.compromised');
+        Route::patch('/compromised', 'emailCompromised')->middleware('throttle:credentials')->name('email.compromised');
     });
 });
 

@@ -7,7 +7,6 @@ use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvi
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\URL;
 
 class RouteServiceProvider extends ServiceProvider
@@ -35,7 +34,7 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         $this->configureRateLimiting();
         $this->setRootUrl();
@@ -43,13 +42,13 @@ class RouteServiceProvider extends ServiceProvider
         $this->routes(function () {
             Route::middleware(['api'])->group(function () {
                 Route::namespace($this->namespace)
-                     ->group(base_path('routes/guest.php'));
+                    ->group(base_path('routes/guest.php'));
                 Route::namespace($this->namespace)
-                     ->middleware(['auth:sanctum'])
-                     ->group(base_path('routes/authenticated.php'));
+                    ->middleware(['auth:sanctum'])
+                    ->group(base_path('routes/authenticated.php'));
                 Route::namespace($this->namespace)
-                     ->middleware(['auth:sanctum', 'verified'])
-                     ->group(base_path('routes/verified.php'));
+                    ->middleware(['auth:sanctum', 'verified'])
+                    ->group(base_path('routes/verified.php'));
             });
         });
     }
@@ -59,15 +58,29 @@ class RouteServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function configureRateLimiting()
+    protected function configureRateLimiting(): void
     {
         RateLimiter::for('api', function (Request $request) {
-            return Limit::perMinute(120)->by(optional($request->user())->id ?: $request->ip());
+            return Limit::perMinute(120)->by($this->generateKey($request));
         });
+
+        RateLimiter::for('credentials', function (Request $request) {
+            return Limit::perMinutes(5, 1)->by($this->generateKey($request, true));
+        });
+
+
     }
 
-    protected function setRootUrl()
+    protected function setRootUrl(): void
     {
         URL::forceRootUrl(config('app.url'));
+    }
+
+
+    private function generateKey(Request $request, ?bool $useRouteWithinKey = false): ?string
+    {
+        if ($useRouteWithinKey)
+            return $request->user()?->id . '-' . $request->route()->uri ?: $request->ip() . '-' . $request->route()->uri;
+        return $request->user()?->id ?: $request->ip();
     }
 }

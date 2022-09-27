@@ -20,7 +20,7 @@ class EmailCompromisedRequest extends FormRequest
      *
      * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -30,7 +30,7 @@ class EmailCompromisedRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules(): array
     {
         return [
             'email'      => ['string', 'email', 'unique:users,email'],
@@ -40,7 +40,7 @@ class EmailCompromisedRequest extends FormRequest
         ];
     }
 
-    public function fulfill()
+    public function fulfill(): void
     {
         $validatedData = $this->validated();
         $compromisedEmail = CompromisedEmail::where('identifier', $validatedData['identifier'])

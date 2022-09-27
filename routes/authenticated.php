@@ -16,19 +16,19 @@ use Symfony\Component\HttpFoundation\Response;
 Route::group(['prefix' => 'account'], function () {
     Route::group(['prefix' => 'email'], function () {
         Route::patch('/change', [EmailController::class, 'emailChange'])
-            ->middleware('throttle:3,60')
+            ->middleware('throttle:credentials')
             ->name('email.change');
         Route::post('/verify', [EmailController::class, 'emailVerify'])
-            ->middleware('throttle:3,10')
+            ->middleware('throttle:credentials')
             ->name('email.verify');
         Route::post('/verify/retry', [EmailController::class, 'emailVerifyRetry'])
-            ->middleware('throttle:3,10')
+            ->middleware('throttle:credentials')
             ->name('email.verify.retry');
     });
 
     Route::group(['prefix' => 'password'], function () {
         Route::patch('/change', [PasswordController::class, 'passwordChange'])
-            ->middleware('throttle:3,60')
+            ->middleware('throttle:credentials')
             ->name('password.change');
     });
 
