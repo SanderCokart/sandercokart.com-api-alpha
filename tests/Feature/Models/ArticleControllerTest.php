@@ -23,7 +23,7 @@ test('only admins can see all Article models on index page across all ArticleTyp
             if ($response->isOk())
                 $response->assertJson(function (AssertableJson $json) use ($data) {
                     $json->has('articles', $data['expected']['count'])
-                         ->hasAll(['links', 'meta']);
+                        ->hasAll(['links', 'meta']);
                 });
         });
     })->with('ArticleIndexData');
@@ -34,7 +34,6 @@ it('can create new Article models for all ArticleType relationships',
      *
      * @type User  user
      * @type string $articleTypeName
-     * @type int    $article
      * @type array submittedData {
      * @type string title
      * @type string excerpt
@@ -46,7 +45,7 @@ it('can create new Article models for all ArticleType relationships',
      * }
      */
     function (array $data) {
-        postJson(route('articles.store', ['article' => $data['article']]), $data['submittedData'])
+        postJson(route('articles.store', [$data['articleTypeName']]), $data['submittedData'])
             ->assertStatus($data['expected']['status'])
             ->assertJsonStructure(['message']);
     })->with('ArticleCreateData');
@@ -57,7 +56,6 @@ it('can update an existing Article model for all ArticleType relationships, only
      *
      * @type User  user
      * @type string $articleTypeName
-     * @type int    $article
      * @type array submittedData {
      * @type string title
      * @type string excerpt
@@ -69,7 +67,10 @@ it('can update an existing Article model for all ArticleType relationships, only
      * }
      */
     function (array $data) {
-        $response = patchJson(route('articles.update', ['articleType' => $data['articleTypeName'], 'article' => $data['article']]), $data['submittedData']);
+        $response = patchJson(route('articles.update', [
+            'articleType' => $data['articleTypeName'],
+            'article'     => $data['article'],
+        ]), $data['submittedData']);
         $response->assertStatus($data['expected']['status']);
         $response->assertJsonStructure(['message']);
     })->with('ArticleUpdateData');

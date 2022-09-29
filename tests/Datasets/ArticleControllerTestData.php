@@ -15,12 +15,12 @@ function generateArticles(int $articlesPerType, int $articlesPublished): void
 {
     ArticleType::each(function ($articleType) use ($articlesPerType, $articlesPublished) {
         Article::factory()
-               ->for($articleType, 'articleType')
-               ->count($articlesPerType)
-               ->sequence(function (Sequence $sequence) use ($articlesPublished) {
-                   return $sequence->index < $articlesPublished ? ['published_at' => now()->toDateTimeString()] : [];
-               })
-               ->create();
+            ->for($articleType, 'articleType')
+            ->count($articlesPerType)
+            ->sequence(function (Sequence $sequence) use ($articlesPublished) {
+                return $sequence->index < $articlesPublished ? ['published_at' => now()->toDateTimeString()] : [];
+            })
+            ->create();
     });
 }
 
@@ -52,15 +52,14 @@ dataset('ArticleIndexData', function () {
     };
 });
 
-
 dataset('ArticleCreateData', function () {
     yield function () {
         generateArticles(1, 0);
         $user = withAdmin();
         return [
-            'user'          => $user,
-            'article'       => Article::first()->id,
-            'submittedData' => [
+            'user'            => $user,
+            'articleTypeName' => ArticleType::POSTS['name'],
+            'submittedData'   => [
                 'title'             => 'Test Article',
                 'excerpt'           => 'This is a test article',
                 'markdown'          => 'Test Article Body',
@@ -68,7 +67,47 @@ dataset('ArticleCreateData', function () {
                 'article_type_id'   => ArticleType::POSTS['id'],
                 'article_banner_id' => File::factory()->create()->id,
             ],
-            'expected'      => [
+            'expected'        => [
+                'status' => 201,
+                'count'  => 1,
+            ],
+        ];
+    };
+    yield function () {
+        generateArticles(1, 0);
+        $user = withAdmin();
+        return [
+            'user'            => $user,
+            'articleTypeName' => ArticleType::TIPS_AND_TUTORIALS['name'],
+            'submittedData'   => [
+                'title'             => 'Test Article',
+                'excerpt'           => 'This is a test article',
+                'markdown'          => 'Test Article Body',
+                'published'         => false,
+                'article_type_id'   => ArticleType::POSTS['id'],
+                'article_banner_id' => File::factory()->create()->id,
+            ],
+            'expected'        => [
+                'status' => 201,
+                'count'  => 1,
+            ],
+        ];
+    };
+    yield function () {
+        generateArticles(1, 0);
+        $user = withAdmin();
+        return [
+            'user'            => $user,
+            'articleTypeName' => ArticleType::COURSES['name'],
+            'submittedData'   => [
+                'title'             => 'Test Article',
+                'excerpt'           => 'This is a test article',
+                'markdown'          => 'Test Article Body',
+                'published'         => false,
+                'article_type_id'   => ArticleType::POSTS['id'],
+                'article_banner_id' => File::factory()->create()->id,
+            ],
+            'expected'        => [
                 'status' => 201,
                 'count'  => 1,
             ],
@@ -78,9 +117,9 @@ dataset('ArticleCreateData', function () {
         $user = withUser();
         generateArticles(1, 0);
         return [
-            'user'          => $user,
-            'article'       => Article::first()->id,
-            'submittedData' => [
+            'user'            => $user,
+            'articleTypeName' => ArticleType::COURSES['name'],
+            'submittedData'   => [
                 'title'             => 'Test Article',
                 'excerpt'           => 'This is a test article',
                 'markdown'          => 'Test Article Body',
@@ -88,7 +127,7 @@ dataset('ArticleCreateData', function () {
                 'article_type_id'   => ArticleType::POSTS['id'],
                 'article_banner_id' => 1,
             ],
-            'expected'      => [
+            'expected'        => [
                 'status' => 403,
                 'count'  => null,
             ],

@@ -32,12 +32,10 @@ class ArticleController extends Controller
         $articleTypeId = $articleTypes->where('name', $articleTypeName)
             ->firstOrFail()->id;
 
-
         /* Pagination parameters */
         $perPage = $validatedData['perPage'] ?? 100;
         $sortBy = $validatedData['sortBy'] ?? 'id';
         $sortDirection = $validatedData['sortDirection'] ?? 'desc';
-
 
         return new ArticleCollection(Article::with(['author'])
             ->where('article_type_id', $articleTypeId)
@@ -46,7 +44,7 @@ class ArticleController extends Controller
             ->withQueryString());
     }
 
-    public function store(Request $request): JsonResponse
+    public function store(Request $request, string $articleTypeName): JsonResponse
     {
         $this->authorize('create', Article::class);
         $validatedData = $request->validate([
@@ -57,21 +55,22 @@ class ArticleController extends Controller
             'article_banner_id' => ['integer', 'required', 'exists:files,id'],
         ]);
 
-        ray($validatedData);
+        $validatedData['article_type_id'] = ArticleType::whereName($articleTypeName)->firstOrFail()->id;
 
-//        /** @var Article $article */
-//        $article = $request->user()
-//            ->articles()
-//            ->create($validatedData);
-//        $article->banner()
-//            ->sync([$validatedData['article_banner_id']]);
-//
-//        if ($validatedData['published']) {
-//            $article->publish();
-//            return response()->json(['message' => 'Article created and published successfully.'], Response::HTTP_CREATED);
-//        }
-//
-//        return response()->json(['message' => 'Article created successfully.'], Response::HTTP_CREATED);
+        /** @var Article $article */
+        $article = $request->user()
+            ->articles()
+            ->create($validatedData);
+
+        $article->banner()
+            ->sync([$validatedData['article_banner_id']]);
+
+        if ($validatedData['published']) {
+            $article->publish();
+            return response()->json(['message' => 'Article created and published successfully.'], Response::HTTP_CREATED);
+        }
+
+        return response()->json(['message' => 'Article created successfully.'], Response::HTTP_CREATED);
     }
 
     public function show(Request $request, string $articleTypeName, string $articleSlug): ArticleResource
@@ -115,7 +114,7 @@ class ArticleController extends Controller
     public function recent(Request $request, ArticleType $articleType): ArticleCollection
     {
         $cachedUrls = Cache::get('recent-article-urls', []);
-        if (! in_array($request->fullUrl(), $cachedUrls)) {
+        if (! in_array($request->fullUrl(), $cachedUrls, true)) {
             Cache::put('recent-article-urls', [...$cachedUrls, $request->fullUrl()]);
         }
 
