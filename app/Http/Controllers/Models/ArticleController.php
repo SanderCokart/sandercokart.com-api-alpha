@@ -113,19 +113,28 @@ class ArticleController extends Controller
 
     public function recent(Request $request, ArticleType $articleType): ArticleCollection
     {
-        $cachedUrls = Cache::get('recent-article-urls', []);
-        if (! in_array($request->fullUrl(), $cachedUrls, true)) {
-            Cache::put('recent-article-urls', [...$cachedUrls, $request->fullUrl()]);
-        }
+//        $cachedUrls = Cache::get('recent-article-urls', []);
+//        if (! in_array($request->fullUrl(), $cachedUrls, true)) {
+//            Cache::put('recent-article-urls', [...$cachedUrls, $request->fullUrl()]);
+//        }
+//
+//        return
+//            Cache::rememberForever($request->fullUrl(), fn() => new ArticleCollection(Article::with([
+//                'author',
+//                'banner',
+//            ])->published()
+//                ->latest()
+//                ->whereBelongsTo($articleType, 'articleType')
+//                ->cursorPaginate(10)));
 
-        return
-            Cache::rememberForever($request->fullUrl(), fn() => new ArticleCollection(Article::with([
-                'author',
-                'banner',
-            ])->published()
+        return new ArticleCollection(
+            Article::orderBy('id')
+                ->with(['author', 'banner'])
+                ->published()
                 ->latest()
                 ->whereBelongsTo($articleType, 'articleType')
-                ->cursorPaginate(10)));
+                ->cursorPaginate(10)
+        );
     }
 
     public function slugs(): Collection
