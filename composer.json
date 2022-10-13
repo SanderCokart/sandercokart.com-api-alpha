@@ -28,7 +28,7 @@
         "pestphp/pest": "^1.21",
         "pestphp/pest-plugin-laravel": "^1.2",
         "phpunit/phpunit": "^9.5.12",
-        "psy/psysh": "0.11.2",
+        "psy/psysh": "^v0.11.1",
         "spatie/laravel-ignition": "^1.0",
         "spatie/laravel-ray": "^1.30"
     },
