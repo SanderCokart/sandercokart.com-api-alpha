@@ -15,7 +15,7 @@ class ArticleTypeSeeder extends Seeder
      */
     public function run(): void
     {
-        ArticleType::insert([
+        ArticleType::insertOrIgnore([
             ['name' => 'posts'],
             ['name' => 'tips-&-tutorials'],
             ['name' => 'courses'],

@@ -21,19 +21,35 @@ class DatabaseSeeder extends Seeder
         ]);
 
         /*DEFAULT USER*/
-        $admin = User::factory()
-                     ->hasAttached(Role::find([
-                         Role::ADMIN,
-                     ]))
-                     ->create([
-                         'email'    => 'cokart32@gmail.com',
-                         'name'     => 'Sander Cokart',
-                         'password' => bcrypt('Pa$$w0rd'),
-                     ]);
+        $admin = User::firstOrCreate([
+            'email' => 'cokart32@gmail.com',
+        ], [
+
+            'email'    => 'cokart32@gmail.com',
+            'name'     => 'Sander Cokart',
+            'password' => bcrypt('Pa$$w0rd'),
+        ]);
+
+        $admin->roles()->sync([Role::ADMIN]);
 
         /*ARTICLES*/
-        $this->callWith(ArticleSeeder::class, ['count' => 10, 'articleTypeId' => ArticleType::POSTS['id'], 'amountPublished' => 5, 'userId' => $admin->id]);
-        $this->callWith(ArticleSeeder::class, ['count' => 10, 'articleTypeId' => ArticleType::COURSES['id'], 'amountPublished' => 5, 'userId' => $admin->id]);
-        $this->callWith(ArticleSeeder::class, ['count' => 10, 'articleTypeId' => ArticleType::TIPS_AND_TUTORIALS['id'], 'amountPublished' => 5, 'userId' => $admin->id]);
+        $this->callWith(ArticleSeeder::class, [
+            'count'           => 50,
+            'articleTypeId'   => ArticleType::POSTS['id'],
+            'amountPublished' => 50,
+            'userId'          => $admin->id,
+        ]);
+//        $this->callWith(ArticleSeeder::class, [
+//            'count'           => 30,
+//            'articleTypeId'   => ArticleType::COURSES['id'],
+//            'amountPublished' => 5,
+//            'userId'          => $admin->id,
+//        ]);
+//        $this->callWith(ArticleSeeder::class, [
+//            'count'           => 30,
+//            'articleTypeId'   => ArticleType::TIPS_AND_TUTORIALS['id'],
+//            'amountPublished' => 5,
+//            'userId'          => $admin->id,
+//        ]);
     }
 }

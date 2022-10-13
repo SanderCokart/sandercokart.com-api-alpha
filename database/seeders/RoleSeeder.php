@@ -14,7 +14,7 @@ class RoleSeeder extends Seeder
      */
     public function run(): void
     {
-        Role::insert([
+        Role::insertOrIgnore([
             ['name' => 'User'],
             ['name' => 'Admin'],
         ]);
