@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Models\{Article, ArticleType, File};
 use Database\Factories\FileFactory;
 use Faker\Factory;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Database\Seeder;
 use Str;
 
@@ -50,7 +49,12 @@ class ArticleSeeder extends Seeder
 
         Article::find($ids)->each(function (Article $article) {
             $article->banner()->sync([
-                File::factory()->when($article->isPublished(), fn (FileFactory $query) => $query->public())->create()->id,
+                File::factory()
+                    ->when(
+                        $article->isPublished(),
+                        fn(FileFactory $fileFactory) => $fileFactory->public())
+                    ->create()
+                    ->id,
             ]);
         });
     }

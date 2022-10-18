@@ -76,14 +76,14 @@ class Article extends Model
     public function publish(): void
     {
         $this->published_at = now()->toDateTimeString();
-        $this->banner->makePublic();
+        $this->banner()->first()->makePublic();
         $this->publicizeImagesWithinMarkdown();
     }
 
     public function unPublish(): void
     {
         $this->published_at = null;
-        $this->banner->makePrivate();
+        $this->banner()->first()->makePrivate();
         $this->privatizeImagesWithinMarkdown();
     }
 

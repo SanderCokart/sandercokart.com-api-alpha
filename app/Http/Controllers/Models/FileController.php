@@ -6,6 +6,7 @@ use App\Enums\ArticleType;
 use App\Enums\DisksEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\FileResource;
+use App\Models\Article;
 use App\Models\File;
 use App\Services\FileUploadService;
 use Illuminate\Http\JsonResponse;
@@ -26,8 +27,6 @@ class FileController extends Controller
     {
         $mimeType = $request->file('file')->getMimeType();
 
-        if (! $mimeType) abort(422, 'Could not process file.');
-
         if (Str::contains($mimeType, 'image')) {
             $validatedData = $request->validate(['file' => 'file|image|required|max:50000']);
         } else {
@@ -36,13 +35,13 @@ class FileController extends Controller
 
         $relativePath = $fileUploadService->handleFileUpload(
             $validatedData['file'],
-            $mimeType,
+            Article::class,
             DisksEnum::PRIVATE
         );
 
         return new FileResource(File::create([
             'relative_path' => $relativePath,
-            'is_private' => true,
+            'is_private'    => true,
         ]));
     }
 

@@ -2,26 +2,32 @@
 
 namespace App\Services;
 
-use App\Contracts\FileUploadServiceContract;
 use App\Enums\DisksEnum;
-use Illuminate\Http\Response;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\UploadedFile;
+use ReflectionClass;
+use ReflectionException;
 
-class FileUploadService implements FileUploadServiceContract
+class FileUploadService
 {
-    /**@return string relative path */
-    public function handleFileUpload(UploadedFile $file, string $mimeType, DisksEnum $disk = DisksEnum::PRIVATE): string
+    /**
+     * @throws ReflectionException
+     */
+    public static function determineFolderName(Model|string $model): string
     {
-        $relativePath = $file->store($this->determineFolderName($mimeType), ['disk' => $disk->value]);
+        $rc = new ReflectionClass($model);
 
-        if (! $relativePath) {
-            return abort(Response::HTTP_UNPROCESSABLE_ENTITY, 'File upload failed.');
-        }
-        return $relativePath;
+        return 'uploads/' . $rc->getShortName();
     }
 
-    public function determineFolderName(string $mimeType): string
+    public function handleFileUpload(UploadedFile $file, Model|string $model, DisksEnum $disk = DisksEnum::PRIVATE): string
     {
-        return 'uploads/' . $mimeType;
+        $relativePath = $file->store(self::determineFolderName($model), ['disk' => $disk()]);
+
+        if (! $relativePath) {
+            return abort(JsonResponse::HTTP_UNPROCESSABLE_ENTITY, 'File upload failed.');
+        }
+        return $relativePath;
     }
 }

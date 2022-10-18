@@ -3,7 +3,9 @@
 namespace Database\Factories;
 
 use App\Enums\DisksEnum;
+use App\Models\Article;
 use App\Models\File;
+use App\Services\FileUploadService;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Http\UploadedFile;
 
@@ -17,7 +19,7 @@ class FileFactory extends Factory
     public function definition(): array
     {
         return [
-            'is_private'    => true,
+            'is_private' => true,
         ];
     }
 
@@ -32,13 +34,18 @@ class FileFactory extends Factory
     public function configure(): FileFactory
     {
         $uploadedFile = Uploadedfile::fake()
-                                    ->image('300x300.png', 300, 300);
+            ->image('300x300.png', 300, 300);
+
         return $this->afterMaking(function (File $file) use ($uploadedFile) {
-            $file->relative_path = $uploadedFile->store(
-                'uploads/' . $uploadedFile->getMimeType(),
-                ['disk' => $file->is_private ? DisksEnum::PRIVATE->value : DisksEnum::PUBLIC->value]
-            );
+            $fus = new FileUploadService();
+
+            $file->relative_path =
+                $fus->handleFileUpload(
+                    $uploadedFile,
+                    Article::class,
+                    $file->is_private ? DisksEnum::PRIVATE : DisksEnum::PUBLIC
+                );
+
         });
     }
-
 }
