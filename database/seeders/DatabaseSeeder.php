@@ -28,17 +28,18 @@ class DatabaseSeeder extends Seeder
             'email'    => 'cokart32@gmail.com',
             'name'     => 'Sander Cokart',
             'password' => bcrypt('Pa$$w0rd'),
+            'email_verified_at' => now()
         ]);
 
         $admin->roles()->sync([Role::ADMIN]);
 
         /*ARTICLES*/
-        $this->callWith(ArticleSeeder::class, [
-            'count'           => 50,
-            'articleTypeId'   => ArticleType::POSTS['id'],
-            'amountPublished' => 50,
-            'userId'          => $admin->id,
-        ]);
+//        $this->callWith(ArticleSeeder::class, [
+//            'count'           => 50,
+//            'articleTypeId'   => ArticleType::POSTS['id'],
+//            'amountPublished' => 50,
+//            'userId'          => $admin->id,
+//        ]);
 //        $this->callWith(ArticleSeeder::class, [
 //            'count'           => 30,
 //            'articleTypeId'   => ArticleType::COURSES['id'],
