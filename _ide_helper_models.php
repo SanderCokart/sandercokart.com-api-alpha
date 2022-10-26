@@ -14,6 +14,7 @@ namespace App\Models{
 /**
  * App\Models\Article
  *
+ * @mixin Article
  * @property int $id
  * @property string $title
  * @property string $excerpt
@@ -21,7 +22,6 @@ namespace App\Models{
  * @property string $slug
  * @property \Illuminate\Support\Carbon|null $published_at
  * @property int $user_id
- * @property int $article_banner_id
  * @property int $article_type_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -35,7 +35,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Article newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Article published()
  * @method static \Illuminate\Database\Eloquent\Builder|Article query()
- * @method static \Illuminate\Database\Eloquent\Builder|Article whereArticleBannerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Article whereArticleTypeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Article whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Article whereExcerpt($value)
@@ -85,15 +84,15 @@ namespace App\Models{
 /**
  * App\Models\CompromisedEmail
  *
- * @property int $user_id
+ * @property string $identifier
  * @property string $token
- * @property string $created_at
- * @property string $expire_at
+ * @property int $user_id
+ * @property string $expires_at
  * @method static \Illuminate\Database\Eloquent\Builder|CompromisedEmail newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|CompromisedEmail newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|CompromisedEmail query()
- * @method static \Illuminate\Database\Eloquent\Builder|CompromisedEmail whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CompromisedEmail whereExpireAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CompromisedEmail whereExpiresAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CompromisedEmail whereIdentifier($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CompromisedEmail whereToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CompromisedEmail whereUserId($value)
  */
@@ -104,15 +103,15 @@ namespace App\Models{
 /**
  * App\Models\CompromisedPassword
  *
- * @property string $user_id
+ * @property string $identifier
  * @property string $token
- * @property string $created_at
- * @property string $expire_at
+ * @property int $user_id
+ * @property string $expires_at
  * @method static \Illuminate\Database\Eloquent\Builder|CompromisedPassword newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|CompromisedPassword newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|CompromisedPassword query()
- * @method static \Illuminate\Database\Eloquent\Builder|CompromisedPassword whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|CompromisedPassword whereExpireAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CompromisedPassword whereExpiresAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CompromisedPassword whereIdentifier($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CompromisedPassword whereToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CompromisedPassword whereUserId($value)
  */
@@ -123,10 +122,16 @@ namespace App\Models{
 /**
  * App\Models\EmailVerification
  *
+ * @property string $identifier
+ * @property string $token
+ * @property string $expires_at
  * @method static \Database\Factories\EmailVerificationFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|EmailVerification newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|EmailVerification newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|EmailVerification query()
+ * @method static \Illuminate\Database\Eloquent\Builder|EmailVerification whereExpiresAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EmailVerification whereIdentifier($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EmailVerification whereToken($value)
  */
 	class EmailVerification extends \Eloquent {}
 }
@@ -136,12 +141,8 @@ namespace App\Models{
  * App\Models\File
  *
  * @property int $id
- * @property string|null $fileable_type
- * @property int|null $fileable_id
- * @property string $original_name
- * @property string $mime_type
- * @property bool|null $is_private
- * @property string $relative_url
+ * @property string $relative_path
+ * @property bool $is_private
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Article[] $articles
@@ -151,13 +152,9 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|File newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|File query()
  * @method static \Illuminate\Database\Eloquent\Builder|File whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|File whereFileableId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|File whereFileableType($value)
  * @method static \Illuminate\Database\Eloquent\Builder|File whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|File whereIsPrivate($value)
- * @method static \Illuminate\Database\Eloquent\Builder|File whereMimeType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|File whereOriginalName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|File whereRelativeUrl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|File whereRelativePath($value)
  * @method static \Illuminate\Database\Eloquent\Builder|File whereUpdatedAt($value)
  */
 	class File extends \Eloquent {}
@@ -167,15 +164,15 @@ namespace App\Models{
 /**
  * App\Models\PasswordReset
  *
- * @property int $user_id
+ * @property string $identifier
  * @property string $token
- * @property string $created_at
- * @property string $expire_at
+ * @property int $user_id
+ * @property string $expires_at
  * @method static \Illuminate\Database\Eloquent\Builder|PasswordReset newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PasswordReset newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|PasswordReset query()
- * @method static \Illuminate\Database\Eloquent\Builder|PasswordReset whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|PasswordReset whereExpireAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PasswordReset whereExpiresAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PasswordReset whereIdentifier($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PasswordReset whereToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|PasswordReset whereUserId($value)
  */
