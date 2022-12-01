@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers\Models;
 
-use App\Enums\ArticleType;
 use App\Enums\DisksEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\FileResource;
-use App\Models\Article;
 use App\Models\File;
 use App\Services\FileUploadService;
 use Illuminate\Http\JsonResponse;
@@ -35,7 +33,7 @@ class FileController extends Controller
 
         $relativePath = $fileUploadService->handleFileUpload(
             $validatedData['file'],
-            Article::class,
+            '/uploads',
             DisksEnum::PRIVATE
         );
 

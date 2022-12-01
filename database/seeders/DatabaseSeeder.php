@@ -34,23 +34,23 @@ class DatabaseSeeder extends Seeder
         $admin->roles()->sync([Role::ADMIN]);
 
         /*ARTICLES*/
-//        $this->callWith(ArticleSeeder::class, [
-//            'count'           => 50,
-//            'articleTypeId'   => ArticleType::POSTS['id'],
-//            'amountPublished' => 50,
-//            'userId'          => $admin->id,
-//        ]);
-//        $this->callWith(ArticleSeeder::class, [
-//            'count'           => 30,
-//            'articleTypeId'   => ArticleType::COURSES['id'],
-//            'amountPublished' => 5,
-//            'userId'          => $admin->id,
-//        ]);
-//        $this->callWith(ArticleSeeder::class, [
-//            'count'           => 30,
-//            'articleTypeId'   => ArticleType::TIPS_AND_TUTORIALS['id'],
-//            'amountPublished' => 5,
-//            'userId'          => $admin->id,
-//        ]);
+        $this->callWith(ArticleSeeder::class, [
+            'count'           => 50,
+            'articleTypeId'   => ArticleType::POSTS['id'],
+            'amountPublished' => 25,
+            'userId'          => $admin->id,
+        ]);
+        $this->callWith(ArticleSeeder::class, [
+            'count'           => 50,
+            'articleTypeId'   => ArticleType::COURSES['id'],
+            'amountPublished' => 25,
+            'userId'          => $admin->id,
+        ]);
+        $this->callWith(ArticleSeeder::class, [
+            'count'           => 50,
+            'articleTypeId'   => ArticleType::TIPS_AND_TUTORIALS['id'],
+            'amountPublished' => 25,
+            'userId'          => $admin->id,
+        ]);
     }
 }
